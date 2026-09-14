@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="es-CO">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Prueba responsive</title>
+    <style>
+      iframe { position: absolute; left: -10000px; height: 900px; border: 0; }
+    </style>
+  </head>
+  <body data-result="pendiente">
+    <pre></pre>
+    <script>
+      const widths = [360, 768, 1440];
+      const interactiveSelector = [
+        ".button", ".cart-slot", ".site-nav a", ".choice-card",
+        ".product-card__button", ".product-card__whatsapp",
+        ".whatsapp-help", ".cart-dialog__close"
+      ].join(",");
+
+      Promise.all(widths.map((width) => new Promise((resolve) => {
+        const frame = document.createElement("iframe");
+        frame.width = width;
+        frame.src = "index.html";
+        frame.addEventListener("load", () => {
+          requestAnimationFrame(() => {
+            const doc = frame.contentDocument;
+            const root = doc.documentElement;
+            const interactive = [...doc.querySelectorAll(interactiveSelector)]
+              .filter((element) => element.getBoundingClientRect().height > 0);
+            const images = [...doc.images];
+            const overflowing = [...doc.querySelectorAll("body *")]
+              .filter((element) => element.getBoundingClientRect().right > root.clientWidth + 1)
+              .slice(0, 5)
+              .map((element) => element.className || element.tagName);
+            const shortTargets = interactive
+              .filter((element) => element.getBoundingClientRect().height < 48)
+              .slice(0, 5)
+              .map((element) => ({ className: element.className, height: element.getBoundingClientRect().height }));
+            resolve({
+              width,
+              noHorizontalOverflow: root.scrollWidth <= root.clientWidth,
+              minimumBodyText: parseFloat(getComputedStyle(doc.body).fontSize) >= 16,
+              touchTargets: interactive.every((element) => element.getBoundingClientRect().height >= 48),
+              imageDimensions: images.every((image) => image.width > 0 && image.height > 0),
+              productCards: doc.querySelectorAll(".product-card").length,
+              overflowing,
+              shortTargets,
+            });
+          });
+        }, { once: true });
+        document.body.append(frame);
+      }))).then((results) => {
+        const passed = results.every((result) =>
+          result.noHorizontalOverflow && result.minimumBodyText && result.touchTargets &&
+          result.imageDimensions && result.productCards === 47
+        );
+        document.querySelector("pre").textContent = JSON.stringify(results);
+        document.body.dataset.result = passed ? "correcto" : "error";
+      });
+    </script>
+  </body>
+</html>

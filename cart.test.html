@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="es-CO">
+  <head><meta charset="UTF-8"><title>Prueba del carrito</title></head>
+  <body data-result="pendiente">
+    <script type="module">
+      import { Cart } from "./cart.mjs";
+
+      const cart = new Cart();
+      cart.add({ id: "a", name: "a", price: 1250 });
+      cart.add({ id: "b", name: "b", price: 2750 });
+      cart.add({ id: "a", name: "a", price: 1250 });
+      cart.setQuantity("b", 3);
+
+      let state = cart.snapshot();
+      const totalsAreCorrect = state.quantity === 5 && state.subtotal === 10750 && state.total === 10750;
+
+      cart.remove("a");
+      state = cart.snapshot();
+      const removalIsCorrect = state.quantity === 3 && state.subtotal === 8250;
+
+      cart.setQuantity("b", 0);
+      state = cart.snapshot();
+      const emptyIsCorrect = state.quantity === 0 && state.subtotal === 0 && state.total === 0;
+
+      document.body.dataset.result = totalsAreCorrect && removalIsCorrect && emptyIsCorrect ? "correcto" : "error";
+    </script>
+  </body>
+</html>
