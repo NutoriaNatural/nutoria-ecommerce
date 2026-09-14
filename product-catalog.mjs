@@ -74,7 +74,7 @@ function createProductCard(product) {
   imageContainer.className = "product-card__image";
   const image = document.createElement("img");
   image.src = product.image;
-  image.alt = product.name;
+  image.alt = `Fotografía de ${product.name}`;
   image.width = 900;
   image.height = 900;
   image.loading = "lazy";
