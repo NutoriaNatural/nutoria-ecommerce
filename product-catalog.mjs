@@ -17,8 +17,14 @@ export const products = [
   id: `producto-${index + 1}`,
   name,
   image: `assets/images/${name}.jpg`,
-  presentation: "",
-  price: name === "7 Colagenos" ? 89900 : 0,
+  presentation: name === "Almendras" ? "1.000g" : "",
+  price: name === "7 Colagenos" ? 89900 : name === "Almendras" ? 75000 : 0,
+  variants: name === "Almendras" ? [
+    { id: "1000g", presentation: "1.000g", price: 75000 },
+    { id: "500g", presentation: "500g", price: 39000 },
+    { id: "250g", presentation: "250g", price: 20000 },
+    { id: "125g", presentation: "125g", price: 10000 },
+  ] : [],
   category: "",
   ingredients: "",
   content: "",
@@ -92,9 +98,21 @@ function createProductCard(product) {
   const presentationLabel = document.createElement("span");
   presentationLabel.className = "product-card__label";
   presentationLabel.textContent = "Presentación";
-  const presentationValue = document.createElement("p");
-  presentationValue.className = "product-card__value";
-  presentationValue.textContent = product.presentation;
+  const presentationValue = document.createElement(product.variants.length ? "select" : "p");
+  presentationValue.className = product.variants.length
+    ? "product-card__presentation"
+    : "product-card__value";
+  if (product.variants.length) {
+    presentationValue.setAttribute("aria-label", `Presentación de ${product.name}`);
+    product.variants.forEach((variant, variantIndex) => {
+      const option = document.createElement("option");
+      option.value = String(variantIndex);
+      option.textContent = variant.presentation;
+      presentationValue.append(option);
+    });
+  } else {
+    presentationValue.textContent = product.presentation;
+  }
   presentation.append(presentationLabel, presentationValue);
 
   const price = document.createElement("div");
@@ -114,6 +132,18 @@ function createProductCard(product) {
   button.dataset.productId = product.id;
   button.dataset.productName = product.name;
   button.dataset.productPrice = String(product.price);
+
+  if (product.variants.length) {
+    const updateVariant = () => {
+      const variant = product.variants[Number(presentationValue.value)];
+      priceValue.textContent = formatMoney(variant.price);
+      button.dataset.productId = `${product.id}-${variant.id}`;
+      button.dataset.productName = `${product.name} ${variant.presentation}`;
+      button.dataset.productPrice = String(variant.price);
+    };
+    presentationValue.addEventListener("change", updateVariant);
+    updateVariant();
+  }
 
   const whatsapp = document.createElement("a");
   whatsapp.className = "product-card__whatsapp";
