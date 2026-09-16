@@ -18,7 +18,7 @@ export const products = [
   name,
   image: `assets/images/${name}.jpg`,
   presentation: "",
-  price: 0,
+  price: name === "7 Colagenos" ? 89900 : 0,
   category: "",
   ingredients: "",
   content: "",
