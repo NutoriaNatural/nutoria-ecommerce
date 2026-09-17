@@ -16,7 +16,7 @@ export const products = [
 ].map((name, index) => ({
   id: `producto-${index + 1}`,
   name,
-  image: `assets/images/${name}.jpg`,
+  image: `assets/images/optimized/${name}.jpg`,
   presentation: name === "Almendras" ? "1.000g" : "",
   price: name === "7 Colagenos" ? 89900 : name === "Almendras" ? 75000 : 0,
   variants: name === "Almendras" ? [
@@ -81,8 +81,8 @@ function createProductCard(product) {
   const image = document.createElement("img");
   image.src = product.image;
   image.alt = `Fotografía de ${product.name}`;
-  image.width = 900;
-  image.height = 900;
+  image.width = 600;
+  image.height = 600;
   image.loading = "lazy";
   imageContainer.append(image);
 
