@@ -220,5 +220,5 @@ function createProductCard(product) {
   return card;
 }
 
-const grid = document.querySelector("[data-product-grid]");
+const grid = typeof document !== "undefined" ? document.querySelector("[data-product-grid]") : null;
 if (grid) grid.replaceChildren(...products.map(createProductCard));

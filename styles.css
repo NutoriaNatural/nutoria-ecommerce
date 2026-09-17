@@ -503,7 +503,7 @@ h2 {
 }
 
 .cart-dialog {
-  width: min(100% - 2rem, 32rem);
+  width: min(100% - 2rem, 38rem);
   max-height: min(48rem, calc(100dvh - 2rem));
   margin: auto 0 auto auto;
   padding: 0;
@@ -630,6 +630,85 @@ h2 {
   margin: 0;
 }
 
+.cart-empty,
+.shipping-note,
+.checkout-form__message {
+  margin: 0;
+}
+
+.shipping-note {
+  padding: 0 1.25rem 1.25rem;
+  color: rgba(4, 38, 22, 0.78);
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.checkout-form {
+  display: grid;
+  gap: 1rem;
+  padding: 1.25rem;
+  border-top: 1px solid var(--borde);
+}
+
+.checkout-form h3 {
+  margin: 0;
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 1.75rem;
+}
+
+.checkout-form label {
+  display: grid;
+  gap: 0.35rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.checkout-form input {
+  width: 100%;
+  min-height: 3rem;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+  color: inherit;
+  background: var(--blanco);
+  font: inherit;
+}
+
+.checkout-form__row {
+  display: grid;
+  gap: 1rem;
+}
+
+.checkout-form__message {
+  min-height: 1.5rem;
+  font-size: 0.875rem;
+}
+
+.checkout-form__button {
+  min-height: 3.25rem;
+  padding: 0.75rem 1rem;
+  border: 0;
+  border-radius: var(--radio);
+  color: var(--verde-nutoria);
+  background: var(--dorado-nutoria);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.checkout-form__button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.payment-status {
+  margin-block: 1rem;
+  padding: 1rem;
+  border: 1px solid var(--dorado-nutoria);
+  border-radius: var(--radio);
+  background: rgba(216, 168, 78, 0.12);
+}
+
 .whatsapp-help {
   position: fixed;
   z-index: 10;
@@ -698,6 +777,10 @@ h2 {
   .information-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     column-gap: 2rem;
+  }
+
+  .checkout-form__row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 

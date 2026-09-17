@@ -14,5 +14,7 @@ export function createProductWhatsAppUrl(productName) {
   );
 }
 
-const generalLink = document.querySelector("[data-whatsapp-general]");
+const generalLink = typeof document !== "undefined"
+  ? document.querySelector("[data-whatsapp-general]")
+  : null;
 if (generalLink) generalLink.href = createWhatsAppUrl(GENERAL_MESSAGE);

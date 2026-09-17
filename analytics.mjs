@@ -120,4 +120,12 @@ export function trackCompletedPurchase({ transactionId, value, items }) {
   });
 }
 
+export function trackBeginCheckout({ value, items }) {
+  sendEvent("begin_checkout", {
+    currency: "COP",
+    value,
+    items,
+  });
+}
+
 if (typeof document !== "undefined") initializeAnalytics();

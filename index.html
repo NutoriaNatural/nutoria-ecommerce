@@ -93,6 +93,8 @@
       </div>
     </header>
 
+    <div class="payment-status container" data-payment-status role="status" hidden></div>
+
     <main>
       <section class="section section--hero" id="propuesta" aria-labelledby="titulo-principal">
         <div class="container hero-grid">
@@ -212,10 +214,46 @@
           <dd data-cart-subtotal>$0</dd>
         </div>
         <div>
+          <dt>Envío</dt>
+          <dd data-cart-shipping>$0</dd>
+        </div>
+        <div>
           <dt>Total</dt>
           <dd data-cart-total>$0</dd>
         </div>
       </dl>
+      <p class="shipping-note">El envío se calcula según el subtotal: $16.000 hasta $99.999; $12.000 de $100.000 a $199.999; $8.000 de $200.000 a $300.000; gratis para compras superiores a $300.000.</p>
+      <form class="checkout-form" data-checkout-form>
+        <h3>Datos de entrega</h3>
+        <label>
+          Nombre completo
+          <input name="name" type="text" autocomplete="name" maxlength="100" required />
+        </label>
+        <label>
+          Correo electrónico
+          <input name="email" type="email" autocomplete="email" maxlength="160" required />
+        </label>
+        <label>
+          Teléfono
+          <input name="phone" type="tel" autocomplete="tel" inputmode="tel" maxlength="20" required />
+        </label>
+        <label>
+          Dirección de entrega
+          <input name="address" type="text" autocomplete="street-address" maxlength="160" required />
+        </label>
+        <div class="checkout-form__row">
+          <label>
+            Ciudad o municipio
+            <input name="city" type="text" autocomplete="address-level2" maxlength="80" required />
+          </label>
+          <label>
+            Departamento
+            <input name="region" type="text" autocomplete="address-level1" maxlength="80" required />
+          </label>
+        </div>
+        <p class="checkout-form__message" data-checkout-message role="status"></p>
+        <button class="checkout-form__button" data-checkout-button type="submit">Pagar con Wompi</button>
+      </form>
     </dialog>
 
     <script type="module" src="product-catalog.mjs"></script>
