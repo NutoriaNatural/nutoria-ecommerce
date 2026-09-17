@@ -77,6 +77,10 @@ function initializeCart() {
       ...state.items.map((item) => {
         const row = document.createElement("article");
         row.className = "cart-item";
+        row.dataset.productId = item.id;
+        row.dataset.productName = item.name;
+        row.dataset.productPrice = String(item.price);
+        row.dataset.productQuantity = String(item.quantity);
 
         const name = document.createElement("p");
         name.className = "cart-item__name";
