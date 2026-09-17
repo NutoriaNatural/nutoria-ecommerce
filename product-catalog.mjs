@@ -1,5 +1,64 @@
 import { createProductWhatsAppUrl } from "./whatsapp.mjs";
 
+const standardVariants = (prices) =>
+  ["1.000g", "500g", "250g", "125g"].map((presentation, index) => ({
+    id: presentation.replace(".", ""),
+    presentation,
+    price: prices[index],
+  }));
+
+const fixedPrice = (presentation, price) => ({ presentation, price, variants: [] });
+
+const productPricing = {
+  "7 Colagenos": fixedPrice("", 89900),
+  "Ajonjoli Negro": { variants: standardVariants([51000, 27000, 14000, 7000]) },
+  "Ajonjoli Tostado": { variants: standardVariants([39000, 21000, 11000, 5500]) },
+  Ajonjoli: { variants: standardVariants([35000, 19000, 10000, 5000]) },
+  Albaricoques: { variants: standardVariants([111000, 57000, 29000, 14500]) },
+  "Almendra Laminada": { variants: standardVariants([83000, 43000, 22000, 11000]) },
+  Almendras: { variants: standardVariants([75000, 39000, 20000, 10000]) },
+  Amaranto: { variants: standardVariants([31000, 17000, 9000, 4500]) },
+  Arandanos: { variants: standardVariants([45000, 25000, 13000, 6500]) },
+  Avellanas: { variants: standardVariants([153000, 79000, 40000, 20000]) },
+  "Avena en Hojuelas sin Gluten": { variants: standardVariants([13000, 7000, 4000, 2000]) },
+  "Brevas Meladas": { variants: standardVariants([39000, 21000, 11000, 5500]) },
+  "Calcio Coral Marino": fixedPrice("1.000g", 89900),
+  "Ciruelas Pasas": { variants: standardVariants([39000, 21000, 11000, 5500]) },
+  "Coco Acaramelado": { variants: standardVariants([89000, 47000, 24000, 11000]) },
+  "Coco Laminado Deshidratado": { variants: standardVariants([65000, 35000, 18000, 9000]) },
+  "Coffe + Colageno": fixedPrice("250g", 32900),
+  "Colageno Hidrolizado": { variants: standardVariants([153000, 79000, 40000, 20000]) },
+  "Colageno Marino": fixedPrice("1.000g", 89900),
+  Datiles: { variants: standardVariants([53000, 29000, 15000, 7500]) },
+  "Flor de Jamaica": { variants: standardVariants([65000, 35000, 18000, 9000]) },
+  "Garbanzo Tostados": { variants: standardVariants([81000, 43000, 22000, 11000]) },
+  "Habas Saladas": { variants: standardVariants([47000, 26000, 13000, 6500]) },
+  "Harina de Almendras": { variants: standardVariants([81000, 43000, 22000, 11000]) },
+  "Lentejas Tostadas": { variants: standardVariants([81000, 43000, 22000, 11000]) },
+  "Maca Negra, Roja, Shihua Y Amarilla": fixedPrice("1.000g", 89900),
+  "Macadamia Acaramelada": { variants: standardVariants([129000, 67000, 34000, 17000]) },
+  Macadamia: { variants: standardVariants([113000, 59000, 30000, 15000]) },
+  "Mango Deshidratado": { variants: standardVariants([153000, 79000, 40000, 20000]) },
+  "Mani Confitado": { variants: standardVariants([28000, 15000, 8000, 4000]) },
+  Marañon: { variants: standardVariants([113000, 59000, 30000, 15000]) },
+  "Mix Golden (leche dorada)": fixedPrice("250g", 31900),
+  "Mix Rojos Deshidratado": { variants: standardVariants([153000, 79000, 40000, 20000]) },
+  "Mix Tropical Deshidratado": { variants: standardVariants([153000, 79000, 40000, 20000]) },
+  "Nibs de Cacao": { variants: standardVariants([105000, 55000, 28000, 14000]) },
+  "Nuez del Brasil": { variants: standardVariants([113000, 59000, 30000, 15000]) },
+  "Nuez Nogal": { variants: standardVariants([93000, 49000, 25000, 12500]) },
+  "Nuez Pecana": { variants: standardVariants([153000, 79000, 40000, 20000]) },
+  "Piña Deshidratada": { variants: standardVariants([153000, 79000, 40000, 20000]) },
+  Pistachos: { variants: standardVariants([113000, 59000, 30000, 15000]) },
+  "Proteina Whey": fixedPrice("900g", 179900),
+  Quinua: { variants: standardVariants([29000, 17000, 9000, 4500]) },
+  Resveratrol: fixedPrice("90g (90 und)", 63900),
+  "Sales de Magnesio Mg2": fixedPrice("1.000g", 89900),
+  "Semillas de Amapola": { variants: standardVariants([81000, 43000, 22000, 11000]) },
+  "Te Chai": fixedPrice("250g", 31900),
+  "Uvas Pasas": { variants: standardVariants([24000, 13000, 7000, 3500]) },
+};
+
 // Edita `presentation`, `price` y `category` únicamente con los datos reales aprobados.
 export const products = [
   "7 Colagenos", "Ajonjoli Negro", "Ajonjoli Tostado", "Ajonjoli", "Albaricoques",
@@ -13,25 +72,26 @@ export const products = [
   "Nibs de Cacao", "Nuez del Brasil", "Nuez Nogal", "Nuez Pecana", "Piña Deshidratada",
   "Pistachos", "Proteina Whey", "Quinua", "Resveratrol", "Sales de Magnesio Mg2",
   "Semillas de Amapola", "Te Chai", "Uvas Pasas",
-].map((name, index) => ({
-  id: `producto-${index + 1}`,
-  name,
-  image: `assets/images/optimized/${name}.jpg`,
-  presentation: name === "Almendras" ? "1.000g" : "",
-  price: name === "7 Colagenos" ? 89900 : name === "Almendras" ? 75000 : 0,
-  variants: name === "Almendras" ? [
-    { id: "1000g", presentation: "1.000g", price: 75000 },
-    { id: "500g", presentation: "500g", price: 39000 },
-    { id: "250g", presentation: "250g", price: 20000 },
-    { id: "125g", presentation: "125g", price: 10000 },
-  ] : [],
-  category: "",
-  ingredients: "",
-  content: "",
-  nutrition: "",
-  usage: "",
-  sanitaryRegistration: "",
-}));
+].map((name, index) => {
+  const pricing = productPricing[name];
+  const variants = pricing.variants;
+  const firstVariant = variants[0];
+
+  return {
+    id: `producto-${index + 1}`,
+    name,
+    image: `assets/images/optimized/${name}.jpg`,
+    presentation: pricing.presentation ?? firstVariant.presentation,
+    price: pricing.price ?? firstVariant.price,
+    variants,
+    category: "",
+    ingredients: "",
+    content: "",
+    nutrition: "",
+    usage: "",
+    sanitaryRegistration: "",
+  };
+});
 
 const formatMoney = (value) =>
   new Intl.NumberFormat("es-CO", {
