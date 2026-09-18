@@ -6,7 +6,7 @@
     "db:inspect": "node scripts/inspect-database.mjs",
     "db:migrate": "node scripts/migrate-database.mjs",
     "db:verify": "node scripts/verify-database.mjs",
-    "test": "node --test --test-isolation=none tests/order-pricing.test.mjs tests/wompi-events.test.mjs"
+    "test": "node --test --test-isolation=none tests/order-pricing.test.mjs tests/wompi-events.test.mjs tests/wompi-config.test.mjs"
   },
   "dependencies": {
     "pg": "^8.13.1"
