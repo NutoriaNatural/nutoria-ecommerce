@@ -1,6 +1,7 @@
 import { trackBeginCheckout, trackCompletedPurchase } from "./analytics.mjs";
 
 const STORAGE_KEY = "nutoria_cart";
+const CHECKOUT_KEY = "nutoria_checkout_key";
 
 export function calculateShipping(subtotal) {
   if (subtotal <= 0) return 0;
@@ -207,10 +208,18 @@ function initializeCart() {
     message.textContent = "Preparando el pago seguro…";
 
     const formData = new FormData(checkoutForm);
+    let idempotencyKey = sessionStorage.getItem(CHECKOUT_KEY);
+    if (!idempotencyKey) {
+      idempotencyKey = crypto.randomUUID();
+      sessionStorage.setItem(CHECKOUT_KEY, idempotencyKey);
+    }
     try {
       const response = await fetch("/api/wompi/checkout", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "Idempotency-Key": idempotencyKey,
+        },
         body: JSON.stringify({
           items: state.items.map(({ id, quantity }) => ({ id, quantity })),
           customer: Object.fromEntries(formData),
@@ -239,6 +248,7 @@ function initializeCart() {
         wompiForm.append(input);
       });
       document.body.append(wompiForm);
+      sessionStorage.removeItem(CHECKOUT_KEY);
       wompiForm.submit();
     } catch (error) {
       message.textContent = error.message;

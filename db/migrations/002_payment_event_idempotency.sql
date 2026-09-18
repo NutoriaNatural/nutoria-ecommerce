@@ -1,0 +1,1 @@
+DROP INDEX IF EXISTS payment_events_transaction_status_idx;
