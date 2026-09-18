@@ -6,6 +6,13 @@ const json = (response, status, body) => {
   response.end(JSON.stringify(body));
 };
 
+export function paymentReturnUrl(environment = process.env) {
+  if (environment.VERCEL_ENV === "preview" && environment.VERCEL_URL) {
+    return `https://${environment.VERCEL_URL}/?payment=return`;
+  }
+  return `${environment.APP_BASE_URL || "https://nutoria.com.co"}/?payment=return`;
+}
+
 export default async function handler(request, response) {
   if (request.method !== "POST") {
     response.setHeader("Allow", "POST");
@@ -44,7 +51,7 @@ export default async function handler(request, response) {
         "amount-in-cents": String(amountInCents),
         reference: order.reference,
         "signature:integrity": signature,
-        "redirect-url": "https://nutoria.com.co/?payment=return",
+        "redirect-url": paymentReturnUrl(),
         "customer-data:email": customer.email,
         "customer-data:full-name": customer.name,
         "customer-data:phone-number": String(customer.phone).replace(/\D/g, ""),
