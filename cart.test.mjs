@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { Cart, calculateShipping } from "./cart.mjs";
+import { Cart, calculateShipping, waitForPaymentStatus } from "./cart.mjs";
 
 assert.equal(calculateShipping(0), 0);
 assert.equal(calculateShipping(99999), 16000);
@@ -37,5 +37,19 @@ assert.equal(cart.snapshot().subtotal, 8250);
 
 cart.setQuantity("b", 0);
 assert.deepEqual(cart.snapshot(), { items: [], quantity: 0, subtotal: 0, shipping: 0, total: 0 });
+
+const statuses = ["PENDING", "PENDING", "APPROVED"];
+let requests = 0;
+const confirmed = await waitForPaymentStatus("transaction-test", {
+  attempts: 3,
+  delayMs: 0,
+  request: async () => ({
+    ok: true,
+    json: async () => ({ id: "transaction-test", status: statuses[requests++] }),
+  }),
+  pause: async () => {},
+});
+assert.equal(confirmed.status, "APPROVED");
+assert.equal(requests, 3);
 
 console.log("Carrito: todas las operaciones funcionan correctamente.");

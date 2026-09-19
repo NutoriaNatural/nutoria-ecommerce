@@ -16,7 +16,7 @@ const parseBody = (body) => {
   if (body && typeof body === "object" && !Buffer.isBuffer(body)) return body;
   if (Buffer.isBuffer(body)) return JSON.parse(body.toString("utf8"));
   if (typeof body === "string") return JSON.parse(body);
-  throw new TypeError("El evento no contiene un cuerpo JSON vÃ¡lido.");
+  throw new TypeError("El evento no contiene un cuerpo JSON válido.");
 };
 
 const sameChecksum = (received, calculated) => {
@@ -41,7 +41,7 @@ export default async function handler(request, response) {
   if (request.method === "GET") return json(response, 200, { service: "wompi-events", status: "ready" });
   if (request.method !== "POST") {
     response.setHeader("Allow", "GET, POST");
-    return json(response, 405, { error: "MÃ©todo no permitido." });
+    return json(response, 405, { error: "Método no permitido." });
   }
 
   const secret = getEventSecret();
@@ -51,11 +51,11 @@ export default async function handler(request, response) {
   try {
     event = parseBody(request.body);
   } catch {
-    return json(response, 400, { error: "JSON invÃ¡lido." });
+    return json(response, 400, { error: "JSON inválido." });
   }
 
   if (!verifyWompiEvent(event, request.headers["x-event-checksum"], secret)) {
-    return json(response, 401, { error: "Firma de evento invÃ¡lida." });
+    return json(response, 401, { error: "Firma de evento inválida." });
   }
 
   const expectedEnvironment = expectedWompiEnvironment(secret);

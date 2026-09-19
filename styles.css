@@ -338,6 +338,8 @@ h2 {
   display: flex;
   min-width: 0;
   flex-direction: column;
+  content-visibility: auto;
+  contain-intrinsic-size: auto 38rem;
   overflow: hidden;
   border: 1px solid var(--borde);
   border-radius: var(--radio);

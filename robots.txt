@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://nutoria-ecommerce.vercel.app/sitemap.xml
+Sitemap: https://nutoria.com.co/sitemap.xml

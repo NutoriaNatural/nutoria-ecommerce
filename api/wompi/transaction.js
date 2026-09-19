@@ -8,12 +8,12 @@ const json = (response, status, body) => {
 export default async function handler(request, response) {
   if (request.method !== "GET") {
     response.setHeader("Allow", "GET");
-    return json(response, 405, { error: "MÃ©todo no permitido." });
+    return json(response, 405, { error: "Método no permitido." });
   }
 
   const transactionId = typeof request.query?.id === "string" ? request.query.id.trim() : "";
   if (!transactionId || transactionId.length > 160) {
-    return json(response, 400, { error: "Identificador de transacciÃ³n invÃ¡lido." });
+    return json(response, 400, { error: "Identificador de transacción inválido." });
   }
 
   try {

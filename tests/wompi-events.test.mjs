@@ -18,7 +18,7 @@ event.signature.checksum = createHash("sha256")
   .update(`tx-1APPROVED3000000${event.timestamp}${secret}`)
   .digest("hex");
 
-test("verifica la firma dinÃ¡mica de Wompi", () => {
+test("verifica la firma dinámica de Wompi", () => {
   assert.equal(verifyWompiEvent(event, null, secret), true);
   assert.equal(verifyWompiEvent(event, null, `${secret}-incorrecto`), false);
 });

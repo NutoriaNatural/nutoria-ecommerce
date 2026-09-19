@@ -10,13 +10,13 @@ const standardVariants = (prices) =>
 const fixedPrice = (presentation, price) => ({ presentation, price, variants: [] });
 
 const productPricing = {
-  "7 Colagenos": fixedPrice("", 89900),
+  "7 Colagenos": fixedPrice("", null),
   "Ajonjoli Negro": { variants: standardVariants([51000, 27000, 14000, 7000]) },
   "Ajonjoli Tostado": { variants: standardVariants([39000, 21000, 11000, 5500]) },
   Ajonjoli: { variants: standardVariants([35000, 19000, 10000, 5000]) },
   Albaricoques: { variants: standardVariants([111000, 57000, 29000, 14500]) },
   "Almendra Laminada": { variants: standardVariants([83000, 43000, 22000, 11000]) },
-  Almendras: { variants: standardVariants([75000, 39000, 20000, 10000]) },
+  Almendras: fixedPrice("", null),
   Amaranto: { variants: standardVariants([31000, 17000, 9000, 4500]) },
   Arandanos: { variants: standardVariants([45000, 25000, 13000, 6500]) },
   Avellanas: { variants: standardVariants([153000, 79000, 40000, 20000]) },
@@ -82,7 +82,7 @@ export const products = [
     name,
     image: `assets/images/optimized/${name}.jpg`,
     presentation: pricing.presentation ?? firstVariant.presentation,
-    price: pricing.price ?? firstVariant.price,
+    price: Object.hasOwn(pricing, "price") ? pricing.price : firstVariant.price,
     variants,
     category: "",
     ingredients: "",
@@ -182,16 +182,20 @@ function createProductCard(product) {
   priceLabel.textContent = "Precio";
   const priceValue = document.createElement("p");
   priceValue.className = "product-card__value";
-  priceValue.textContent = formatMoney(product.price);
+  priceValue.textContent = Number.isInteger(product.price) ? formatMoney(product.price) : "";
   price.append(priceLabel, priceValue);
 
   const button = document.createElement("button");
   button.className = "product-card__button";
   button.type = "button";
   button.textContent = "Comprar";
-  button.dataset.productId = product.id;
-  button.dataset.productName = product.name;
-  button.dataset.productPrice = String(product.price);
+  if (Number.isInteger(product.price) && product.price > 0) {
+    button.dataset.productId = product.id;
+    button.dataset.productName = product.name;
+    button.dataset.productPrice = String(product.price);
+  } else {
+    button.disabled = true;
+  }
 
   if (product.variants.length) {
     const updateVariant = () => {

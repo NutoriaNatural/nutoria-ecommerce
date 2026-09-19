@@ -10,7 +10,7 @@ const customer = {
   name: "Prueba Preview",
   email: "preview@example.com",
   phone: "3000000000",
-  address: "DirecciÃ³n de prueba",
+  address: "Dirección de prueba",
   addressDetail: "Complemento de prueba",
   city: "Envigado",
   region: "Antioquia",
@@ -119,7 +119,7 @@ try {
   const correctedSaved = await database.query("SELECT * FROM orders WHERE id = $1", [mismatchedOrder.order.id]);
   assert.equal(correctedSaved.rows[0].payment_status, "approved");
 
-  console.log("IntegraciÃ³n Preview: persistencia, idempotencia y estados correctos.");
+  console.log("Integración Preview: persistencia, idempotencia y estados correctos.");
 } finally {
   if (createdOrderIds.length) {
     await database.query("DELETE FROM orders WHERE id = ANY($1::uuid[])", [createdOrderIds]);

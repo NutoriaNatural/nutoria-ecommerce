@@ -10,6 +10,7 @@ const response = () => ({
 });
 
 test("informa ambiente test sin exponer credenciales", () => {
+  process.env.VERCEL_ENV = "preview";
   process.env.WOMPI_PUBLIC_KEY = " pub_test_secret-value ";
   process.env.WOMPI_INTEGRITY_SECRET = "test_integrity_secret-value\r\n";
   process.env.WOMPI_EVENTS_SECRET = " test_events_secret-value";
@@ -26,4 +27,13 @@ test("informa ambiente test sin exponer credenciales", () => {
   delete process.env.WOMPI_PUBLIC_KEY;
   delete process.env.WOMPI_INTEGRITY_SECRET;
   delete process.env.WOMPI_EVENTS_SECRET;
+  delete process.env.VERCEL_ENV;
+});
+
+test("no publica el diagnóstico fuera de Preview", () => {
+  process.env.VERCEL_ENV = "production";
+  const result = response();
+  handler({ method: "GET" }, result);
+  assert.equal(result.statusCode, 404);
+  delete process.env.VERCEL_ENV;
 });

@@ -31,7 +31,7 @@ try {
         name: "Prueba API Preview",
         email: "api-preview@example.com",
         phone: "3000000000",
-        address: "DirecciÃ³n de prueba",
+        address: "Dirección de prueba",
         addressDetail: "Detalle de prueba",
         city: "Envigado",
         region: "Antioquia",

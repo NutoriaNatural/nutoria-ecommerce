@@ -9,9 +9,13 @@ const environmentValue = (...values) =>
   values.find((value) => typeof value === "string" && value.trim())?.trim();
 
 export default function handler(request, response) {
+  if (process.env.VERCEL_ENV !== "preview") {
+    return response.status(404).json({ error: "No encontrado." });
+  }
+
   if (request.method !== "GET") {
     response.setHeader("Allow", "GET");
-    return response.status(405).json({ error: "MÃ©todo no permitido." });
+    return response.status(405).json({ error: "Método no permitido." });
   }
 
   const publicKey = environmentValue(process.env.WOMPI_PUBLIC_KEY, process.env.WOMPI_PUBLIC_KEY_PROD);

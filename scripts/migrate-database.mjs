@@ -28,7 +28,7 @@ try {
     const sql = await readFile(new URL(name, migrationsUrl), "utf8");
     await client.query(sql);
     await client.query("INSERT INTO schema_migrations (name) VALUES ($1)", [name]);
-    console.log(`MigraciÃ³n aplicada: ${name}`);
+    console.log(`Migración aplicada: ${name}`);
   }
 
   await client.query("COMMIT");

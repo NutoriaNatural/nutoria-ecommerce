@@ -2,6 +2,8 @@ import { trackBeginCheckout, trackCompletedPurchase } from "./analytics.mjs";
 
 const STORAGE_KEY = "nutoria_cart";
 const CHECKOUT_KEY = "nutoria_checkout_key";
+const PAYMENT_STATUS_ATTEMPTS = 15;
+const PAYMENT_STATUS_DELAY_MS = 2000;
 
 export function calculateShipping(subtotal) {
   if (subtotal <= 0) return 0;
@@ -92,6 +94,28 @@ const readStoredItems = () => {
     return [];
   }
 };
+
+const wait = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
+
+export async function waitForPaymentStatus(
+  transactionId,
+  {
+    attempts = PAYMENT_STATUS_ATTEMPTS,
+    delayMs = PAYMENT_STATUS_DELAY_MS,
+    request = fetch,
+    pause = wait,
+  } = {},
+) {
+  let result;
+  for (let attempt = 0; attempt < attempts; attempt += 1) {
+    const response = await request(`/api/wompi/transaction?id=${encodeURIComponent(transactionId)}`);
+    result = await response.json();
+    if (!response.ok) throw new Error(result.error || "No fue posible consultar el pago.");
+    if (result.status !== "PENDING" || attempt === attempts - 1) return result;
+    await pause(delayMs);
+  }
+  return result;
+}
 
 function initializeCart() {
   const dialog = document.querySelector("#cart-dialog");
@@ -260,10 +284,8 @@ function initializeCart() {
   if (transactionId && paymentStatus) {
     paymentStatus.hidden = false;
     paymentStatus.textContent = "Verificando el resultado del pago…";
-    fetch(`/api/wompi/transaction?id=${encodeURIComponent(transactionId)}`)
-      .then((response) => response.json().then((result) => ({ ok: response.ok, result })))
-      .then(({ ok, result }) => {
-        if (!ok) throw new Error(result.error);
+    waitForPaymentStatus(transactionId)
+      .then((result) => {
         if (result.status === "APPROVED") {
           paymentStatus.textContent = "Pago aprobado. Tu pedido quedó confirmado.";
           const marker = `nutoria_purchase_${result.id}`;

@@ -25,7 +25,7 @@ export function createIntegritySignature(reference, amountInCents, currency, int
 export default async function handler(request, response) {
   if (request.method !== "POST") {
     response.setHeader("Allow", "POST");
-    return json(response, 405, { error: "MÃ©todo no permitido." });
+    return json(response, 405, { error: "Método no permitido." });
   }
 
   const publicKey = environmentValue(process.env.WOMPI_PUBLIC_KEY, process.env.WOMPI_PUBLIC_KEY_PROD);
@@ -35,7 +35,7 @@ export default async function handler(request, response) {
     process.env.WOMPI_INTEGRITY_KEY,
   );
   if (!publicKey || !integritySecret) {
-    return json(response, 503, { error: "El pago con Wompi aÃºn no estÃ¡ configurado." });
+    return json(response, 503, { error: "El pago con Wompi aún no está configurado." });
   }
 
   try {

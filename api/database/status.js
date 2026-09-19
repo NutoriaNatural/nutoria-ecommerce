@@ -1,9 +1,13 @@
 import { getDatabase } from "../../db/client.mjs";
 
 export default async function handler(request, response) {
+  if (process.env.VERCEL_ENV !== "preview") {
+    return response.status(404).json({ error: "No encontrado." });
+  }
+
   if (request.method !== "GET") {
     response.setHeader("Allow", "GET");
-    return response.status(405).json({ error: "MÃ©todo no permitido." });
+    return response.status(405).json({ error: "Método no permitido." });
   }
 
   if (!process.env.POSTGRES_URL) {
@@ -39,7 +43,7 @@ export default async function handler(request, response) {
       },
     });
   } catch (error) {
-    console.error("FallÃ³ el diagnÃ³stico seguro de PostgreSQL.", { code: error.code });
+    console.error("Falló el diagnóstico seguro de PostgreSQL.", { code: error.code });
     return response.status(503).json({
       service: "postgres",
       configured: true,
