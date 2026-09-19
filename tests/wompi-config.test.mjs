@@ -10,9 +10,9 @@ const response = () => ({
 });
 
 test("informa ambiente test sin exponer credenciales", () => {
-  process.env.WOMPI_PUBLIC_KEY = "pub_test_secret-value";
-  process.env.WOMPI_INTEGRITY_SECRET = "test_integrity_secret-value";
-  process.env.WOMPI_EVENTS_SECRET = "test_events_secret-value";
+  process.env.WOMPI_PUBLIC_KEY = " pub_test_secret-value ";
+  process.env.WOMPI_INTEGRITY_SECRET = "test_integrity_secret-value\r\n";
+  process.env.WOMPI_EVENTS_SECRET = " test_events_secret-value";
   const result = response();
   handler({ method: "GET" }, result);
   assert.equal(result.statusCode, 200);

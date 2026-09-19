@@ -8,7 +8,9 @@ const json = (response, status, body) => {
 
 const getProperty = (data, path) => path.split(".").reduce((value, key) => value?.[key], data);
 const getEventSecret = () =>
-  process.env.WOMPI_EVENTS_SECRET || process.env.WOMPI_EVENT_SECRET || process.env.WOMPI_SECRET_EVENTS;
+  [process.env.WOMPI_EVENTS_SECRET, process.env.WOMPI_EVENT_SECRET, process.env.WOMPI_SECRET_EVENTS]
+    .find((value) => typeof value === "string" && value.trim())
+    ?.trim();
 
 const parseBody = (body) => {
   if (body && typeof body === "object" && !Buffer.isBuffer(body)) return body;

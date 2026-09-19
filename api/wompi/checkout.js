@@ -1,6 +1,9 @@
 import { createHash } from "node:crypto";
 import { createOrder } from "../../lib/orders.mjs";
 
+const environmentValue = (...values) =>
+  values.find((value) => typeof value === "string" && value.trim())?.trim();
+
 const json = (response, status, body) => {
   response.status(status).setHeader("Content-Type", "application/json; charset=utf-8");
   response.end(JSON.stringify(body));
@@ -13,17 +16,24 @@ export function paymentReturnUrl(environment = process.env) {
   return `${environment.APP_BASE_URL || "https://nutoria.com.co"}/?payment=return`;
 }
 
+export function createIntegritySignature(reference, amountInCents, currency, integritySecret) {
+  return createHash("sha256")
+    .update(`${reference}${amountInCents}${currency}${integritySecret.trim()}`, "utf8")
+    .digest("hex");
+}
+
 export default async function handler(request, response) {
   if (request.method !== "POST") {
     response.setHeader("Allow", "POST");
     return json(response, 405, { error: "MÃ©todo no permitido." });
   }
 
-  const publicKey = process.env.WOMPI_PUBLIC_KEY || process.env.WOMPI_PUBLIC_KEY_PROD;
-  const integritySecret =
-    process.env.WOMPI_INTEGRITY_SECRET ||
-    process.env.WOMPI_INTEGRITY_SECRET_PROD ||
-    process.env.WOMPI_INTEGRITY_KEY;
+  const publicKey = environmentValue(process.env.WOMPI_PUBLIC_KEY, process.env.WOMPI_PUBLIC_KEY_PROD);
+  const integritySecret = environmentValue(
+    process.env.WOMPI_INTEGRITY_SECRET,
+    process.env.WOMPI_INTEGRITY_SECRET_PROD,
+    process.env.WOMPI_INTEGRITY_KEY,
+  );
   if (!publicKey || !integritySecret) {
     return json(response, 503, { error: "El pago con Wompi aÃºn no estÃ¡ configurado." });
   }
@@ -35,9 +45,12 @@ export default async function handler(request, response) {
       idempotencyKey: request.headers["idempotency-key"],
     });
     const amountInCents = order.total * 100;
-    const signature = createHash("sha256")
-      .update(`${order.reference}${amountInCents}${order.currency}${integritySecret}`, "utf8")
-      .digest("hex");
+    const signature = createIntegritySignature(
+      order.reference,
+      amountInCents,
+      order.currency,
+      integritySecret,
+    );
     return json(response, 200, {
       checkoutUrl: "https://checkout.wompi.co/p/",
       reference: order.reference,
