@@ -9,7 +9,10 @@ try {
     SELECT table_name
     FROM information_schema.tables
     WHERE table_schema = 'public'
-      AND table_name IN ('orders', 'order_items', 'payment_events', 'schema_migrations')
+      AND table_name IN (
+        'orders', 'order_items', 'payment_events', 'schema_migrations',
+        'order_status_history', 'notification_jobs'
+      )
     ORDER BY table_name
   `);
   const migrations = await client.query("SELECT name FROM schema_migrations ORDER BY name");

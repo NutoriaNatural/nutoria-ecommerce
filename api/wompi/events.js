@@ -1,5 +1,6 @@
 import { createHash, timingSafeEqual } from "node:crypto";
 import { expectedWompiEnvironment, processVerifiedWompiEvent } from "../../lib/wompi-events.mjs";
+import { dispatchOrderNotifications } from "../../lib/notifications.mjs";
 
 const json = (response, status, body) => {
   response.status(status).setHeader("Content-Type", "application/json; charset=utf-8");
@@ -65,6 +66,13 @@ export default async function handler(request, response) {
 
   try {
     const result = await processVerifiedWompiEvent(event);
+    if (result.newlyApproved && result.orderId) {
+      const notifications = await dispatchOrderNotifications(result.orderId).catch((error) => {
+        console.error("El pago quedo guardado, pero fallo el envio de notificaciones.", { code: error.code });
+        return [];
+      });
+      return json(response, 200, { received: true, ...result, notifications });
+    }
     return json(response, 200, { received: true, ...result });
   } catch (error) {
     console.error("No fue posible procesar el evento verificado de Wompi.", { code: error.code });

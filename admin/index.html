@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="es-CO">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Pedidos | Administración Nutoria</title>
+  <link rel="icon" href="/assets/icons/favicon-32x32.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/admin/styles.css">
+</head>
+<body>
+  <header class="admin-header">
+    <a href="/" aria-label="Ir a Nutoria"><img src="/assets/images/logo-nutoria-180.png" alt="Nutoria"></a>
+    <div><h1>Pedidos</h1><p>Administración privada</p></div>
+    <button id="logout" class="secondary" hidden>Cerrar sesión</button>
+  </header>
+
+  <main>
+    <section id="login-view" class="login-card" aria-labelledby="login-title">
+      <h2 id="login-title">Ingresar al panel</h2>
+      <form id="login-form">
+        <label>Contraseña administrativa
+          <input id="password" name="password" type="password" autocomplete="current-password" required>
+        </label>
+        <button type="submit">Ingresar</button>
+        <p id="login-message" class="message" role="status"></p>
+      </form>
+    </section>
+
+    <section id="orders-view" hidden>
+      <div class="toolbar">
+        <label>Filtrar por estado
+          <select id="status-filter">
+            <option value="">Todos</option>
+            <option value="awaiting_payment">Esperando pago</option>
+            <option value="ready_to_prepare">Por preparar</option>
+            <option value="preparing">En preparación</option>
+            <option value="dispatched">Despachado</option>
+            <option value="delivered">Entregado</option>
+            <option value="cancelled">Cancelado</option>
+          </select>
+        </label>
+        <button id="refresh" class="secondary">Actualizar</button>
+      </div>
+      <p id="orders-message" class="message" role="status"></p>
+      <div class="orders-layout">
+        <div id="orders-list" class="orders-list" aria-label="Lista de pedidos"></div>
+        <article id="order-detail" class="order-detail" aria-live="polite">
+          <p>Selecciona un pedido para consultar todos sus datos.</p>
+        </article>
+      </div>
+    </section>
+  </main>
+  <script type="module" src="/admin/admin.mjs"></script>
+</body>
+</html>
