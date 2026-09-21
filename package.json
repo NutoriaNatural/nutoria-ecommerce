@@ -6,7 +6,7 @@
     "db:inspect": "node scripts/inspect-database.mjs",
     "db:migrate": "node scripts/migrate-database.mjs",
     "db:verify": "node scripts/verify-database.mjs",
-    "test": "node --test --test-isolation=none cart.test.mjs tests/order-pricing.test.mjs tests/wompi-events.test.mjs tests/wompi-config.test.mjs tests/checkout-environment.test.mjs tests/site-audit.test.mjs tests/admin-auth.test.mjs tests/admin-panel.test.mjs"
+    "test": "node --test --test-isolation=none cart.test.mjs tests/order-pricing.test.mjs tests/wompi-events.test.mjs tests/wompi-config.test.mjs tests/checkout-environment.test.mjs tests/site-audit.test.mjs tests/admin-auth.test.mjs tests/admin-panel.test.mjs tests/whatsapp-webhook.test.mjs"
   },
   "dependencies": {
     "pg": "^8.13.1"
