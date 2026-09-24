@@ -9,4 +9,6 @@ test("el panel privado no se indexa y no incrusta datos con HTML inseguro", asyn
   ]);
   assert.match(html, /name="robots" content="noindex,nofollow"/);
   assert.doesNotMatch(script, /innerHTML|insertAdjacentHTML|document\.write/);
+  assert.match(script, /customer_email/);
+  assert.match(script, /Enviar o reintentar notificaciones/);
 });

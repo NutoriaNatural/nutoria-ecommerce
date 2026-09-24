@@ -32,7 +32,7 @@ try {
   let detail = await getOrderDetail(orderId, database);
   assert.equal(detail.payment_status, "approved");
   assert.equal(detail.fulfillment_status, "ready_to_prepare");
-  assert.deepEqual(detail.notifications.map((job) => job.channel), ["email", "whatsapp"]);
+  assert.deepEqual(detail.notifications.map((job) => job.channel), ["email", "whatsapp", "customer_email"]);
 
   await updateFulfillmentStatus({ id: orderId, status: "preparing", notes: "Prueba interna" }, database);
   await updateFulfillmentStatus({ id: orderId, status: "dispatched", notes: "Transportadora de prueba" }, database);
@@ -40,6 +40,10 @@ try {
   detail = await getOrderDetail(orderId, database);
   assert.equal(detail.fulfillment_status, "delivered");
   assert.equal(detail.history.length, 4);
+  assert.deepEqual(
+    detail.notifications.filter((job) => job.channel === "customer_email").map((job) => job.notification_type),
+    ["customer_order_confirmed", "customer_preparing", "customer_dispatched", "customer_delivered"],
+  );
   const listed = await listOrders({ status: "delivered" }, database);
   assert.equal(listed.some((order) => order.id === orderId), true);
   console.log("Panel Preview: pedido, cola unica y seguimiento hasta entrega verificados.");

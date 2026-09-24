@@ -11,6 +11,11 @@ const labels = {
   preparing: "En preparación", dispatched: "Despachado",
   delivered: "Entregado", cancelled: "Cancelado",
 };
+const notificationLabels = {
+  email: "Correo administrativo",
+  customer_email: "Correo al cliente",
+  whatsapp: "WhatsApp administrativo",
+};
 const money = (cents) => new Intl.NumberFormat("es-CO", { style:"currency", currency:"COP", maximumFractionDigits:0 }).format(Number(cents) / 100);
 const date = (value) => value ? new Intl.DateTimeFormat("es-CO", { dateStyle:"medium", timeStyle:"short" }).format(new Date(value)) : "—";
 
@@ -96,13 +101,13 @@ async function loadDetail(id) {
     if (!order.notifications.length) detail.append(node("p", "Aún no hay notificaciones asociadas."));
     order.notifications.forEach((notification) => {
       const item = node("div", null, "notification");
-      item.append(node("strong", `${notification.channel}: ${notification.status}`));
+      item.append(node("strong", `${notificationLabels[notification.channel] || notification.channel}: ${notification.status}`));
       if (notification.sent_at) item.append(node("span", ` — ${date(notification.sent_at)}`));
       if (notification.last_error) item.append(node("p", notification.last_error, "error"));
       detail.append(item);
     });
-    if (order.notifications.some((item) => item.status === "failed" && item.attempts < 5)) {
-      const retry = node("button", "Reintentar notificaciones", "secondary");
+    if (order.notifications.some((item) => ["pending", "failed"].includes(item.status) && item.attempts < 5)) {
+      const retry = node("button", "Enviar o reintentar notificaciones", "secondary");
       retry.addEventListener("click", async () => {
         retry.disabled = true;
         try { await api("/api/admin/notifications", { method:"POST", body:JSON.stringify({ id }) }); await loadDetail(id); }

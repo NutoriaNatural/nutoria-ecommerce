@@ -1,5 +1,6 @@
 import { isAdminRequest } from "../../lib/admin-auth.mjs";
 import { getOrderDetail, updateFulfillmentStatus } from "../../lib/admin-orders.mjs";
+import { dispatchOrderNotifications } from "../../lib/notifications.mjs";
 
 const json = (response, status, body) => {
   response.status(status).setHeader("Content-Type", "application/json; charset=utf-8");
@@ -18,7 +19,15 @@ export default async function handler(request, response) {
     }
     if (request.method === "PATCH") {
       const updated = await updateFulfillmentStatus({ id, status: request.body?.status, notes: request.body?.notes });
-      return updated ? json(response, 200, { updated: true }) : json(response, 404, { error: "Pedido no encontrado." });
+      if (!updated) return json(response, 404, { error: "Pedido no encontrado." });
+      let notifications = [];
+      if (updated.customerNotificationQueued) {
+        notifications = await dispatchOrderNotifications(id).catch((error) => {
+          console.error("No fue posible enviar el seguimiento al cliente.", { code: error.code });
+          return [];
+        });
+      }
+      return json(response, 200, { updated: true, notifications });
     }
     response.setHeader("Allow", "GET, PATCH");
     return json(response, 405, { error: "Metodo no permitido." });

@@ -53,6 +53,18 @@ Ejemplo de contenido para someter a aprobacion en Meta:
 El numero receptor debe ser diferente del numero emisor de WhatsApp Cloud si Meta no
 permite que la cuenta se envie mensajes a si misma.
 
+## Correos transaccionales para el cliente
+
+Cuando Wompi confirma un pago aprobado, el sistema crea una notificacion independiente
+para `customer_email`. Tambien crea seguimientos cuando el pedido cambia a en preparacion,
+despachado, entregado o cancelado. Cada evento usa una clave idempotente distinta para
+evitar envios duplicados.
+
+Los correos al cliente usan `RESEND_API_KEY` y `ORDER_FROM_EMAIL`, pero nunca incluyen
+el enlace ni las credenciales del panel administrativo. La migracion
+`004_customer_order_notifications.sql` agrega los tipos de seguimiento y prepara una
+confirmacion pendiente para los pedidos aprobados que ya existan.
+
 ## Comportamiento seguro
 
 El webhook de Wompi confirma y guarda el pago antes de intentar cualquier mensaje.
