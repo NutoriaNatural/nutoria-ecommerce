@@ -36,10 +36,18 @@ try {
 
   await updateFulfillmentStatus({ id: orderId, status: "preparing", notes: "Prueba interna" }, database);
   await updateFulfillmentStatus({ id: orderId, status: "dispatched", notes: "Transportadora de prueba" }, database);
+  await database.query(
+    "DELETE FROM notification_jobs WHERE order_id = $1 AND notification_type = 'customer_dispatched'",
+    [orderId],
+  );
+  const repaired = await updateFulfillmentStatus({
+    id: orderId, status: "dispatched", notes: "Reconstruccion idempotente",
+  }, database);
+  assert.equal(repaired.customerNotificationQueued, true);
   await updateFulfillmentStatus({ id: orderId, status: "delivered", notes: "Entrega de prueba" }, database);
   detail = await getOrderDetail(orderId, database);
   assert.equal(detail.fulfillment_status, "delivered");
-  assert.equal(detail.history.length, 4);
+  assert.equal(detail.history.length, 5);
   assert.deepEqual(
     detail.notifications.filter((job) => job.channel === "customer_email").map((job) => job.notification_type),
     ["customer_order_confirmed", "customer_preparing", "customer_dispatched", "customer_delivered"],
