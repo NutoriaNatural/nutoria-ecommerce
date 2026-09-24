@@ -44,7 +44,15 @@ try {
     id: orderId, status: "dispatched", notes: "Reconstruccion idempotente",
   }, database);
   assert.equal(repaired.customerNotificationQueued, true);
+  await assert.rejects(
+    updateFulfillmentStatus({ id: orderId, status: "cancelled", notes: "" }, database),
+    /motivo de la cancelacion/,
+  );
   await updateFulfillmentStatus({ id: orderId, status: "delivered", notes: "Entrega de prueba" }, database);
+  await assert.rejects(
+    updateFulfillmentStatus({ id: orderId, status: "cancelled", notes: "No debe permitirse" }, database),
+    /entregado no se puede cancelar/,
+  );
   detail = await getOrderDetail(orderId, database);
   assert.equal(detail.fulfillment_status, "delivered");
   assert.equal(detail.history.length, 5);

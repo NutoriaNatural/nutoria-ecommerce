@@ -11,4 +11,7 @@ test("el panel privado no se indexa y no incrusta datos con HTML inseguro", asyn
   assert.doesNotMatch(script, /innerHTML|insertAdjacentHTML|document\.write/);
   assert.match(script, /customer_email/);
   assert.match(script, /Enviar o reintentar notificaciones/);
+  assert.match(script, /no reembolsa automaticamente el pago en Wompi/);
+  assert.match(script, /normalFulfillmentStatuses/);
+  assert.match(script, /window\.confirm/);
 });

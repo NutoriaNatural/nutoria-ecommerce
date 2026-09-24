@@ -11,6 +11,7 @@ const labels = {
   preparing: "En preparación", dispatched: "Despachado",
   delivered: "Entregado", cancelled: "Cancelado",
 };
+const normalFulfillmentStatuses = ["ready_to_prepare", "preparing", "dispatched", "delivered"];
 const notificationLabels = {
   email: "Correo administrativo",
   customer_email: "Correo al cliente",
@@ -116,9 +117,17 @@ async function loadDetail(id) {
       detail.append(retry);
     }
     const form = node("form", null, "status-form");
-    const statusLabel = node("label", "Estado del despacho");
+    const statusLabel = node("label", "Estado normal del despacho");
     const select = node("select"); select.name = "status";
-    Object.entries(labels).forEach(([value, text]) => { const option=node("option",text); option.value=value; option.selected=value===order.fulfillment_status; select.append(option); });
+    if (!normalFulfillmentStatuses.includes(order.fulfillment_status)) {
+      const placeholder = node("option", labels[order.fulfillment_status] || "Selecciona un estado");
+      placeholder.value = ""; placeholder.selected = true; placeholder.disabled = true;
+      select.append(placeholder);
+    }
+    normalFulfillmentStatuses.forEach((value) => {
+      const option=node("option",labels[value]); option.value=value;
+      option.selected=value===order.fulfillment_status; select.append(option);
+    });
     statusLabel.append(select);
     const notesLabel = node("label", "Notas internas");
     const notes = node("textarea"); notes.name="notes"; notes.maxLength=500; notes.value=order.fulfillment_notes || ""; notesLabel.append(notes);
@@ -131,6 +140,29 @@ async function loadDetail(id) {
       catch (error) { message.textContent=error.message; save.disabled=false; }
     });
     detail.append(form);
+    if (!["delivered", "cancelled"].includes(order.fulfillment_status)) {
+      const cancelSection = node("section", null, "cancel-section");
+      cancelSection.append(
+        node("h3", "Cancelar pedido"),
+        node("p", "Esta acción cambia el seguimiento, pero no genera un reembolso automático en Wompi."),
+      );
+      const cancelButton = node("button", "Cancelar pedido", "danger");
+      cancelButton.type = "button";
+      cancelButton.addEventListener("click", async () => {
+        const reason = notes.value.trim();
+        if (!reason) { message.textContent="Escribe primero el motivo en Notas internas."; notes.focus(); return; }
+        if (!window.confirm("¿Confirmas la cancelación? Esta acción no reembolsa automaticamente el pago en Wompi.")) return;
+        cancelButton.disabled = true; message.textContent="Cancelando pedido…";
+        try {
+          await api(`/api/admin/order?id=${encodeURIComponent(id)}`, {
+            method:"PATCH", body:JSON.stringify({ id, status:"cancelled", notes:reason }),
+          });
+          await loadOrders(); await loadDetail(id);
+        } catch (error) { message.textContent=error.message; cancelButton.disabled=false; }
+      });
+      cancelSection.append(cancelButton);
+      detail.append(cancelSection);
+    }
   } catch (error) { detail.replaceChildren(node("p", error.message, "error")); }
 }
 
