@@ -37,16 +37,18 @@ Configurar:
 - `WHATSAPP_GRAPH_VERSION`: version activa de Graph API indicada por Meta.
 - `WHATSAPP_TEMPLATE_LANGUAGE`: codigo aprobado; normalmente `es_CO`.
 
-La plantilla debe tener exactamente cuatro variables de cuerpo y en este orden:
+La plantilla debe tener exactamente seis variables de cuerpo y en este orden:
 
 1. referencia del pedido;
 2. nombre del cliente;
 3. total pagado;
-4. ciudad y departamento de entrega.
+4. ciudad y departamento de entrega;
+5. direccion principal y complemento de entrega, omitiendo el complemento si esta vacio;
+6. telefono de contacto del cliente.
 
 Ejemplo de contenido para someter a aprobacion en Meta:
 
-`Pedido pagado {{1}}. Cliente: {{2}}. Total: {{3}}. Entrega: {{4}}. Revisalo en el panel de Nutoria.`
+`Pedido pagado {{1}}. Cliente: {{2}}. Total: {{3}}. Entrega: {{4}}. Direccion: {{5}}. Telefono: {{6}}. Revisalo en el panel de Nutoria.`
 
 El numero receptor debe ser diferente del numero emisor de WhatsApp Cloud si Meta no
 permite que la cuenta se envie mensajes a si misma.
