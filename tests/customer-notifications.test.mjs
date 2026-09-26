@@ -6,6 +6,7 @@ const order = {
   reference: "NUTORIA-PRUEBA-1",
   customer_name: "Cliente <Nutoria>",
   customer_email: "cliente@example.com",
+  document_number: "DOCUMENTO-NO-DEBE-APARECER",
   shipping_address: "Carrera 1 # 2-3",
   shipping_address_detail: "Apto 4",
   shipping_city: "Envigado",
@@ -41,6 +42,8 @@ test("genera confirmacion factual para el cliente sin exponer el panel", () => {
   assert.match(email.text, /Información de entrega/);
   assert.doesNotMatch(email.html, /\/admin\//);
   assert.doesNotMatch(email.text, /\/admin\//);
+  assert.doesNotMatch(email.html, /DOCUMENTO-NO-DEBE-APARECER/);
+  assert.doesNotMatch(email.text, /DOCUMENTO-NO-DEBE-APARECER/);
 });
 
 test("genera los seguimientos aprobados con la misma referencia", () => {
@@ -117,4 +120,10 @@ test("omite el complemento cuando no existe y escapa contenido dinamico", () => 
 
 test("rechaza tipos de correo al cliente no definidos", () => {
   assert.throws(() => customerOrderEmail(order, "otro"), /invalido/);
+});
+
+test("las notificaciones no incluyen el documento del cliente", async () => {
+  const source = await import("node:fs/promises").then(({ readFile }) =>
+    readFile(new URL("../lib/notifications.mjs", import.meta.url), "utf8"));
+  assert.doesNotMatch(source, /document_number|documentNumber|Número de documento/);
 });

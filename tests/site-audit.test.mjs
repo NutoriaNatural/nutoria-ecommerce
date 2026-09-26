@@ -38,6 +38,15 @@ test("productos sin precio suministrado no pueden entrar al checkout", () => {
   assert.equal(productIndex.has("producto-7"), false);
 });
 
+test("el checkout exige el documento sin publicarlo en URLs", () => {
+  const index = read("index.html");
+  const field = index.match(/<input name="documentNumber"[^>]*>/)?.[0] || "";
+  assert.match(field, /type="text"/);
+  assert.match(field, /maxlength="40"/);
+  assert.match(field, /required/);
+  assert.doesNotMatch(index, /[?&]document(?:Number|_number)=/);
+});
+
 test("PostgreSQL conserva validación completa del certificado TLS", () => {
   const value = secureConnectionString("postgresql://user:password@example.com/db?sslmode=require");
   assert.equal(new URL(value).searchParams.get("sslmode"), "verify-full");

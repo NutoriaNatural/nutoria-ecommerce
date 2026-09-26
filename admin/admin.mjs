@@ -83,6 +83,7 @@ async function loadDetail(id) {
     addField(grid, "Pago", order.payment_status);
     addField(grid, "Preparación", labels[order.fulfillment_status] || order.fulfillment_status);
     addField(grid, "Cliente", order.customer_name);
+    addField(grid, "Documento", order.document_number || "No registrado");
     addField(grid, "Teléfono", order.customer_phone);
     addField(grid, "Correo", order.customer_email);
     addField(grid, "Fecha", date(order.created_at));

@@ -31,6 +31,7 @@ try {
         name: "Prueba API Preview",
         email: "api-preview@example.com",
         phone: "3000000000",
+        documentNumber: "CC 987654321",
         address: "Dirección de prueba",
         addressDetail: "Detalle de prueba",
         city: "Envigado",
@@ -48,6 +49,10 @@ try {
   assert.equal(stored.rowCount, 1);
   orderId = stored.rows[0].id;
   assert.equal(stored.rows[0].shipping_address_detail, "Detalle de prueba");
+  assert.equal(stored.rows[0].document_number, "CC 987654321");
+  assert.equal(JSON.stringify(checkoutResponse.body).includes("CC 987654321"), false);
+  assert.equal(Object.keys(checkoutResponse.body.parameters).some((key) => /document/i.test(key)), false);
+  assert.equal(checkoutResponse.headers["Cache-Control"], "no-store");
 
   const repeatedResponse = response();
   await checkoutHandler(checkoutRequest, repeatedResponse);
@@ -93,6 +98,8 @@ try {
   assert.equal(statusResponse.statusCode, 200);
   assert.equal(statusResponse.body.status, "APPROVED");
   assert.equal(statusResponse.body.orderStatus, "confirmed");
+  assert.equal(Object.hasOwn(statusResponse.body, "documentNumber"), false);
+  assert.equal(Object.hasOwn(statusResponse.body, "document_number"), false);
 
   console.log("API Preview: checkout persistido, webhook firmado y estado confirmado correctamente.");
 } finally {

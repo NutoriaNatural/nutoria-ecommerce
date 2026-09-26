@@ -13,6 +13,7 @@ try {
     requestedItems: [{ id: "producto-2-125g", quantity: 2 }],
     customerInput: {
       name: "Prueba Panel Preview", email: "admin-preview@example.com", phone: "3000000000",
+      documentNumber: "CC 1122334455",
       address: "Direccion de prueba", addressDetail: "Detalle", city: "Envigado", region: "Antioquia",
     },
   }, database);
@@ -32,6 +33,7 @@ try {
   let detail = await getOrderDetail(orderId, database);
   assert.equal(detail.payment_status, "approved");
   assert.equal(detail.fulfillment_status, "ready_to_prepare");
+  assert.equal(detail.document_number, "CC 1122334455");
   assert.deepEqual(detail.notifications.map((job) => job.channel), ["email", "whatsapp", "customer_email"]);
 
   await updateFulfillmentStatus({ id: orderId, status: "preparing", notes: "Prueba interna" }, database);
@@ -61,7 +63,11 @@ try {
     ["customer_order_confirmed", "customer_preparing", "customer_dispatched", "customer_delivered"],
   );
   const listed = await listOrders({ status: "delivered" }, database);
-  assert.equal(listed.some((order) => order.id === orderId), true);
+  const listedOrder = listed.find((order) => order.id === orderId);
+  assert.ok(listedOrder);
+  assert.equal(Object.hasOwn(listedOrder, "document_number"), false);
+  assert.equal(Object.hasOwn(listedOrder, "customer_email"), false);
+  assert.equal(Object.hasOwn(listedOrder, "customer_phone"), false);
   console.log("Panel Preview: pedido, cola unica y seguimiento hasta entrega verificados.");
 } finally {
   if (orderId) await database.query("DELETE FROM orders WHERE id = $1", [orderId]);

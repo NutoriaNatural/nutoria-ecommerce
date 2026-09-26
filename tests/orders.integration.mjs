@@ -10,6 +10,7 @@ const customer = {
   name: "Prueba Preview",
   email: "preview@example.com",
   phone: "3000000000",
+  documentNumber: "CC 123456789",
   address: "Dirección de prueba",
   addressDetail: "Complemento de prueba",
   city: "Envigado",
@@ -84,6 +85,11 @@ try {
   assert.equal(saved.rows[0].payment_status, "approved");
   assert.equal(saved.rows[0].order_status, "confirmed");
   assert.equal(saved.rows[0].shipping_address_detail, "Complemento de prueba");
+  assert.equal(saved.rows[0].document_number, "CC 123456789");
+
+  await database.query("UPDATE orders SET document_number = NULL WHERE id = $1", [first.order.id]);
+  const historical = await database.query("SELECT document_number FROM orders WHERE id = $1", [first.order.id]);
+  assert.equal(historical.rows[0].document_number, null);
 
   const rejectedOrder = await createOrder({
     requestedItems: [{ id: "producto-2-125g", quantity: 1 }],

@@ -6,6 +6,7 @@ const environmentValue = (...values) =>
 
 const json = (response, status, body) => {
   response.status(status).setHeader("Content-Type", "application/json; charset=utf-8");
+  response.setHeader("Cache-Control", "no-store");
   response.end(JSON.stringify(body));
 };
 
