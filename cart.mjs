@@ -210,6 +210,7 @@ function initializeCart() {
   });
 
   document.querySelectorAll(".product-card__button[data-product-id]").forEach((button) => {
+    let feedbackTimer;
     button.addEventListener("click", () => {
       cart.add({
         id: button.dataset.productId,
@@ -218,7 +219,13 @@ function initializeCart() {
       });
       persist();
       render();
-      dialog.showModal();
+      window.clearTimeout(feedbackTimer);
+      button.classList.add("is-added");
+      button.textContent = "Agregado ✓";
+      feedbackTimer = window.setTimeout(() => {
+        button.classList.remove("is-added");
+        button.textContent = "Agregar";
+      }, 1400);
     });
   });
 

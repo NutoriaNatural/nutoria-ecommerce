@@ -330,6 +330,7 @@ h2 {
 
 .product-grid {
   display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1.25rem;
   margin-top: 2rem;
 }
@@ -467,6 +468,11 @@ h2 {
   opacity: 0.62;
 }
 
+.product-card__button.is-added {
+  color: var(--blanco);
+  background: var(--verde-nutoria);
+}
+
 .product-card__whatsapp {
   display: inline-flex;
   min-height: 48px;
@@ -484,6 +490,67 @@ h2 {
 .product-card__whatsapp:hover,
 .product-card__whatsapp:focus-visible {
   border-color: var(--dorado-nutoria);
+}
+
+@media (max-width: 719px) {
+  .product-grid {
+    gap: 0.75rem;
+    margin-top: 1.25rem;
+  }
+
+  .product-card {
+    border-radius: calc(var(--radio) - 2px);
+    contain-intrinsic-size: auto 24rem;
+  }
+
+  .product-card__body {
+    gap: 0.65rem;
+    padding: 0.75rem;
+  }
+
+  .product-card__name {
+    display: -webkit-box;
+    min-height: 2.2em;
+    overflow: hidden;
+    font-size: clamp(1.05rem, 4.8vw, 1.25rem);
+    line-height: 1.1;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  .product-card__field {
+    gap: 0.25rem;
+    min-width: 0;
+  }
+
+  .product-card__label {
+    font-size: 0.75rem;
+  }
+
+  .product-card__presentation {
+    min-width: 0;
+    min-height: 44px;
+    padding: 0.45rem;
+    font-size: 0.875rem;
+  }
+
+  .product-card__value {
+    min-height: 1.35em;
+    overflow-wrap: anywhere;
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+
+  .product-card__button {
+    width: 100%;
+    min-height: 48px;
+    padding: 0.65rem 0.5rem;
+  }
+
+  .product-card__details,
+  .product-card__whatsapp {
+    display: none;
+  }
 }
 
 .information-grid {

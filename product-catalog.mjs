@@ -188,7 +188,7 @@ function createProductCard(product) {
   const button = document.createElement("button");
   button.className = "product-card__button";
   button.type = "button";
-  button.textContent = "Comprar";
+  button.textContent = "Agregar";
   if (Number.isInteger(product.price) && product.price > 0) {
     button.dataset.productId = product.id;
     button.dataset.productName = product.name;
