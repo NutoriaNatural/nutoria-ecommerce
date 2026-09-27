@@ -16,10 +16,29 @@ test("las tarjetas móviles priorizan compra y conservan objetivos táctiles", (
   const css = read("styles.css");
   const catalog = read("product-catalog.mjs");
   assert.match(catalog, /button\.textContent = "Agregar"/);
-  assert.match(css, /\.product-card__button\s*{[^}]*min-height:\s*48px/s);
+  assert.match(css, /@media\s*\(max-width:\s*719px\)[\s\S]*?\.product-card__button\s*{[^}]*min-height:\s*44px/s);
   assert.match(css, /@media\s*\(max-width:\s*719px\)[\s\S]*?\.product-card__details,[\s\S]*?\.product-card__whatsapp\s*{\s*display:\s*none/s);
   assert.match(css, /\.product-card__image\s*{[^}]*aspect-ratio:\s*1\s*\/\s*1/s);
   assert.match(css, /\.product-card__image img\s*{[^}]*object-fit:\s*cover/s);
+  assert.match(css, /@media\s*\(max-width:\s*719px\)[\s\S]*?\.product-card__image\s*{[^}]*aspect-ratio:\s*4\s*\/\s*3/s);
+  assert.match(css, /@media\s*\(max-width:\s*719px\)[\s\S]*?\.product-card__image img\s*{[^}]*object-fit:\s*contain/s);
+  assert.match(css, /@media\s*\(max-width:\s*719px\)[\s\S]*?\.product-card__label\s*{[^}]*display:\s*none/s);
+  assert.match(css, /@media\s*\(max-width:\s*719px\)[\s\S]*?\.product-card__presentation\s*{[^}]*min-height:\s*40px/s);
+});
+
+test("WhatsApp conserva su enlace y usa un control circular accesible", () => {
+  const html = read("index.html");
+  const css = read("styles.css");
+  const whatsapp = read("whatsapp.mjs");
+  assert.match(html, /class="whatsapp-help"[^>]*data-whatsapp-general/);
+  assert.match(html, /aria-label="Contactar por WhatsApp"/);
+  assert.match(html, /class="whatsapp-help__icon"[^>]*aria-hidden="true"/);
+  assert.doesNotMatch(html, />\s*WhatsApp\s*<\/a>/);
+  assert.match(css, /\.whatsapp-help\s*{[^}]*width:\s*56px[^}]*height:\s*56px[^}]*border-radius:\s*50%/s);
+  assert.match(css, /env\(safe-area-inset-bottom\)/);
+  assert.match(css, /@media\s*\(max-width:\s*719px\)[\s\S]*?\.whatsapp-help\s*{[^}]*width:\s*54px[^}]*height:\s*54px/s);
+  assert.match(whatsapp, /document\.querySelector\("\[data-whatsapp-general\]"\)/);
+  assert.match(whatsapp, /573117411563/);
 });
 
 test("agregar actualiza el carrito, confirma visualmente y no abre el checkout", () => {
