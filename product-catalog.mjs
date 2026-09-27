@@ -100,6 +100,9 @@ const formatMoney = (value) =>
     maximumFractionDigits: 0,
   }).format(value);
 
+export const formatPresentation = (value) =>
+  value.replace(/(\d[\d.]*)\s*(mg|kg|g|ml|l)\b/giu, "$1 $2");
+
 const detailFields = [
   ["ingredients", "Ingredientes"],
   ["content", "Contenido"],
@@ -161,17 +164,17 @@ function createProductCard(product) {
   const presentationValue = document.createElement(product.variants.length ? "select" : "p");
   presentationValue.className = product.variants.length
     ? "product-card__presentation"
-    : "product-card__value";
+    : "product-card__value product-card__presentation-value";
   if (product.variants.length) {
     presentationValue.setAttribute("aria-label", `Presentación de ${product.name}`);
     product.variants.forEach((variant, variantIndex) => {
       const option = document.createElement("option");
       option.value = String(variantIndex);
-      option.textContent = variant.presentation;
+      option.textContent = formatPresentation(variant.presentation);
       presentationValue.append(option);
     });
   } else {
-    presentationValue.textContent = product.presentation;
+    presentationValue.textContent = formatPresentation(product.presentation);
   }
   presentation.append(presentationLabel, presentationValue);
 

@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
+import { formatPresentation, products } from "../product-catalog.mjs";
 
 const read = (path) => readFileSync(new URL(`../${path}`, import.meta.url), "utf8");
 
@@ -23,7 +24,16 @@ test("las tarjetas móviles priorizan compra y conservan objetivos táctiles", (
   assert.match(css, /@media\s*\(max-width:\s*719px\)[\s\S]*?\.product-card__image\s*{[^}]*aspect-ratio:\s*4\s*\/\s*3/s);
   assert.match(css, /@media\s*\(max-width:\s*719px\)[\s\S]*?\.product-card__image img\s*{[^}]*object-fit:\s*contain/s);
   assert.match(css, /@media\s*\(max-width:\s*719px\)[\s\S]*?\.product-card__label\s*{[^}]*display:\s*none/s);
-  assert.match(css, /@media\s*\(max-width:\s*719px\)[\s\S]*?\.product-card__presentation\s*{[^}]*min-height:\s*40px/s);
+  assert.match(css, /@media\s*\(max-width:\s*719px\)[\s\S]*?\.product-card__presentation,\s*\.product-card__presentation-value\s*{[^}]*min-height:\s*40px/s);
+  assert.match(catalog, /product-card__value product-card__presentation-value/);
+});
+
+test("uniforma el área de presentación y normaliza solo su texto visible", () => {
+  assert.equal(formatPresentation("1.000g"), "1.000 g");
+  assert.equal(formatPresentation("500g"), "500 g");
+  assert.equal(formatPresentation("90g (90 und)"), "90 g (90 und)");
+  assert.equal(formatPresentation("250 g"), "250 g");
+  assert.equal(products.find((product) => product.variants.length)?.variants[0].presentation, "1.000g");
 });
 
 test("WhatsApp conserva su enlace y usa un control circular accesible", () => {
