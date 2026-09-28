@@ -113,6 +113,8 @@ test("mantiene dos columnas móviles y contiene el desplazamiento en las categor
   assert.doesNotMatch(desktopCss, /\.choice-grid--categories \.choice-card__media img\s*{[^}]*object-fit:\s*contain/s);
   assert.match(css, /@media\s*\(max-width:\s*719px\)[\s\S]*?\.choice-grid--categories \.choice-card__name\s*{[^}]*min-height:\s*3\.45em/s);
   assert.match(css, /@media\s*\(max-width:\s*719px\)[\s\S]*?\.choice-grid--categories \.choice-card__media img\s*{[^}]*height:\s*auto[^}]*aspect-ratio:\s*auto[^}]*object-fit:\s*contain[^}]*object-position:\s*center/s);
+  assert.match(css, /@media\s*\(max-width:\s*719px\)[\s\S]*?\.choice-grid--categories \.choice-card__media\s*{[^}]*padding:\s*0[^}]*border:\s*0[^}]*background:\s*transparent/s);
+  assert.match(css, /@media\s*\(max-width:\s*719px\)[\s\S]*?\.choice-grid--categories \.choice-card__media img\s*{[^}]*border-radius:\s*calc\(var\(--radio\) - 2px\)/s);
   assert.doesNotMatch(css, /@media\s*\(max-width:\s*719px\)[\s\S]*?\.choice-grid--categories \.choice-card__media\s*{[^}]*aspect-ratio:\s*4\s*\/\s*3/s);
   assert.match(css, /@media\s*\(min-width:\s*1024px\)[\s\S]*?\.product-grid\s*{[^}]*repeat\(4,/s);
 });

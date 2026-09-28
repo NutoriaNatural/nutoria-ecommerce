@@ -598,7 +598,11 @@ h2 {
 
   .choice-grid--categories .choice-card__media {
     min-height: 0;
-    padding: 0.35rem;
+    overflow: visible;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
   }
 
   .choice-grid--categories .choice-card__media img {
@@ -607,6 +611,7 @@ h2 {
     aspect-ratio: auto;
     object-fit: contain;
     object-position: center;
+    border-radius: calc(var(--radio) - 2px);
   }
 
   .choice-grid--categories .choice-card__name {
