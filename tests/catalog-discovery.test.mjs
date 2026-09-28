@@ -61,6 +61,9 @@ test("la interfaz cuenta resultados, muestra estado vacío y restablece filtros"
   assert.match(html, /data-product-count[^>]*aria-live="polite"/);
   assert.match(html, /No encontramos productos con esa búsqueda\./);
   assert.match(html, /data-catalog-clear>Restablecer búsqueda y filtros/);
+  assert.match(html, /<h2 id="titulo-productos">Nuestros productos<\/h2>/);
+  assert.doesNotMatch(html, /Compra según lo que necesitas|Categorías principales/);
+  assert.doesNotMatch(html, /id="necesidades"|id="categorias"|data-catalog-category/);
   assert.match(catalog, /resultCount\.textContent = `\$\{count\} \$\{count === 1 \? "producto" : "productos"\}`/);
   assert.match(catalog, /emptyState\.hidden = count > 0/);
   assert.match(catalog, /searchInput\.value = ""/);

@@ -294,7 +294,6 @@ if (grid) {
   const resultCount = document.querySelector("[data-product-count]");
   const emptyState = document.querySelector("[data-catalog-empty]");
   const clearButton = document.querySelector("[data-catalog-clear]");
-  const featuredCategoryLinks = document.querySelectorAll("[data-catalog-category]");
   let activeCategory = "Todos";
 
   const categoryButtons = ["Todos", ...PRODUCT_CATEGORIES].map((category) => {
@@ -330,9 +329,6 @@ if (grid) {
 
   categoryButtons.forEach((button) => {
     button.addEventListener("click", () => selectCategory(button.dataset.category));
-  });
-  featuredCategoryLinks.forEach((link) => {
-    link.addEventListener("click", () => selectCategory(link.dataset.catalogCategory));
   });
   searchInput?.addEventListener("input", applyFilters);
   clearButton?.addEventListener("click", () => {
