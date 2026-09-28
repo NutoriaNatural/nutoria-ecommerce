@@ -333,20 +333,6 @@ h2 {
   justify-content: flex-start;
 }
 
-.choice-grid--categories .choice-card__media {
-  display: grid;
-  min-height: 0;
-  aspect-ratio: 1 / 1;
-  place-items: center;
-  padding: 0.4rem;
-}
-
-.choice-grid--categories .choice-card__media img {
-  aspect-ratio: auto;
-  object-fit: contain;
-  object-position: center;
-}
-
 .choice-grid--categories .choice-card__name {
   min-height: 3.3em;
 }
@@ -612,7 +598,15 @@ h2 {
 
   .choice-grid--categories .choice-card__media {
     min-height: 0;
-    aspect-ratio: 4 / 3;
+    padding: 0.35rem;
+  }
+
+  .choice-grid--categories .choice-card__media img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: auto;
+    object-fit: contain;
+    object-position: center;
   }
 
   .choice-grid--categories .choice-card__name {

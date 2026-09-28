@@ -99,6 +99,7 @@ test("filtra las tarjetas existentes sin duplicar catálogo ni romper Agregar", 
 
 test("mantiene dos columnas móviles y contiene el desplazamiento en las categorías", () => {
   const css = read("styles.css");
+  const desktopCss = css.split("@media (max-width: 719px)")[0];
   assert.match(css, /\.product-grid\s*{[^}]*grid-template-columns:\s*repeat\(2,\s*minmax\(0,\s*1fr\)\)/s);
   assert.match(css, /\.catalog-categories\s*{[^}]*max-width:\s*100%[^}]*overflow-x:\s*auto[^}]*overscroll-behavior-inline:\s*contain/s);
   assert.match(css, /\.catalog-categories\s*{[^}]*scrollbar-width:\s*none/s);
@@ -108,9 +109,10 @@ test("mantiene dos columnas móviles y contiene el desplazamiento en las categor
   assert.match(css, /@media\s*\(max-width:\s*719px\)[\s\S]*?\.choice-grid--categories\s*{[^}]*grid-template-columns:\s*repeat\(2,\s*minmax\(0,\s*1fr\)\)/s);
   assert.match(css, /\.choice-grid--categories \.choice-card\s*{[^}]*height:\s*100%[^}]*justify-content:\s*flex-start/s);
   assert.match(css, /\.choice-grid--categories \.choice-card__name\s*{[^}]*min-height:\s*3\.3em/s);
-  assert.match(css, /\.choice-grid--categories \.choice-card__media\s*{[^}]*aspect-ratio:\s*1\s*\/\s*1[^}]*place-items:\s*center[^}]*padding:\s*0\.4rem/s);
-  assert.match(css, /\.choice-grid--categories \.choice-card__media img\s*{[^}]*object-fit:\s*contain[^}]*object-position:\s*center/s);
+  assert.match(css, /\.choice-card__media img\s*{[^}]*aspect-ratio:\s*1\s*\/\s*1[^}]*object-fit:\s*cover/s);
+  assert.doesNotMatch(desktopCss, /\.choice-grid--categories \.choice-card__media img\s*{[^}]*object-fit:\s*contain/s);
   assert.match(css, /@media\s*\(max-width:\s*719px\)[\s\S]*?\.choice-grid--categories \.choice-card__name\s*{[^}]*min-height:\s*3\.45em/s);
-  assert.match(css, /@media\s*\(max-width:\s*719px\)[\s\S]*?\.choice-grid--categories \.choice-card__media\s*{[^}]*aspect-ratio:\s*4\s*\/\s*3/s);
+  assert.match(css, /@media\s*\(max-width:\s*719px\)[\s\S]*?\.choice-grid--categories \.choice-card__media img\s*{[^}]*height:\s*auto[^}]*aspect-ratio:\s*auto[^}]*object-fit:\s*contain[^}]*object-position:\s*center/s);
+  assert.doesNotMatch(css, /@media\s*\(max-width:\s*719px\)[\s\S]*?\.choice-grid--categories \.choice-card__media\s*{[^}]*aspect-ratio:\s*4\s*\/\s*3/s);
   assert.match(css, /@media\s*\(min-width:\s*1024px\)[\s\S]*?\.product-grid\s*{[^}]*repeat\(4,/s);
 });
