@@ -101,8 +101,13 @@ test("mantiene dos columnas móviles y contiene el desplazamiento en las categor
   const css = read("styles.css");
   assert.match(css, /\.product-grid\s*{[^}]*grid-template-columns:\s*repeat\(2,\s*minmax\(0,\s*1fr\)\)/s);
   assert.match(css, /\.catalog-categories\s*{[^}]*max-width:\s*100%[^}]*overflow-x:\s*auto[^}]*overscroll-behavior-inline:\s*contain/s);
+  assert.match(css, /\.catalog-categories\s*{[^}]*scrollbar-width:\s*none/s);
+  assert.match(css, /\.catalog-categories::\-webkit-scrollbar\s*{[^}]*display:\s*none/s);
   assert.match(css, /\.catalog-category\s*{[^}]*min-height:\s*44px[^}]*white-space:\s*nowrap/s);
   assert.match(css, /\.catalog-category\[aria-pressed="true"\]/);
   assert.match(css, /@media\s*\(max-width:\s*719px\)[\s\S]*?\.choice-grid--categories\s*{[^}]*grid-template-columns:\s*repeat\(2,\s*minmax\(0,\s*1fr\)\)/s);
+  assert.match(css, /\.choice-grid--categories \.choice-card\s*{[^}]*height:\s*100%[^}]*justify-content:\s*flex-start/s);
+  assert.match(css, /\.choice-grid--categories \.choice-card__name\s*{[^}]*min-height:\s*3\.3em/s);
+  assert.match(css, /@media\s*\(max-width:\s*719px\)[\s\S]*?\.choice-grid--categories \.choice-card__name\s*{[^}]*min-height:\s*3\.45em/s);
   assert.match(css, /@media\s*\(min-width:\s*1024px\)[\s\S]*?\.product-grid\s*{[^}]*repeat\(4,/s);
 });

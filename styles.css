@@ -328,6 +328,15 @@ h2 {
   object-fit: cover;
 }
 
+.choice-grid--categories .choice-card {
+  height: 100%;
+  justify-content: flex-start;
+}
+
+.choice-grid--categories .choice-card__name {
+  min-height: 3.3em;
+}
+
 .catalog-tools {
   display: grid;
   gap: 0.75rem;
@@ -367,7 +376,11 @@ h2 {
   overflow-x: auto;
   overscroll-behavior-inline: contain;
   padding: 0.15rem 0.15rem 0.4rem;
-  scrollbar-width: thin;
+  scrollbar-width: none;
+}
+
+.catalog-categories::-webkit-scrollbar {
+  display: none;
 }
 
 .catalog-category {
@@ -592,6 +605,7 @@ h2 {
   }
 
   .choice-grid--categories .choice-card__name {
+    min-height: 3.45em;
     font-size: 1rem;
     line-height: 1.15;
   }
