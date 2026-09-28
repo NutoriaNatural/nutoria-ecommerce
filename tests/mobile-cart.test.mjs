@@ -50,13 +50,22 @@ test("aumentar, disminuir y eliminar conservan cálculos y cantidades válidas",
 });
 
 test("el mensaje de envío gratis deriva de la misma regla de envío", () => {
-  assert.equal(FREE_SHIPPING_SUBTOTAL, 300001);
-  assert.equal(calculateShipping(300000), 8000);
+  assert.equal(FREE_SHIPPING_SUBTOTAL, 300000);
+  assert.equal(calculateShipping(299999), 8000);
   assert.equal(calculateShipping(FREE_SHIPPING_SUBTOTAL), 0);
-  assert.equal(shippingFor(300000), calculateShipping(300000));
-  assert.equal(shippingFor(FREE_SHIPPING_SUBTOTAL), calculateShipping(FREE_SHIPPING_SUBTOTAL));
-  assert.match(shippingProgressMessage(0), /300[.]001/);
-  assert.match(shippingProgressMessage(300000), /\$\s?1\b/);
+  [
+    [99999, 16000],
+    [100000, 12000],
+    [199999, 12000],
+    [200000, 8000],
+    [299999, 8000],
+    [300000, 0],
+  ].forEach(([subtotal, expected]) => {
+    assert.equal(calculateShipping(subtotal), expected);
+    assert.equal(shippingFor(subtotal), expected);
+  });
+  assert.match(shippingProgressMessage(0), /300[.]000/);
+  assert.match(shippingProgressMessage(299999), /\$\s?1\b/);
   assert.equal(shippingProgressMessage(FREE_SHIPPING_SUBTOTAL), "¡Tu pedido tiene envío gratis!");
   const html = read("index.html");
   assert.match(html, /data-shipping-message[^>]*aria-live="polite"/);

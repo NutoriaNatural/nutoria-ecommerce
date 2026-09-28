@@ -4,7 +4,7 @@ const STORAGE_KEY = "nutoria_cart";
 const CHECKOUT_KEY = "nutoria_checkout_key";
 const PAYMENT_STATUS_ATTEMPTS = 15;
 const PAYMENT_STATUS_DELAY_MS = 2000;
-export const FREE_SHIPPING_SUBTOTAL = 300001;
+export const FREE_SHIPPING_SUBTOTAL = 300000;
 
 export function calculateShipping(subtotal) {
   if (subtotal <= 0) return 0;

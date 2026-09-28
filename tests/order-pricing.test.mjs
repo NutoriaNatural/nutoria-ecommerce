@@ -8,8 +8,8 @@ test("calcula todos los rangos de envío en el servidor", () => {
   assert.equal(shippingFor(100000), 12000);
   assert.equal(shippingFor(199999), 12000);
   assert.equal(shippingFor(200000), 8000);
-  assert.equal(shippingFor(300000), 8000);
-  assert.equal(shippingFor(300001), 0);
+  assert.equal(shippingFor(299999), 8000);
+  assert.equal(shippingFor(300000), 0);
 });
 
 test("ignora precios y nombres enviados por el navegador", () => {

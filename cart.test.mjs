@@ -6,8 +6,8 @@ assert.equal(calculateShipping(99999), 16000);
 assert.equal(calculateShipping(100000), 12000);
 assert.equal(calculateShipping(199999), 12000);
 assert.equal(calculateShipping(200000), 8000);
-assert.equal(calculateShipping(300000), 8000);
-assert.equal(calculateShipping(300001), 0);
+assert.equal(calculateShipping(299999), 8000);
+assert.equal(calculateShipping(300000), 0);
 
 const cart = new Cart();
 
