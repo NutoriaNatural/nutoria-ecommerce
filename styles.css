@@ -641,10 +641,39 @@ h2 {
 
 .cart-item {
   display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 0.75rem 1rem;
+  grid-template-columns: 72px minmax(0, 1fr) auto;
+  grid-template-rows: auto auto auto;
+  gap: 0.25rem 0.875rem;
   padding-bottom: 1rem;
   border-bottom: 1px solid var(--borde);
+}
+
+.cart-item__media {
+  display: grid;
+  grid-row: 1 / 4;
+  width: 72px;
+  height: 72px;
+  place-items: center;
+  align-self: start;
+  overflow: hidden;
+  border: 1px solid var(--borde);
+  border-radius: 0.65rem;
+  background: var(--blanco);
+}
+
+.cart-item__media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.cart-item__media.is-placeholder {
+  padding: 0.35rem;
+  color: rgba(4, 38, 22, 0.58);
+  font-size: 0.68rem;
+  line-height: 1.15;
+  text-align: center;
 }
 
 .cart-item__name,
@@ -653,20 +682,32 @@ h2 {
   font-weight: 600;
 }
 
+.cart-item__name {
+  grid-column: 2;
+  grid-row: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
 .cart-item__price {
+  grid-column: 3;
+  grid-row: 1;
+  align-self: start;
   text-align: right;
 }
 
 .cart-item__presentation {
-  grid-column: 1 / -1;
-  margin: -0.5rem 0 0;
+  grid-column: 2;
+  grid-row: 2;
+  margin: 0;
   color: rgba(4, 38, 22, 0.72);
   font-size: 0.875rem;
 }
 
 .cart-item__controls {
   display: flex;
-  grid-column: 1 / -1;
+  grid-column: 2 / -1;
+  grid-row: 3;
   align-items: center;
   justify-content: space-between;
   gap: 0.75rem;
@@ -774,9 +815,25 @@ h2 {
   line-height: 1.5;
 }
 
-.shipping-note.is-free {
+.shipping-note__primary,
+.shipping-note__details {
+  margin: 0;
+}
+
+.shipping-note__primary {
+  font-weight: 600;
+}
+
+.shipping-note__primary.is-free {
   color: var(--verde-nutoria);
   font-weight: 600;
+}
+
+.shipping-note__details {
+  margin-top: 0.2rem;
+  color: rgba(4, 38, 22, 0.62);
+  font-size: 0.78rem;
+  line-height: 1.4;
 }
 
 .checkout-form {
@@ -981,12 +1038,18 @@ h2 {
   }
 
   .cart-item {
-    gap: 0.35rem 0.75rem;
-    padding-bottom: 0.75rem;
+    grid-template-columns: 64px minmax(0, 1fr) auto;
+    gap: 0.2rem 0.65rem;
+    padding-bottom: 0.65rem;
+  }
+
+  .cart-item__media {
+    width: 64px;
+    height: 64px;
   }
 
   .cart-item__presentation {
-    margin-top: -0.15rem;
+    margin-top: 0;
   }
 
   .cart-summary {

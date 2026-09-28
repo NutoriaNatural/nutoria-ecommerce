@@ -5,18 +5,51 @@ const CHECKOUT_KEY = "nutoria_checkout_key";
 const PAYMENT_STATUS_ATTEMPTS = 15;
 const PAYMENT_STATUS_DELAY_MS = 2000;
 export const FREE_SHIPPING_SUBTOTAL = 300000;
+export const SHIPPING_TIERS = Object.freeze([
+  Object.freeze({ minimum: 0, shipping: 16000 }),
+  Object.freeze({ minimum: 100000, shipping: 12000 }),
+  Object.freeze({ minimum: 200000, shipping: 8000 }),
+  Object.freeze({ minimum: FREE_SHIPPING_SUBTOTAL, shipping: 0 }),
+]);
 
 export function calculateShipping(subtotal) {
   if (subtotal <= 0) return 0;
-  if (subtotal < 100000) return 16000;
-  if (subtotal < 200000) return 12000;
-  if (subtotal < FREE_SHIPPING_SUBTOTAL) return 8000;
-  return 0;
+  let currentTier = SHIPPING_TIERS[0];
+  for (const tier of SHIPPING_TIERS) {
+    if (subtotal < tier.minimum) break;
+    currentTier = tier;
+  }
+  return currentTier.shipping;
+}
+
+export function shippingProgress(subtotal) {
+  const normalizedSubtotal = Math.max(0, subtotal);
+  let currentTierIndex = 0;
+  for (let index = 0; index < SHIPPING_TIERS.length; index += 1) {
+    if (normalizedSubtotal < SHIPPING_TIERS[index].minimum) break;
+    currentTierIndex = index;
+  }
+
+  const nextTier = SHIPPING_TIERS[currentTierIndex + 1];
+  if (!nextTier) {
+    return { primary: "¡Tu pedido tiene envío gratis!", secondary: "" };
+  }
+
+  const remaining = nextTier.minimum - normalizedSubtotal;
+  const primary = nextTier.shipping === 0
+    ? `Te faltan ${formatMoney(remaining)} para obtener envío gratis.`
+    : `Te faltan ${formatMoney(remaining)} para que tu envío baje a ${formatMoney(nextTier.shipping)}.`;
+  const futureBenefits = SHIPPING_TIERS.slice(currentTierIndex + 1).map((tier) => (
+    tier.shipping === 0
+      ? `Gratis desde ${formatMoney(tier.minimum)}`
+      : `${formatMoney(tier.shipping)} desde ${formatMoney(tier.minimum)}`
+  ));
+
+  return { primary, secondary: `Envío: ${futureBenefits.join(" · ")}` };
 }
 
 export function shippingProgressMessage(subtotal) {
-  if (subtotal >= FREE_SHIPPING_SUBTOTAL) return "¡Tu pedido tiene envío gratis!";
-  return `Te faltan ${formatMoney(FREE_SHIPPING_SUBTOTAL - Math.max(0, subtotal))} para obtener envío gratis.`;
+  return shippingProgress(subtotal).primary;
 }
 
 export class Cart {
@@ -137,6 +170,7 @@ function initializeCart() {
   const message = document.querySelector("[data-checkout-message]");
   const paymentStatus = document.querySelector("[data-payment-status]");
   const shippingMessage = document.querySelector("[data-shipping-message]");
+  const shippingDetails = document.querySelector("[data-shipping-details]");
 
   if (!dialog || !openButtons.length || !closeButton || !itemsContainer || !checkoutForm) return;
 
@@ -150,8 +184,13 @@ function initializeCart() {
     shipping.textContent = state.shipping ? formatMoney(state.shipping) : "Gratis";
     total.textContent = formatMoney(state.total);
     if (shippingMessage) {
-      shippingMessage.textContent = shippingProgressMessage(state.subtotal);
+      const progress = shippingProgress(state.subtotal);
+      shippingMessage.textContent = progress.primary;
       shippingMessage.classList.toggle("is-free", state.subtotal >= FREE_SHIPPING_SUBTOTAL);
+      if (shippingDetails) {
+        shippingDetails.textContent = progress.secondary;
+        shippingDetails.hidden = !progress.secondary;
+      }
     }
     checkoutButton.disabled = state.items.length === 0;
 
@@ -171,6 +210,24 @@ function initializeCart() {
         row.dataset.productName = item.name;
         row.dataset.productPrice = String(item.price);
         row.dataset.productQuantity = String(item.quantity);
+
+        const media = document.createElement("div");
+        media.className = "cart-item__media";
+        if (typeof item.image === "string" && item.image.trim()) {
+          const image = document.createElement("img");
+          image.src = item.image;
+          image.alt = "";
+          image.loading = "lazy";
+          image.addEventListener("error", () => {
+            image.remove();
+            media.classList.add("is-placeholder");
+            media.textContent = "Sin imagen";
+          }, { once: true });
+          media.append(image);
+        } else {
+          media.classList.add("is-placeholder");
+          media.textContent = "Sin imagen";
+        }
 
         const name = document.createElement("p");
         name.className = "cart-item__name";
@@ -237,7 +294,7 @@ function initializeCart() {
         });
 
         controls.append(quantity, remove);
-        row.append(name, presentation, price, controls);
+        row.append(media, name, presentation, price, controls);
         return row;
       }),
     );
@@ -263,6 +320,7 @@ function initializeCart() {
         displayName: button.dataset.productDisplayName,
         presentation: button.dataset.productPresentation,
         price: Number(button.dataset.productPrice),
+        image: button.dataset.productImage,
       });
       persist();
       render();

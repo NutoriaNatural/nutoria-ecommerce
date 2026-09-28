@@ -198,6 +198,7 @@ function createProductCard(product) {
     button.dataset.productDisplayName = product.name;
     button.dataset.productPresentation = formatPresentation(product.presentation);
     button.dataset.productPrice = String(product.price);
+    button.dataset.productImage = product.image;
   } else {
     button.disabled = true;
   }
@@ -211,6 +212,7 @@ function createProductCard(product) {
       button.dataset.productDisplayName = product.name;
       button.dataset.productPresentation = formatPresentation(variant.presentation);
       button.dataset.productPrice = String(variant.price);
+      button.dataset.productImage = product.image;
     };
     presentationValue.addEventListener("change", updateVariant);
     updateVariant();

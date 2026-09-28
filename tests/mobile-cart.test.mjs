@@ -4,7 +4,9 @@ import { readFileSync } from "node:fs";
 import {
   Cart,
   FREE_SHIPPING_SUBTOTAL,
+  SHIPPING_TIERS,
   calculateShipping,
+  shippingProgress,
   shippingProgressMessage,
 } from "../cart.mjs";
 import { shippingFor } from "../lib/order-pricing.mjs";
@@ -49,8 +51,14 @@ test("aumentar, disminuir y eliminar conservan cálculos y cantidades válidas",
   assert.match(source, /remove\.setAttribute\("aria-label", "Eliminar producto"\)/);
 });
 
-test("el mensaje de envío gratis deriva de la misma regla de envío", () => {
+test("los mensajes del próximo beneficio derivan de la misma regla de envío", () => {
   assert.equal(FREE_SHIPPING_SUBTOTAL, 300000);
+  assert.deepEqual(SHIPPING_TIERS, [
+    { minimum: 0, shipping: 16000 },
+    { minimum: 100000, shipping: 12000 },
+    { minimum: 200000, shipping: 8000 },
+    { minimum: 300000, shipping: 0 },
+  ]);
   assert.equal(calculateShipping(299999), 8000);
   assert.equal(calculateShipping(FREE_SHIPPING_SUBTOTAL), 0);
   [
@@ -64,12 +72,51 @@ test("el mensaje de envío gratis deriva de la misma regla de envío", () => {
     assert.equal(calculateShipping(subtotal), expected);
     assert.equal(shippingFor(subtotal), expected);
   });
-  assert.match(shippingProgressMessage(0), /300[.]000/);
+  [
+    [99999, /\$\s?1.*envío baje a.*12[.]000/],
+    [100000, /100[.]000.*envío baje a.*8[.]000/],
+    [199999, /\$\s?1.*envío baje a.*8[.]000/],
+    [200000, /100[.]000.*envío gratis/],
+    [299999, /\$\s?1.*envío gratis/],
+  ].forEach(([subtotal, expectedMessage]) => {
+    assert.match(shippingProgressMessage(subtotal), expectedMessage);
+  });
+  assert.match(shippingProgressMessage(0), /100[.]000/);
   assert.match(shippingProgressMessage(299999), /\$\s?1\b/);
   assert.equal(shippingProgressMessage(FREE_SHIPPING_SUBTOTAL), "¡Tu pedido tiene envío gratis!");
+
+  const firstLevel = shippingProgress(35500);
+  assert.match(firstLevel.primary, /64[.]500.*envío baje a.*12[.]000/);
+  assert.match(firstLevel.secondary, /12[.]000 desde.*100[.]000.*8[.]000 desde.*200[.]000.*Gratis desde.*300[.]000/);
+  const secondLevel = shippingProgress(150000);
+  assert.match(secondLevel.primary, /50[.]000.*envío baje a.*8[.]000/);
+  assert.doesNotMatch(secondLevel.secondary, /12[.]000/);
+  assert.match(secondLevel.secondary, /8[.]000 desde.*200[.]000.*Gratis desde.*300[.]000/);
+  const thirdLevel = shippingProgress(230000);
+  assert.match(thirdLevel.primary, /70[.]000.*envío gratis/);
+  assert.equal(thirdLevel.secondary.replace(/\s/g, " ").replace(/ +/g, " "), "Envío: Gratis desde $ 300.000");
+  assert.deepEqual(shippingProgress(300000), {
+    primary: "¡Tu pedido tiene envío gratis!",
+    secondary: "",
+  });
   const html = read("index.html");
   assert.match(html, /data-shipping-message[^>]*aria-live="polite"/);
+  assert.match(html, /data-shipping-details/);
   assert.doesNotMatch(html, /\$16\.000 hasta \$99\.999/);
+});
+
+test("cada producto reutiliza su imagen del catálogo y ofrece un fallback seguro", () => {
+  const catalog = read("product-catalog.mjs");
+  const cart = read("cart.mjs");
+  const css = read("styles.css");
+  assert.match(catalog, /button\.dataset\.productImage = product\.image/);
+  assert.match(cart, /image: button\.dataset\.productImage/);
+  assert.match(cart, /typeof item\.image === "string" && item\.image\.trim\(\)/);
+  assert.match(cart, /image\.addEventListener\("error"/);
+  assert.match(cart, /media\.textContent = "Sin imagen"/);
+  assert.match(css, /\.cart-item__media\s*{[^}]*width:\s*72px[^}]*height:\s*72px/s);
+  assert.match(css, /\.cart-item__media img\s*{[^}]*object-fit:\s*contain/s);
+  assert.match(css, /@media\s*\(max-width:\s*719px\)[\s\S]*?\.cart-item__media\s*{[^}]*width:\s*64px[^}]*height:\s*64px/s);
 });
 
 test("el formulario identifica campos obligatorios sin cambiar validaciones", () => {
