@@ -57,20 +57,65 @@ const productPricing = {
   "Uvas Pasas": { variants: standardVariants([24000, 13000, 7000, 3500]) },
 };
 
-// Edita `presentation`, `price` y `category` únicamente con los datos reales aprobados.
-export const products = [
-  "7 Colagenos", "Ajonjoli Negro", "Ajonjoli Tostado", "Ajonjoli", "Albaricoques",
-  "Almendra Laminada", "Almendras", "Amaranto", "Arandanos", "Avellanas",
-  "Avena en Hojuelas sin Gluten", "Brevas Meladas", "Calcio Coral Marino", "Ciruelas Pasas",
-  "Coco Acaramelado", "Coco Laminado Deshidratado", "Coffe + Colageno", "Colageno Hidrolizado",
-  "Colageno Marino", "Datiles", "Flor de Jamaica", "Garbanzo Tostados", "Habas Saladas",
-  "Harina de Almendras", "Lentejas Tostadas", "Maca Negra, Roja, Shihua Y Amarilla",
-  "Macadamia Acaramelada", "Macadamia", "Mango Deshidratado", "Mani Confitado", "Marañon",
-  "Mix Golden (leche dorada)", "Mix Rojos Deshidratado", "Mix Tropical Deshidratado",
-  "Nibs de Cacao", "Nuez del Brasil", "Nuez Nogal", "Nuez Pecana", "Piña Deshidratada",
-  "Pistachos", "Proteina Whey", "Quinua", "Resveratrol", "Sales de Magnesio Mg2",
-  "Semillas de Amapola", "Te Chai", "Uvas Pasas",
-].map((name, index) => {
+export const PRODUCT_CATEGORIES = Object.freeze([
+  "Frutos secos, semillas y granos",
+  "Deshidratados",
+  "Alimentos naturales",
+  "Suplementos",
+]);
+
+const productClassification = [
+  ["7 Colagenos", "Suplementos"],
+  ["Ajonjoli Negro", "Frutos secos, semillas y granos"],
+  ["Ajonjoli Tostado", "Frutos secos, semillas y granos"],
+  ["Ajonjoli", "Frutos secos, semillas y granos"],
+  ["Albaricoques", "Deshidratados"],
+  ["Almendra Laminada", "Frutos secos, semillas y granos"],
+  ["Almendras", "Frutos secos, semillas y granos"],
+  ["Amaranto", "Frutos secos, semillas y granos"],
+  ["Arandanos", "Deshidratados"],
+  ["Avellanas", "Frutos secos, semillas y granos"],
+  ["Avena en Hojuelas sin Gluten", "Alimentos naturales"],
+  ["Brevas Meladas", "Deshidratados"],
+  ["Calcio Coral Marino", "Suplementos"],
+  ["Ciruelas Pasas", "Deshidratados"],
+  ["Coco Acaramelado", "Deshidratados"],
+  ["Coco Laminado Deshidratado", "Deshidratados"],
+  ["Coffe + Colageno", "Suplementos"],
+  ["Colageno Hidrolizado", "Suplementos"],
+  ["Colageno Marino", "Suplementos"],
+  ["Datiles", "Deshidratados"],
+  ["Flor de Jamaica", "Alimentos naturales"],
+  ["Garbanzo Tostados", "Frutos secos, semillas y granos"],
+  ["Habas Saladas", "Frutos secos, semillas y granos"],
+  ["Harina de Almendras", "Alimentos naturales"],
+  ["Lentejas Tostadas", "Frutos secos, semillas y granos"],
+  ["Maca Negra, Roja, Shihua Y Amarilla", "Alimentos naturales"],
+  ["Macadamia Acaramelada", "Frutos secos, semillas y granos"],
+  ["Macadamia", "Frutos secos, semillas y granos"],
+  ["Mango Deshidratado", "Deshidratados"],
+  ["Mani Confitado", "Frutos secos, semillas y granos"],
+  ["Marañon", "Frutos secos, semillas y granos"],
+  ["Mix Golden (leche dorada)", "Alimentos naturales"],
+  ["Mix Rojos Deshidratado", "Deshidratados"],
+  ["Mix Tropical Deshidratado", "Deshidratados"],
+  ["Nibs de Cacao", "Alimentos naturales"],
+  ["Nuez del Brasil", "Frutos secos, semillas y granos"],
+  ["Nuez Nogal", "Frutos secos, semillas y granos"],
+  ["Nuez Pecana", "Frutos secos, semillas y granos"],
+  ["Piña Deshidratada", "Deshidratados"],
+  ["Pistachos", "Frutos secos, semillas y granos"],
+  ["Proteina Whey", "Suplementos"],
+  ["Quinua", "Frutos secos, semillas y granos"],
+  ["Resveratrol", "Suplementos"],
+  ["Sales de Magnesio Mg2", "Suplementos"],
+  ["Semillas de Amapola", "Frutos secos, semillas y granos"],
+  ["Te Chai", "Alimentos naturales"],
+  ["Uvas Pasas", "Deshidratados"],
+];
+
+// Edita presentación, precio y categoría únicamente con datos reales aprobados.
+export const products = productClassification.map(([name, category], index) => {
   const pricing = productPricing[name];
   const variants = pricing.variants;
   const firstVariant = variants[0];
@@ -82,7 +127,7 @@ export const products = [
     presentation: pricing.presentation ?? firstVariant.presentation,
     price: Object.hasOwn(pricing, "price") ? pricing.price : firstVariant.price,
     variants,
-    category: "",
+    category,
     ingredients: "",
     content: "",
     nutrition: "",
@@ -100,6 +145,21 @@ const formatMoney = (value) =>
 
 export const formatPresentation = (value) =>
   value.replace(/(\d[\d.]*)\s*(mg|kg|g|ml|l)\b/giu, "$1 $2");
+
+export const normalizeSearchText = (value) => String(value ?? "")
+  .normalize("NFD")
+  .replace(/\p{Diacritic}/gu, "")
+  .toLocaleLowerCase("es-CO")
+  .trim();
+
+export function filterProducts(productList, { query = "", category = "Todos" } = {}) {
+  const normalizedQuery = normalizeSearchText(query);
+  return productList.filter((product) => {
+    const matchesCategory = category === "Todos" || product.category === category;
+    const matchesQuery = !normalizedQuery || normalizeSearchText(product.name).includes(normalizedQuery);
+    return matchesCategory && matchesQuery;
+  });
+}
 
 const detailFields = [
   ["ingredients", "Ingredientes"],
@@ -225,4 +285,60 @@ function createProductCard(product) {
 }
 
 const grid = typeof document !== "undefined" ? document.querySelector("[data-product-grid]") : null;
-if (grid) grid.replaceChildren(...products.map(createProductCard));
+if (grid) {
+  const cards = products.map(createProductCard);
+  grid.replaceChildren(...cards);
+
+  const searchInput = document.querySelector("[data-product-search]");
+  const categoryContainer = document.querySelector("[data-category-filters]");
+  const resultCount = document.querySelector("[data-product-count]");
+  const emptyState = document.querySelector("[data-catalog-empty]");
+  const clearButton = document.querySelector("[data-catalog-clear]");
+  const featuredCategoryLinks = document.querySelectorAll("[data-catalog-category]");
+  let activeCategory = "Todos";
+
+  const categoryButtons = ["Todos", ...PRODUCT_CATEGORIES].map((category) => {
+    const button = document.createElement("button");
+    button.className = "catalog-category";
+    button.type = "button";
+    button.textContent = category;
+    button.dataset.category = category;
+    button.setAttribute("aria-pressed", String(category === activeCategory));
+    categoryContainer?.append(button);
+    return button;
+  });
+
+  const applyFilters = () => {
+    const matches = new Set(filterProducts(products, {
+      query: searchInput?.value,
+      category: activeCategory,
+    }).map((product) => product.id));
+
+    cards.forEach((card, index) => { card.hidden = !matches.has(products[index].id); });
+    categoryButtons.forEach((button) => {
+      button.setAttribute("aria-pressed", String(button.dataset.category === activeCategory));
+    });
+    const count = matches.size;
+    if (resultCount) resultCount.textContent = `${count} ${count === 1 ? "producto" : "productos"}`;
+    if (emptyState) emptyState.hidden = count > 0;
+  };
+
+  const selectCategory = (category) => {
+    activeCategory = category;
+    applyFilters();
+  };
+
+  categoryButtons.forEach((button) => {
+    button.addEventListener("click", () => selectCategory(button.dataset.category));
+  });
+  featuredCategoryLinks.forEach((link) => {
+    link.addEventListener("click", () => selectCategory(link.dataset.catalogCategory));
+  });
+  searchInput?.addEventListener("input", applyFilters);
+  clearButton?.addEventListener("click", () => {
+    if (searchInput) searchInput.value = "";
+    selectCategory("Todos");
+    searchInput?.focus();
+  });
+  applyFilters();
+}

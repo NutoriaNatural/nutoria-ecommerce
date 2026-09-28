@@ -140,24 +140,20 @@
       <section class="section section--tint" id="categorias" aria-labelledby="titulo-categorias">
         <div class="container section-frame">
           <h2 id="titulo-categorias">Categorías principales</h2>
-          <nav class="choice-grid choice-grid--five" aria-label="Categorías de productos">
-            <a class="choice-card choice-card--category" href="#productos">
+          <nav class="choice-grid choice-grid--four" aria-label="Categorías de productos">
+            <a class="choice-card choice-card--category" href="#productos" data-catalog-category="Frutos secos, semillas y granos">
               <span class="choice-card__media"><img src="assets/images/optimized/Almendras.jpg" alt="" width="600" height="600" loading="lazy" /></span>
-              <span class="choice-card__name">Frutos secos</span>
+              <span class="choice-card__name">Frutos secos, semillas y granos</span>
             </a>
-            <a class="choice-card choice-card--category" href="#productos">
-              <span class="choice-card__media"><img src="assets/images/optimized/Ajonjoli.jpg" alt="" width="600" height="600" loading="lazy" /></span>
-              <span class="choice-card__name">Semillas</span>
-            </a>
-            <a class="choice-card choice-card--category" href="#productos">
+            <a class="choice-card choice-card--category" href="#productos" data-catalog-category="Deshidratados">
               <span class="choice-card__media"><img src="assets/images/optimized/Mango Deshidratado.jpg" alt="" width="600" height="600" loading="lazy" /></span>
               <span class="choice-card__name">Deshidratados</span>
             </a>
-            <a class="choice-card choice-card--category" href="#productos">
+            <a class="choice-card choice-card--category" href="#productos" data-catalog-category="Alimentos naturales">
               <span class="choice-card__media"><img src="assets/images/optimized/Avena en Hojuelas sin Gluten.jpg" alt="" width="600" height="600" loading="lazy" /></span>
-              <span class="choice-card__name">Productos naturales</span>
+              <span class="choice-card__name">Alimentos naturales</span>
             </a>
-            <a class="choice-card choice-card--category" href="#productos">
+            <a class="choice-card choice-card--category" href="#productos" data-catalog-category="Suplementos">
               <span class="choice-card__media"><img src="assets/images/optimized/Colageno Marino.jpg" alt="" width="600" height="600" loading="lazy" /></span>
               <span class="choice-card__name">Suplementos</span>
             </a>
@@ -168,6 +164,18 @@
       <section class="section" id="productos" aria-labelledby="titulo-productos">
         <div class="container section-frame">
           <h2 id="titulo-productos">Productos destacados</h2>
+          <div class="catalog-tools">
+            <label class="catalog-search">
+              <span class="catalog-search__label">Buscar productos</span>
+              <input type="search" placeholder="Buscar productos..." autocomplete="off" data-product-search />
+            </label>
+            <div class="catalog-categories" data-category-filters role="group" aria-label="Filtrar por categoría"></div>
+            <p class="catalog-results" data-product-count aria-live="polite"></p>
+          </div>
+          <div class="catalog-empty" data-catalog-empty hidden>
+            <p>No encontramos productos con esa búsqueda.</p>
+            <button type="button" data-catalog-clear>Restablecer búsqueda y filtros</button>
+          </div>
           <div class="product-grid" data-product-grid></div>
         </div>
       </section>
