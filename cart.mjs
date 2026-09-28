@@ -4,13 +4,19 @@ const STORAGE_KEY = "nutoria_cart";
 const CHECKOUT_KEY = "nutoria_checkout_key";
 const PAYMENT_STATUS_ATTEMPTS = 15;
 const PAYMENT_STATUS_DELAY_MS = 2000;
+export const FREE_SHIPPING_SUBTOTAL = 300001;
 
 export function calculateShipping(subtotal) {
   if (subtotal <= 0) return 0;
   if (subtotal < 100000) return 16000;
   if (subtotal < 200000) return 12000;
-  if (subtotal <= 300000) return 8000;
+  if (subtotal < FREE_SHIPPING_SUBTOTAL) return 8000;
   return 0;
+}
+
+export function shippingProgressMessage(subtotal) {
+  if (subtotal >= FREE_SHIPPING_SUBTOTAL) return "¡Tu pedido tiene envío gratis!";
+  return `Te faltan ${formatMoney(FREE_SHIPPING_SUBTOTAL - Math.max(0, subtotal))} para obtener envío gratis.`;
 }
 
 export class Cart {
@@ -119,10 +125,10 @@ export async function waitForPaymentStatus(
 
 function initializeCart() {
   const dialog = document.querySelector("#cart-dialog");
-  const openButton = document.querySelector(".cart-slot");
+  const openButtons = document.querySelectorAll("[data-cart-open]");
   const closeButton = document.querySelector(".cart-dialog__close");
   const itemsContainer = document.querySelector(".cart-items");
-  const count = document.querySelector(".cart-count");
+  const counts = document.querySelectorAll("[data-cart-count]");
   const subtotal = document.querySelector("[data-cart-subtotal]");
   const shipping = document.querySelector("[data-cart-shipping]");
   const total = document.querySelector("[data-cart-total]");
@@ -130,18 +136,23 @@ function initializeCart() {
   const checkoutButton = document.querySelector("[data-checkout-button]");
   const message = document.querySelector("[data-checkout-message]");
   const paymentStatus = document.querySelector("[data-payment-status]");
+  const shippingMessage = document.querySelector("[data-shipping-message]");
 
-  if (!dialog || !openButton || !closeButton || !itemsContainer || !checkoutForm) return;
+  if (!dialog || !openButtons.length || !closeButton || !itemsContainer || !checkoutForm) return;
 
   const cart = new Cart(readStoredItems());
   const persist = () => localStorage.setItem(STORAGE_KEY, JSON.stringify(cart.snapshot().items));
 
   const render = () => {
     const state = cart.snapshot();
-    count.textContent = String(state.quantity);
+    counts.forEach((count) => { count.textContent = String(state.quantity); });
     subtotal.textContent = formatMoney(state.subtotal);
     shipping.textContent = state.shipping ? formatMoney(state.shipping) : "Gratis";
     total.textContent = formatMoney(state.total);
+    if (shippingMessage) {
+      shippingMessage.textContent = shippingProgressMessage(state.subtotal);
+      shippingMessage.classList.toggle("is-free", state.subtotal >= FREE_SHIPPING_SUBTOTAL);
+    }
     checkoutButton.disabled = state.items.length === 0;
 
     if (!state.items.length) {
@@ -163,7 +174,11 @@ function initializeCart() {
 
         const name = document.createElement("p");
         name.className = "cart-item__name";
-        name.textContent = item.name;
+        name.textContent = item.displayName || item.name;
+
+        const presentation = document.createElement("p");
+        presentation.className = "cart-item__presentation";
+        presentation.textContent = item.presentation || "";
 
         const price = document.createElement("p");
         price.className = "cart-item__price";
@@ -171,40 +186,70 @@ function initializeCart() {
 
         const controls = document.createElement("div");
         controls.className = "cart-item__controls";
-        const label = document.createElement("label");
-        label.textContent = "Cantidad";
-        const quantity = document.createElement("input");
+        const quantity = document.createElement("div");
         quantity.className = "cart-item__quantity";
-        quantity.type = "number";
-        quantity.min = "1";
-        quantity.step = "1";
-        quantity.value = String(item.quantity);
-        quantity.addEventListener("change", () => {
-          cart.setQuantity(item.id, Number(quantity.value));
+        quantity.setAttribute("role", "group");
+        quantity.setAttribute("aria-label", `Cantidad de ${item.displayName || item.name}`);
+
+        const decrease = document.createElement("button");
+        decrease.type = "button";
+        decrease.textContent = "−";
+        decrease.setAttribute("aria-label", `Disminuir cantidad de ${item.displayName || item.name}`);
+        decrease.disabled = item.quantity <= 1;
+        decrease.addEventListener("click", () => {
+          cart.setQuantity(item.id, Math.max(1, item.quantity - 1));
           persist();
           render();
         });
-        label.append(quantity);
+
+        const quantityValue = document.createElement("output");
+        quantityValue.value = String(item.quantity);
+        quantityValue.textContent = String(item.quantity);
+        quantityValue.setAttribute("aria-label", `Cantidad actual: ${item.quantity}`);
+
+        const increase = document.createElement("button");
+        increase.type = "button";
+        increase.textContent = "+";
+        increase.setAttribute("aria-label", `Aumentar cantidad de ${item.displayName || item.name}`);
+        increase.addEventListener("click", () => {
+          cart.setQuantity(item.id, item.quantity + 1);
+          persist();
+          render();
+        });
+        quantity.append(decrease, quantityValue, increase);
 
         const remove = document.createElement("button");
         remove.className = "cart-item__remove";
         remove.type = "button";
-        remove.textContent = "Eliminar";
+        remove.setAttribute("aria-label", "Eliminar producto");
+        const removeIcon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        removeIcon.setAttribute("viewBox", "0 0 24 24");
+        removeIcon.setAttribute("aria-hidden", "true");
+        removeIcon.setAttribute("focusable", "false");
+        const removePath = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        removePath.setAttribute("d", "M4 7h16M9 7V4h6v3m3 0-1 13H7L6 7m4 4v5m4-5v5");
+        removeIcon.append(removePath);
+        remove.append(removeIcon);
         remove.addEventListener("click", () => {
           cart.remove(item.id);
           persist();
           render();
         });
 
-        controls.append(label, remove);
-        row.append(name, price, controls);
+        controls.append(quantity, remove);
+        row.append(name, presentation, price, controls);
         return row;
       }),
     );
   };
 
-  openButton.addEventListener("click", () => dialog.showModal());
+  const openCart = () => {
+    dialog.showModal();
+    document.body.classList.add("cart-open");
+  };
+  openButtons.forEach((button) => button.addEventListener("click", openCart));
   closeButton.addEventListener("click", () => dialog.close());
+  dialog.addEventListener("close", () => document.body.classList.remove("cart-open"));
   dialog.addEventListener("click", (event) => {
     if (event.target === dialog) dialog.close();
   });
@@ -215,6 +260,8 @@ function initializeCart() {
       cart.add({
         id: button.dataset.productId,
         name: button.dataset.productName,
+        displayName: button.dataset.productDisplayName,
+        presentation: button.dataset.productPresentation,
         price: Number(button.dataset.productPrice),
       });
       persist();

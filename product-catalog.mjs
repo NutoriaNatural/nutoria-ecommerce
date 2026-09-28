@@ -195,6 +195,8 @@ function createProductCard(product) {
   if (Number.isInteger(product.price) && product.price > 0) {
     button.dataset.productId = product.id;
     button.dataset.productName = product.name;
+    button.dataset.productDisplayName = product.name;
+    button.dataset.productPresentation = formatPresentation(product.presentation);
     button.dataset.productPrice = String(product.price);
   } else {
     button.disabled = true;
@@ -206,6 +208,8 @@ function createProductCard(product) {
       priceValue.textContent = formatMoney(variant.price);
       button.dataset.productId = `${product.id}-${variant.id}`;
       button.dataset.productName = `${product.name} ${variant.presentation}`;
+      button.dataset.productDisplayName = product.name;
+      button.dataset.productPresentation = formatPresentation(variant.presentation);
       button.dataset.productPrice = String(variant.price);
     };
     presentationValue.addEventListener("change", updateVariant);
