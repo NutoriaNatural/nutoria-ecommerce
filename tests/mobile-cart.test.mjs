@@ -150,3 +150,17 @@ test("el diálogo móvil y las acciones flotantes respetan espacio y safe-area",
   assert.match(css, /\.cart-item__quantity\s*{[^}]*grid-template-columns:\s*44px[^}]*44px/s);
   assert.match(css, /\.checkout-form__button\s*{[^}]*min-height:\s*52px/s);
 });
+
+test("el carrito flotante permanece visible y conectado también en desktop", () => {
+  const html = read("index.html");
+  const css = read("styles.css");
+  const cart = read("cart.mjs");
+  assert.match(css, /\.cart-fab\s*{[^}]*display:\s*inline-flex[^}]*width:\s*56px[^}]*height:\s*56px/s);
+  assert.doesNotMatch(css, /@media\s*\(min-width:\s*720px\)[\s\S]*?\.cart-fab\s*{[^}]*display:\s*none/s);
+  assert.match(css, /\.mobile-actions\s*{[^}]*position:\s*fixed[^}]*flex-direction:\s*column[^}]*gap:\s*0\.75rem/s);
+  assert.equal((html.match(/class="cart-fab"/g) || []).length, 1);
+  assert.match(html, /class="cart-fab"[^>]*data-cart-open[^>]*aria-controls="cart-dialog"/);
+  assert.match(html, /class="cart-fab__count"[^>]*data-cart-count/);
+  assert.match(cart, /openButtons\.forEach\(\(button\) => button\.addEventListener\("click", openCart\)\)/);
+  assert.match(cart, /counts\.forEach\(\(count\) => \{ count\.textContent = String\(state\.quantity\); \}\)/);
+});

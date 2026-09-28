@@ -928,7 +928,7 @@ h2 {
 
 .cart-fab {
   position: relative;
-  display: none;
+  display: inline-flex;
   width: 56px;
   height: 56px;
   align-items: center;
