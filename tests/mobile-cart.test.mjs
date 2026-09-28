@@ -7,6 +7,7 @@ import {
   calculateShipping,
   shippingProgressMessage,
 } from "../cart.mjs";
+import { shippingFor } from "../lib/order-pricing.mjs";
 
 const read = (path) => readFileSync(new URL(`../${path}`, import.meta.url), "utf8");
 
@@ -52,12 +53,26 @@ test("el mensaje de envío gratis deriva de la misma regla de envío", () => {
   assert.equal(FREE_SHIPPING_SUBTOTAL, 300001);
   assert.equal(calculateShipping(300000), 8000);
   assert.equal(calculateShipping(FREE_SHIPPING_SUBTOTAL), 0);
+  assert.equal(shippingFor(300000), calculateShipping(300000));
+  assert.equal(shippingFor(FREE_SHIPPING_SUBTOTAL), calculateShipping(FREE_SHIPPING_SUBTOTAL));
   assert.match(shippingProgressMessage(0), /300[.]001/);
   assert.match(shippingProgressMessage(300000), /\$\s?1\b/);
   assert.equal(shippingProgressMessage(FREE_SHIPPING_SUBTOTAL), "¡Tu pedido tiene envío gratis!");
   const html = read("index.html");
   assert.match(html, /data-shipping-message[^>]*aria-live="polite"/);
   assert.doesNotMatch(html, /\$16\.000 hasta \$99\.999/);
+});
+
+test("el formulario identifica campos obligatorios sin cambiar validaciones", () => {
+  const html = read("index.html");
+  const css = read("styles.css");
+  const requiredInputs = html.match(/<input[^>]*required[^>]*>/g) || [];
+  assert.equal(requiredInputs.length, 7);
+  assert.equal((html.match(/class="required-marker"/g) || []).length, 7);
+  assert.match(html, /Complemento o indicaciones de la dirección \(opcional\)/);
+  assert.match(html, /<input name="addressDetail"[^>]*>/);
+  assert.doesNotMatch(html.match(/<input name="addressDetail"[^>]*>/)?.[0] || "", /required/);
+  assert.match(css, /@media\s*\(max-width:\s*719px\)[\s\S]*?\.checkout-form input\s*{[^}]*min-height:\s*44px[^}]*padding:\s*0\.5rem 0\.65rem/s);
 });
 
 test("persistencia, checkout y contrato público permanecen conectados", () => {

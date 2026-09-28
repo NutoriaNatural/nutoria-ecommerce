@@ -857,6 +857,18 @@ h2 {
   transition: opacity 160ms ease, visibility 160ms ease;
 }
 
+.checkout-form__required-note {
+  margin: -0.5rem 0 0;
+  color: rgba(4, 38, 22, 0.72);
+  font-size: 0.8rem;
+}
+
+.required-marker,
+.checkout-form__required-note span {
+  color: #8a5a00;
+  font-weight: 700;
+}
+
 .cart-fab {
   position: relative;
   display: none;
@@ -993,6 +1005,11 @@ h2 {
   .checkout-form {
     gap: 0.875rem;
     padding: 1rem;
+  }
+
+  .checkout-form input {
+    min-height: 44px;
+    padding: 0.5rem 0.65rem;
   }
 
   .checkout-form__button {
