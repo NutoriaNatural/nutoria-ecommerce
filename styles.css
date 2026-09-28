@@ -571,6 +571,31 @@ h2 {
 }
 
 @media (max-width: 719px) {
+  .choice-grid--categories {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+    margin-top: 1.25rem;
+  }
+
+  .choice-grid--categories .choice-card {
+    min-height: 0;
+    gap: 0.65rem;
+    padding: 0.65rem;
+  }
+
+  .choice-grid--categories .choice-card__media {
+    min-height: 0;
+  }
+
+  .choice-grid--categories .choice-card__media img {
+    aspect-ratio: 4 / 3;
+  }
+
+  .choice-grid--categories .choice-card__name {
+    font-size: 1rem;
+    line-height: 1.15;
+  }
+
   .catalog-tools {
     gap: 0.55rem;
     margin-top: 1rem;
