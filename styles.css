@@ -473,25 +473,6 @@ h2 {
   background: var(--verde-nutoria);
 }
 
-.product-card__whatsapp {
-  display: inline-flex;
-  min-height: 48px;
-  align-items: center;
-  justify-content: center;
-  padding: 0.75rem 1rem;
-  border: 1px solid var(--verde-nutoria);
-  border-radius: var(--radio);
-  color: var(--verde-nutoria);
-  background: transparent;
-  font-weight: 600;
-  text-decoration: none;
-}
-
-.product-card__whatsapp:hover,
-.product-card__whatsapp:focus-visible {
-  border-color: var(--dorado-nutoria);
-}
-
 @media (max-width: 719px) {
   .product-grid {
     gap: 0.75rem;
@@ -563,8 +544,7 @@ h2 {
     padding: 0.5rem;
   }
 
-  .product-card__details,
-  .product-card__whatsapp {
+  .product-card__details {
     display: none;
   }
 }

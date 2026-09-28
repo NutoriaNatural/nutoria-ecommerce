@@ -1,5 +1,3 @@
-import { createProductWhatsAppUrl } from "./whatsapp.mjs";
-
 const standardVariants = (prices) =>
   ["1.000g", "500g", "250g", "125g"].map((presentation, index) => ({
     id: presentation.replace(".", ""),
@@ -218,17 +216,10 @@ function createProductCard(product) {
     updateVariant();
   }
 
-  const whatsapp = document.createElement("a");
-  whatsapp.className = "product-card__whatsapp";
-  whatsapp.href = createProductWhatsAppUrl(product.name);
-  whatsapp.target = "_blank";
-  whatsapp.rel = "noopener noreferrer";
-  whatsapp.textContent = "WhatsApp";
-
   const details = createProductDetails(product);
   body.append(name, presentation, price);
   if (details) body.append(details);
-  body.append(button, whatsapp);
+  body.append(button);
   card.append(imageContainer, body);
   return card;
 }

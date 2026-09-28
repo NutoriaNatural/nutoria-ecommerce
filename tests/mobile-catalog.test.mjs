@@ -18,7 +18,7 @@ test("las tarjetas móviles priorizan compra y conservan objetivos táctiles", (
   const catalog = read("product-catalog.mjs");
   assert.match(catalog, /button\.textContent = "Agregar"/);
   assert.match(css, /@media\s*\(max-width:\s*719px\)[\s\S]*?\.product-card__button\s*{[^}]*min-height:\s*44px/s);
-  assert.match(css, /@media\s*\(max-width:\s*719px\)[\s\S]*?\.product-card__details,[\s\S]*?\.product-card__whatsapp\s*{\s*display:\s*none/s);
+  assert.match(css, /@media\s*\(max-width:\s*719px\)[\s\S]*?\.product-card__details\s*{\s*display:\s*none/s);
   assert.match(css, /\.product-card__image\s*{[^}]*aspect-ratio:\s*1\s*\/\s*1/s);
   assert.match(css, /\.product-card__image img\s*{[^}]*object-fit:\s*cover/s);
   assert.match(css, /@media\s*\(max-width:\s*719px\)[\s\S]*?\.product-card__image\s*{[^}]*aspect-ratio:\s*4\s*\/\s*3/s);
@@ -36,14 +36,17 @@ test("uniforma el área de presentación y normaliza solo su texto visible", () 
   assert.equal(products.find((product) => product.variants.length)?.variants[0].presentation, "1.000g");
 });
 
-test("WhatsApp conserva su enlace y usa un control circular accesible", () => {
+test("solo conserva el WhatsApp flotante general en móvil y desktop", () => {
   const html = read("index.html");
   const css = read("styles.css");
   const whatsapp = read("whatsapp.mjs");
+  const catalog = read("product-catalog.mjs");
   assert.match(html, /class="whatsapp-help"[^>]*data-whatsapp-general/);
   assert.match(html, /aria-label="Contactar por WhatsApp"/);
   assert.match(html, /class="whatsapp-help__icon"[^>]*aria-hidden="true"/);
   assert.doesNotMatch(html, />\s*WhatsApp\s*<\/a>/);
+  assert.doesNotMatch(catalog, /product-card__whatsapp|createProductWhatsAppUrl/);
+  assert.doesNotMatch(css, /\.product-card__whatsapp/);
   assert.match(css, /\.whatsapp-help\s*{[^}]*width:\s*56px[^}]*height:\s*56px[^}]*border-radius:\s*50%/s);
   assert.match(css, /env\(safe-area-inset-bottom\)/);
   assert.match(css, /@media\s*\(max-width:\s*719px\)[\s\S]*?\.whatsapp-help\s*{[^}]*width:\s*54px[^}]*height:\s*54px/s);
