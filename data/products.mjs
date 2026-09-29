@@ -114,12 +114,23 @@ const productDefinitions = [
   ["uvas-pasas", "Uvas Pasas", "Deshidratados"],
 ];
 
+const productImages = {
+  "colageno-marino": [
+    "/assets/images/products/colageno-marino/01.webp",
+    "/assets/images/products/colageno-marino/02.webp",
+    "/assets/images/products/colageno-marino/03.webp",
+    "/assets/images/products/colageno-marino/04.webp",
+    "/assets/images/products/colageno-marino/05.webp",
+  ],
+};
+
 // Fuente única del catálogo. Los campos futuros permanecen vacíos hasta contar con información aprobada.
 export const products = productDefinitions.map(([id, name, category], index) => {
   const pricing = productPricing[name];
   const variants = pricing.variants;
   const firstVariant = variants[0];
-  const image = `assets/images/optimized/${name}.jpg`;
+  const images = productImages[id] ?? [`assets/images/optimized/${name}.jpg`];
+  const image = images[0];
 
   return Object.freeze({
     id,
@@ -128,7 +139,7 @@ export const products = productDefinitions.map(([id, name, category], index) => 
     name,
     category,
     image,
-    images: Object.freeze([image]),
+    images: Object.freeze([...images]),
     presentation: pricing.presentation ?? firstVariant.presentation,
     price: Object.hasOwn(pricing, "price") ? pricing.price : firstVariant.price,
     variants: Object.freeze(variants.map((variant) => Object.freeze({ ...variant }))),
