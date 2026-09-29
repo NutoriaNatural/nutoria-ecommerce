@@ -1,0 +1,152 @@
+const standardVariants = (prices) =>
+  ["1.000g", "500g", "250g", "125g"].map((presentation, index) => ({
+    id: presentation.replace(".", ""),
+    presentation,
+    price: prices[index],
+  }));
+
+const fixedPrice = (presentation, price) => ({ presentation, price, variants: [] });
+
+const productPricing = {
+  "7 Colagenos": fixedPrice("", null),
+  "Ajonjoli Negro": { variants: standardVariants([51000, 27000, 14000, 7000]) },
+  "Ajonjoli Tostado": { variants: standardVariants([39000, 21000, 11000, 5500]) },
+  Ajonjoli: { variants: standardVariants([35000, 19000, 10000, 5000]) },
+  Albaricoques: { variants: standardVariants([111000, 57000, 29000, 14500]) },
+  "Almendra Laminada": { variants: standardVariants([83000, 43000, 22000, 11000]) },
+  Almendras: fixedPrice("", null),
+  Amaranto: { variants: standardVariants([31000, 17000, 9000, 4500]) },
+  Arandanos: { variants: standardVariants([45000, 25000, 13000, 6500]) },
+  Avellanas: { variants: standardVariants([153000, 79000, 40000, 20000]) },
+  "Avena en Hojuelas sin Gluten": { variants: standardVariants([13000, 7000, 4000, 2000]) },
+  "Brevas Meladas": { variants: standardVariants([39000, 21000, 11000, 5500]) },
+  "Calcio Coral Marino": fixedPrice("1.000g", 89900),
+  "Ciruelas Pasas": { variants: standardVariants([39000, 21000, 11000, 5500]) },
+  "Coco Acaramelado": { variants: standardVariants([89000, 47000, 24000, 11000]) },
+  "Coco Laminado Deshidratado": { variants: standardVariants([65000, 35000, 18000, 9000]) },
+  "Coffe + Colageno": fixedPrice("250g", 32900),
+  "Colageno Hidrolizado": { variants: standardVariants([153000, 79000, 40000, 20000]) },
+  "Colageno Marino": fixedPrice("1.000g", 89900),
+  Datiles: { variants: standardVariants([53000, 29000, 15000, 7500]) },
+  "Flor de Jamaica": { variants: standardVariants([65000, 35000, 18000, 9000]) },
+  "Garbanzo Tostados": { variants: standardVariants([81000, 43000, 22000, 11000]) },
+  "Habas Saladas": { variants: standardVariants([47000, 26000, 13000, 6500]) },
+  "Harina de Almendras": { variants: standardVariants([81000, 43000, 22000, 11000]) },
+  "Lentejas Tostadas": { variants: standardVariants([81000, 43000, 22000, 11000]) },
+  "Maca Negra, Roja, Shihua Y Amarilla": fixedPrice("1.000g", 89900),
+  "Macadamia Acaramelada": { variants: standardVariants([129000, 67000, 34000, 17000]) },
+  Macadamia: { variants: standardVariants([113000, 59000, 30000, 15000]) },
+  "Mango Deshidratado": { variants: standardVariants([153000, 79000, 40000, 20000]) },
+  "Mani Confitado": { variants: standardVariants([28000, 15000, 8000, 4000]) },
+  Marañon: { variants: standardVariants([113000, 59000, 30000, 15000]) },
+  "Mix Golden (leche dorada)": fixedPrice("250g", 31900),
+  "Mix Rojos Deshidratado": { variants: standardVariants([153000, 79000, 40000, 20000]) },
+  "Mix Tropical Deshidratado": { variants: standardVariants([153000, 79000, 40000, 20000]) },
+  "Nibs de Cacao": { variants: standardVariants([105000, 55000, 28000, 14000]) },
+  "Nuez del Brasil": { variants: standardVariants([113000, 59000, 30000, 15000]) },
+  "Nuez Nogal": { variants: standardVariants([93000, 49000, 25000, 12500]) },
+  "Nuez Pecana": { variants: standardVariants([153000, 79000, 40000, 20000]) },
+  "Piña Deshidratada": { variants: standardVariants([153000, 79000, 40000, 20000]) },
+  Pistachos: { variants: standardVariants([113000, 59000, 30000, 15000]) },
+  "Proteina Whey": fixedPrice("900g", 179900),
+  Quinua: { variants: standardVariants([29000, 17000, 9000, 4500]) },
+  Resveratrol: fixedPrice("90g (90 und)", 63900),
+  "Sales de Magnesio Mg2": fixedPrice("1.000g", 89900),
+  "Semillas de Amapola": { variants: standardVariants([81000, 43000, 22000, 11000]) },
+  "Te Chai": fixedPrice("250g", 31900),
+  "Uvas Pasas": { variants: standardVariants([24000, 13000, 7000, 3500]) },
+};
+
+export const PRODUCT_CATEGORIES = Object.freeze([
+  "Frutos secos, semillas y granos",
+  "Deshidratados",
+  "Alimentos naturales",
+  "Suplementos",
+]);
+
+const productDefinitions = [
+  ["7-colagenos", "7 Colagenos", "Suplementos"],
+  ["ajonjoli-negro", "Ajonjoli Negro", "Frutos secos, semillas y granos"],
+  ["ajonjoli-tostado", "Ajonjoli Tostado", "Frutos secos, semillas y granos"],
+  ["ajonjoli", "Ajonjoli", "Frutos secos, semillas y granos"],
+  ["albaricoques", "Albaricoques", "Deshidratados"],
+  ["almendra-laminada", "Almendra Laminada", "Frutos secos, semillas y granos"],
+  ["almendras", "Almendras", "Frutos secos, semillas y granos"],
+  ["amaranto", "Amaranto", "Frutos secos, semillas y granos"],
+  ["arandanos", "Arandanos", "Deshidratados"],
+  ["avellanas", "Avellanas", "Frutos secos, semillas y granos"],
+  ["avena-en-hojuelas-sin-gluten", "Avena en Hojuelas sin Gluten", "Alimentos naturales"],
+  ["brevas-meladas", "Brevas Meladas", "Deshidratados"],
+  ["calcio-coral-marino", "Calcio Coral Marino", "Suplementos"],
+  ["ciruelas-pasas", "Ciruelas Pasas", "Deshidratados"],
+  ["coco-acaramelado", "Coco Acaramelado", "Deshidratados"],
+  ["coco-laminado-deshidratado", "Coco Laminado Deshidratado", "Deshidratados"],
+  ["coffe-colageno", "Coffe + Colageno", "Suplementos"],
+  ["colageno-hidrolizado", "Colageno Hidrolizado", "Suplementos"],
+  ["colageno-marino", "Colageno Marino", "Suplementos"],
+  ["datiles", "Datiles", "Deshidratados"],
+  ["flor-de-jamaica", "Flor de Jamaica", "Alimentos naturales"],
+  ["garbanzo-tostados", "Garbanzo Tostados", "Frutos secos, semillas y granos"],
+  ["habas-saladas", "Habas Saladas", "Frutos secos, semillas y granos"],
+  ["harina-de-almendras", "Harina de Almendras", "Alimentos naturales"],
+  ["lentejas-tostadas", "Lentejas Tostadas", "Frutos secos, semillas y granos"],
+  ["maca-negra-roja-shihua-y-amarilla", "Maca Negra, Roja, Shihua Y Amarilla", "Alimentos naturales"],
+  ["macadamia-acaramelada", "Macadamia Acaramelada", "Frutos secos, semillas y granos"],
+  ["macadamia", "Macadamia", "Frutos secos, semillas y granos"],
+  ["mango-deshidratado", "Mango Deshidratado", "Deshidratados"],
+  ["mani-confitado", "Mani Confitado", "Frutos secos, semillas y granos"],
+  ["maranon", "Marañon", "Frutos secos, semillas y granos"],
+  ["mix-golden", "Mix Golden (leche dorada)", "Alimentos naturales"],
+  ["mix-rojos-deshidratado", "Mix Rojos Deshidratado", "Deshidratados"],
+  ["mix-tropical-deshidratado", "Mix Tropical Deshidratado", "Deshidratados"],
+  ["nibs-de-cacao", "Nibs de Cacao", "Alimentos naturales"],
+  ["nuez-del-brasil", "Nuez del Brasil", "Frutos secos, semillas y granos"],
+  ["nuez-nogal", "Nuez Nogal", "Frutos secos, semillas y granos"],
+  ["nuez-pecana", "Nuez Pecana", "Frutos secos, semillas y granos"],
+  ["pina-deshidratada", "Piña Deshidratada", "Deshidratados"],
+  ["pistachos", "Pistachos", "Frutos secos, semillas y granos"],
+  ["proteina-whey", "Proteina Whey", "Suplementos"],
+  ["quinua", "Quinua", "Frutos secos, semillas y granos"],
+  ["resveratrol", "Resveratrol", "Suplementos"],
+  ["sales-de-magnesio-mg2", "Sales de Magnesio Mg2", "Suplementos"],
+  ["semillas-de-amapola", "Semillas de Amapola", "Frutos secos, semillas y granos"],
+  ["te-chai", "Te Chai", "Alimentos naturales"],
+  ["uvas-pasas", "Uvas Pasas", "Deshidratados"],
+];
+
+// Fuente única del catálogo. Los campos futuros permanecen vacíos hasta contar con información aprobada.
+export const products = productDefinitions.map(([id, name, category], index) => {
+  const pricing = productPricing[name];
+  const variants = pricing.variants;
+  const firstVariant = variants[0];
+  const image = `assets/images/optimized/${name}.jpg`;
+
+  return Object.freeze({
+    id,
+    slug: id,
+    legacyId: `producto-${index + 1}`,
+    name,
+    category,
+    image,
+    images: Object.freeze([image]),
+    presentation: pricing.presentation ?? firstVariant.presentation,
+    price: Object.hasOwn(pricing, "price") ? pricing.price : firstVariant.price,
+    variants: Object.freeze(variants.map((variant) => Object.freeze({ ...variant }))),
+    shortDescription: "",
+    description: "",
+    highlights: Object.freeze([]),
+    ingredients: "",
+    content: "",
+    nutrition: "",
+    usage: "",
+    conservation: "",
+    sanitaryRegistration: "",
+    additionalInformation: "",
+    seoTitle: "",
+    seoDescription: "",
+  });
+});
+
+export const productById = new Map(products.map((product) => [product.id, product]));
+export const productBySlug = new Map(products.map((product) => [product.slug, product]));
+export const productByLegacyId = new Map(products.map((product) => [product.legacyId, product]));
