@@ -37,6 +37,25 @@ test("la ficha directa usa rutas absolutas y no inventa contenido", () => {
   assert.doesNotMatch(html, /Beneficios principales|Ingredientes destacados|Información técnica|Modo de uso/);
 });
 
+test("solo la imagen y el nombre de Colágeno Marino enlazan a su ficha", () => {
+  const product = productBySlug.get("colageno-marino");
+  assert.equal(product.detailPath, "/productos/colageno-marino/");
+  assert.equal(productBySlug.get("colageno-hidrolizado").detailPath, "");
+  assert.equal(productBySlug.get("almendras").detailPath, "");
+  assert.equal(
+    [...productBySlug.values()].filter(({ detailPath }) => detailPath).length,
+    1,
+  );
+
+  const catalog = read("product-catalog.mjs");
+  assert.match(catalog, /imageLink\.href = product\.detailPath/);
+  assert.match(catalog, /nameLink\.href = product\.detailPath/);
+  assert.match(catalog, /imageContainer\.append\(image\)/);
+  assert.match(catalog, /name\.textContent = product\.name/);
+  assert.match(catalog, /body\.append\(name, presentation, price\)/);
+  assert.match(catalog, /body\.append\(button\)/);
+});
+
 test("la ficha reutiliza el carrito, badge, persistencia y checkout existentes", () => {
   const html = read("productos/colageno-marino/index.html");
   const detail = read("product-detail.mjs");

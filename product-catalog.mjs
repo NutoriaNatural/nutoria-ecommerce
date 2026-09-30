@@ -70,14 +70,31 @@ function createProductCard(product) {
   image.width = 600;
   image.height = 600;
   image.loading = "lazy";
-  imageContainer.append(image);
+  if (product.detailPath) {
+    const imageLink = document.createElement("a");
+    imageLink.className = "product-card__image-link";
+    imageLink.href = product.detailPath;
+    imageLink.setAttribute("aria-label", `Ver ${product.name}`);
+    imageLink.append(image);
+    imageContainer.append(imageLink);
+  } else {
+    imageContainer.append(image);
+  }
 
   const body = document.createElement("div");
   body.className = "product-card__body";
 
   const name = document.createElement("h3");
   name.className = "product-card__name";
-  name.textContent = product.name;
+  if (product.detailPath) {
+    const nameLink = document.createElement("a");
+    nameLink.className = "product-card__name-link";
+    nameLink.href = product.detailPath;
+    nameLink.textContent = product.name;
+    name.append(nameLink);
+  } else {
+    name.textContent = product.name;
+  }
 
   const presentation = document.createElement("div");
   presentation.className = "product-card__field";

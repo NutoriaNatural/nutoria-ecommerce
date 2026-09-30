@@ -136,6 +136,7 @@ export const products = productDefinitions.map(([id, name, category], index) => 
     id,
     slug: id,
     legacyId: `producto-${index + 1}`,
+    detailPath: id === "colageno-marino" ? "/productos/colageno-marino/" : "",
     name,
     category,
     image,
