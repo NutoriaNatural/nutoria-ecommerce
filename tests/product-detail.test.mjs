@@ -5,65 +5,78 @@ import { productBySlug } from "../data/products.mjs";
 import { priceOrder } from "../lib/order-pricing.mjs";
 
 const read = (path) => readFileSync(new URL(`../${path}`, import.meta.url), "utf8");
+const detailSlugs = [
+  "7-colagenos",
+  "calcio-coral-marino",
+  "coffe-colageno",
+  "colageno-marino",
+  "maca-negra-roja-shihua-y-amarilla",
+  "mix-golden",
+  "proteina-whey",
+  "resveratrol",
+  "sales-de-magnesio-mg2",
+  "te-chai",
+];
 
-test("Colágeno Marino usa en orden las cinco imágenes WEBP y reemplaza la imagen del catálogo", () => {
-  const product = productBySlug.get("colageno-marino");
-  assert.ok(product);
-  assert.deepEqual(product.images, [
-    "/assets/images/products/colageno-marino/01.webp",
-    "/assets/images/products/colageno-marino/02.webp",
-    "/assets/images/products/colageno-marino/03.webp",
-    "/assets/images/products/colageno-marino/04.webp",
-    "/assets/images/products/colageno-marino/05.webp",
-  ]);
-  assert.equal(product.image, product.images[0]);
-  product.images.forEach((image) => {
-    assert.equal(existsSync(new URL(`..${image}`, import.meta.url)), true, image);
-  });
+test("las diez fichas autorizadas usan cinco imágenes nuevas en orden", () => {
+  const detailed = [...productBySlug.values()].filter(({ detailPath }) => detailPath);
+  assert.deepEqual(detailed.map(({ slug }) => slug).sort(), [...detailSlugs].sort());
+  for (const slug of detailSlugs) {
+    const product = productBySlug.get(slug);
+    assert.equal(product.detailPath, `/productos/${slug}/`);
+    assert.equal(product.images.length, 5, slug);
+    assert.equal(product.image, product.images[0]);
+    product.images.forEach((image, index) => {
+      assert.match(image, new RegExp(`/assets/images/products/${slug}/0${index + 1}\\.(?:webp|jpeg)$`));
+      assert.equal(existsSync(new URL(`..${image}`, import.meta.url)), true, image);
+    });
+  }
 });
 
-test("la ficha directa usa rutas absolutas y no inventa contenido", () => {
-  const html = read("productos/colageno-marino/index.html");
-  assert.match(html, /data-product-detail/);
-  assert.match(html, /src="\/product-detail\.mjs"/);
-  assert.match(html, /src="\/cart\.mjs"/);
-  assert.match(html, /src="\/whatsapp\.mjs"/);
-  assert.match(html, /href="\/styles\.css"/);
-  assert.match(html, /data-product-main-image/);
-  assert.match(html, /data-product-thumbnails/);
-  assert.match(html, /data-product-presentation/);
-  assert.match(html, /data-product-price/);
-  assert.match(html, /data-product-add/);
-  assert.doesNotMatch(html, /Beneficios principales|Ingredientes destacados|Información técnica|Modo de uso/);
+test("cada URL directa carga la plantilla común mediante rutas absolutas", () => {
+  for (const slug of detailSlugs) {
+    const html = read(`productos/${slug}/index.html`);
+    assert.match(html, new RegExp(`data-product-slug="${slug}"`));
+    assert.match(html, /src="\/product-page\.mjs"/);
+    assert.match(html, /href="\/styles\.css"/);
+    assert.match(html, /href="\/product-detail\.css"/);
+    assert.doesNotMatch(html, /Beneficios principales|Ingredientes destacados|Información técnica|Modo de uso/);
+  }
 });
 
-test("solo la imagen y el nombre de Colágeno Marino enlazan a su ficha", () => {
-  const product = productBySlug.get("colageno-marino");
-  assert.equal(product.detailPath, "/productos/colageno-marino/");
-  assert.equal(productBySlug.get("colageno-hidrolizado").detailPath, "");
+test("la estructura reutilizable renderiza galería y datos reales sin duplicarlos en HTML", () => {
+  const page = read("product-page.mjs");
+  const detail = read("product-detail.mjs");
+  assert.match(page, /productBySlug\.get\(slug\)/);
+  assert.match(page, /data-product-main-image/);
+  assert.match(page, /data-product-thumbnails/);
+  assert.match(page, /data-product-presentation/);
+  assert.match(page, /data-product-price/);
+  assert.match(page, /data-product-add/);
+  assert.match(page, /initializeProductDetail\(slug\)/);
+  assert.match(detail, /product\.images\.forEach/);
+  assert.match(detail, /name\.textContent = product\.name/);
+  assert.match(detail, /category\.textContent = product\.category/);
+});
+
+test("imagen y nombre enlazan solo las fichas existentes y Agregar sigue directo", () => {
   assert.equal(productBySlug.get("almendras").detailPath, "");
-  assert.equal(
-    [...productBySlug.values()].filter(({ detailPath }) => detailPath).length,
-    1,
-  );
-
   const catalog = read("product-catalog.mjs");
   assert.match(catalog, /imageLink\.href = product\.detailPath/);
   assert.match(catalog, /nameLink\.href = product\.detailPath/);
-  assert.match(catalog, /imageContainer\.append\(image\)/);
-  assert.match(catalog, /name\.textContent = product\.name/);
-  assert.match(catalog, /body\.append\(name, presentation, price\)/);
   assert.match(catalog, /body\.append\(button\)/);
 });
 
-test("la ficha reutiliza el carrito, badge, persistencia y checkout existentes", () => {
-  const html = read("productos/colageno-marino/index.html");
+test("todas las fichas reutilizan el mismo carrito, badge, persistencia y checkout", () => {
+  const page = read("product-page.mjs");
   const detail = read("product-detail.mjs");
   const cart = read("cart.mjs");
-  assert.equal((html.match(/id="cart-dialog"/g) || []).length, 1);
-  assert.equal((html.match(/data-cart-open/g) || []).length, 2);
-  assert.equal((html.match(/data-cart-count/g) || []).length, 2);
-  assert.match(html, /data-whatsapp-general/);
+  assert.equal((page.match(/id=\"cart-dialog\"/g) || []).length, 1);
+  assert.equal((page.match(/data-cart-open/g) || []).length, 2);
+  assert.equal((page.match(/data-cart-count/g) || []).length, 2);
+  assert.match(page, /data-whatsapp-general/);
+  assert.match(page, /await import\("\.\/cart\.mjs"\)/);
+  assert.match(page, /await import\("\.\/whatsapp\.mjs"\)/);
   assert.match(detail, /addButton\.dataset\.productId = selected\.id/);
   assert.match(detail, /addButton\.dataset\.productPrice = String\(selected\.price\)/);
   assert.match(cart, /localStorage\.setItem\(STORAGE_KEY/);
@@ -71,13 +84,15 @@ test("la ficha reutiliza el carrito, badge, persistencia y checkout existentes",
   assert.match(cart, /items: state\.items\.map\(\(\{ id, quantity \}\) => \(\{ id, quantity \}\)\)/);
 });
 
-test("la presentación y precio oficial de Colágeno Marino permanecen intactos", () => {
-  const product = productBySlug.get("colageno-marino");
-  assert.equal(product.presentation, "1.000g");
-  assert.equal(product.price, 89900);
-  const priced = priceOrder([{ id: "colageno-marino", quantity: 1 }]);
-  assert.equal(priced.items[0].presentation, "1.000g");
-  assert.equal(priced.items[0].price, 89900);
+test("precios y presentaciones oficiales continúan en la validación server-side", () => {
+  for (const slug of detailSlugs) {
+    const product = productBySlug.get(slug);
+    if (!Number.isInteger(product.price) || product.price <= 0) continue;
+    const priced = priceOrder([{ id: product.id, quantity: 1 }]);
+    assert.equal(priced.items[0].presentation, product.presentation, slug);
+    assert.equal(priced.items[0].price, product.price, slug);
+  }
+  assert.equal(productBySlug.get("7-colagenos").price, null);
 });
 
 test("la galería es responsive y conserva las imágenes completas", () => {

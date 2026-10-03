@@ -1,5 +1,7 @@
 import { productBySlug } from "./data/products.mjs";
-import { formatPresentation } from "./product-catalog.mjs";
+
+const formatPresentation = (value) =>
+  value.replace(/(\d[\d.]*)\s*(mg|kg|g|ml|l)\b/giu, "$1 $2");
 
 const formatMoney = (value) => new Intl.NumberFormat("es-CO", {
   style: "currency",
@@ -7,10 +9,10 @@ const formatMoney = (value) => new Intl.NumberFormat("es-CO", {
   maximumFractionDigits: 0,
 }).format(value);
 
-const product = productBySlug.get("colageno-marino");
-const root = document.querySelector("[data-product-detail]");
-
-if (product && root) {
+export function initializeProductDetail(slug) {
+  const product = productBySlug.get(slug);
+  const root = document.querySelector("[data-product-detail]");
+  if (!product || !root) return false;
   const mainImage = root.querySelector("[data-product-main-image]");
   const thumbnails = root.querySelector("[data-product-thumbnails]");
   const name = root.querySelector("[data-product-name]");
@@ -81,4 +83,5 @@ if (product && root) {
 
   presentation.addEventListener("change", updateSelection);
   updateSelection();
+  return true;
 }

@@ -115,12 +115,75 @@ const productDefinitions = [
 ];
 
 const productImages = {
+  "7-colagenos": [
+    "/assets/images/products/7-colagenos/01.webp",
+    "/assets/images/products/7-colagenos/02.webp",
+    "/assets/images/products/7-colagenos/03.jpeg",
+    "/assets/images/products/7-colagenos/04.webp",
+    "/assets/images/products/7-colagenos/05.webp",
+  ],
+  "calcio-coral-marino": [
+    "/assets/images/products/calcio-coral-marino/01.webp",
+    "/assets/images/products/calcio-coral-marino/02.webp",
+    "/assets/images/products/calcio-coral-marino/03.webp",
+    "/assets/images/products/calcio-coral-marino/04.webp",
+    "/assets/images/products/calcio-coral-marino/05.webp",
+  ],
+  "coffe-colageno": [
+    "/assets/images/products/coffe-colageno/01.webp",
+    "/assets/images/products/coffe-colageno/02.webp",
+    "/assets/images/products/coffe-colageno/03.webp",
+    "/assets/images/products/coffe-colageno/04.webp",
+    "/assets/images/products/coffe-colageno/05.webp",
+  ],
   "colageno-marino": [
     "/assets/images/products/colageno-marino/01.webp",
     "/assets/images/products/colageno-marino/02.webp",
     "/assets/images/products/colageno-marino/03.webp",
     "/assets/images/products/colageno-marino/04.webp",
     "/assets/images/products/colageno-marino/05.webp",
+  ],
+  "maca-negra-roja-shihua-y-amarilla": [
+    "/assets/images/products/maca-negra-roja-shihua-y-amarilla/01.webp",
+    "/assets/images/products/maca-negra-roja-shihua-y-amarilla/02.webp",
+    "/assets/images/products/maca-negra-roja-shihua-y-amarilla/03.webp",
+    "/assets/images/products/maca-negra-roja-shihua-y-amarilla/04.webp",
+    "/assets/images/products/maca-negra-roja-shihua-y-amarilla/05.webp",
+  ],
+  "mix-golden": [
+    "/assets/images/products/mix-golden/01.webp",
+    "/assets/images/products/mix-golden/02.webp",
+    "/assets/images/products/mix-golden/03.webp",
+    "/assets/images/products/mix-golden/04.webp",
+    "/assets/images/products/mix-golden/05.webp",
+  ],
+  "proteina-whey": [
+    "/assets/images/products/proteina-whey/01.webp",
+    "/assets/images/products/proteina-whey/02.webp",
+    "/assets/images/products/proteina-whey/03.webp",
+    "/assets/images/products/proteina-whey/04.webp",
+    "/assets/images/products/proteina-whey/05.webp",
+  ],
+  resveratrol: [
+    "/assets/images/products/resveratrol/01.webp",
+    "/assets/images/products/resveratrol/02.webp",
+    "/assets/images/products/resveratrol/03.webp",
+    "/assets/images/products/resveratrol/04.webp",
+    "/assets/images/products/resveratrol/05.webp",
+  ],
+  "sales-de-magnesio-mg2": [
+    "/assets/images/products/sales-de-magnesio-mg2/01.webp",
+    "/assets/images/products/sales-de-magnesio-mg2/02.webp",
+    "/assets/images/products/sales-de-magnesio-mg2/03.webp",
+    "/assets/images/products/sales-de-magnesio-mg2/04.webp",
+    "/assets/images/products/sales-de-magnesio-mg2/05.webp",
+  ],
+  "te-chai": [
+    "/assets/images/products/te-chai/01.webp",
+    "/assets/images/products/te-chai/02.webp",
+    "/assets/images/products/te-chai/03.webp",
+    "/assets/images/products/te-chai/04.webp",
+    "/assets/images/products/te-chai/05.webp",
   ],
 };
 
@@ -136,7 +199,7 @@ export const products = productDefinitions.map(([id, name, category], index) => 
     id,
     slug: id,
     legacyId: `producto-${index + 1}`,
-    detailPath: id === "colageno-marino" ? "/productos/colageno-marino/" : "",
+    detailPath: productImages[id] ? `/productos/${id}/` : "",
     name,
     category,
     image,
