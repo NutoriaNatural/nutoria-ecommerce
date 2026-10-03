@@ -27,6 +27,10 @@ if (!product || !product.detailPath) {
           <a class="product-purchase__back" href="/#productos">← Volver a productos</a>
           <p class="product-purchase__category" data-product-category></p>
           <h1 id="product-name" data-product-name></h1>
+          <section class="product-purchase__composition" data-product-composition hidden>
+            <h2>Composición</h2>
+            <ul data-product-composition-list></ul>
+          </section>
           <div class="product-purchase__field"><label for="product-presentation">Presentación</label><select id="product-presentation" data-product-presentation></select></div>
           <p class="product-purchase__price" data-product-price aria-live="polite"></p>
           <button class="product-card__button" data-product-add type="button">Agregar</button>

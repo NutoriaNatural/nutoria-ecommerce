@@ -20,9 +20,20 @@ export function initializeProductDetail(slug) {
   const presentation = root.querySelector("[data-product-presentation]");
   const price = root.querySelector("[data-product-price]");
   const addButton = root.querySelector("[data-product-add]");
+  const composition = root.querySelector("[data-product-composition]");
+  const compositionList = root.querySelector("[data-product-composition-list]");
 
   name.textContent = product.name;
   category.textContent = product.category;
+
+  if (product.composition.length && composition && compositionList) {
+    product.composition.forEach((ingredient) => {
+      const item = document.createElement("li");
+      item.textContent = ingredient;
+      compositionList.append(item);
+    });
+    composition.hidden = false;
+  }
 
   product.images.forEach((src, index) => {
     const button = document.createElement("button");

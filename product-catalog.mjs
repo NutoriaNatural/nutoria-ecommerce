@@ -96,6 +96,16 @@ function createProductCard(product) {
     name.textContent = product.name;
   }
 
+  const composition = document.createElement("p");
+  composition.className = "product-card__composition";
+  if (product.composition.length) {
+    const visibleIngredients = product.composition.slice(0, 3);
+    const remaining = product.composition.length - visibleIngredients.length;
+    composition.textContent = remaining > 0
+      ? `${visibleIngredients.join(", ")} + ${remaining} más`
+      : visibleIngredients.join(", ");
+  }
+
   const presentation = document.createElement("div");
   presentation.className = "product-card__field";
   const presentationLabel = document.createElement("span");
@@ -159,7 +169,9 @@ function createProductCard(product) {
   }
 
   const details = createProductDetails(product);
-  body.append(name, presentation, price);
+  body.append(name);
+  if (product.composition.length) body.append(composition);
+  body.append(presentation, price);
   if (details) body.append(details);
   body.append(button);
   card.append(imageContainer, body);

@@ -35,7 +35,7 @@ test("conserva los 47 IDs legacy anteriores y añade los nuevos al final", () =>
 
 test("conserva imágenes, categorías, presentaciones y precios en la fuente única", () => {
   const ajonjoli = productById.get("ajonjoli-negro");
-  assert.equal(ajonjoli.image, "assets/images/optimized/Ajonjoli Negro.jpg");
+  assert.equal(ajonjoli.image, "/assets/images/products/ajonjoli-negro/01.webp");
   assert.equal(ajonjoli.category, "Frutos secos, semillas y granos");
   assert.deepEqual(
     ajonjoli.variants.map(({ presentation, price }) => ({ presentation, price })),
@@ -49,6 +49,9 @@ test("conserva imágenes, categorías, presentaciones y precios en la fuente ún
   const whey = productById.get("proteina-whey");
   assert.equal(whey.presentation, "900g");
   assert.equal(whey.price, 179900);
+  const naturalSesame = productById.get("ajonjoli");
+  assert.equal(naturalSesame.name, "Ajonjolí Natural");
+  assert.deepEqual(naturalSesame.variants.map(({ price }) => price), [35000, 19000, 10000, 5000]);
 });
 
 test("deja vacíos los campos futuros cuando no existe información aprobada", () => {

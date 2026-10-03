@@ -97,6 +97,28 @@
   font-size: clamp(2.4rem, 7vw, 4.2rem);
 }
 
+.product-purchase__composition {
+  padding: 1rem;
+  border-radius: var(--radio);
+  background: rgba(224, 172, 69, 0.12);
+}
+
+.product-purchase__composition h2 {
+  margin: 0 0 0.65rem;
+  font-family: inherit;
+  font-size: 1rem;
+}
+
+.product-purchase__composition ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.1rem;
+  margin: 0;
+  padding-left: 1.15rem;
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
 .product-purchase__field {
   display: grid;
   gap: 0.4rem;

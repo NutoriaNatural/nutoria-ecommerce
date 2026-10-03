@@ -9,9 +9,9 @@ const fixedPrice = (presentation, price) => ({ presentation, price, variants: []
 
 const productPricing = {
   "7 Colagenos": fixedPrice("", null),
-  "Ajonjoli Negro": { variants: standardVariants([51000, 27000, 14000, 7000]) },
-  "Ajonjoli Tostado": { variants: standardVariants([39000, 21000, 11000, 5500]) },
-  Ajonjoli: { variants: standardVariants([35000, 19000, 10000, 5000]) },
+  "Ajonjolí Negro": { variants: standardVariants([51000, 27000, 14000, 7000]) },
+  "Ajonjolí Tostado": { variants: standardVariants([39000, 21000, 11000, 5500]) },
+  "Ajonjolí Natural": { variants: standardVariants([35000, 19000, 10000, 5000]) },
   Albaricoques: { variants: standardVariants([111000, 57000, 29000, 14500]) },
   "Almendra Laminada": { variants: standardVariants([83000, 43000, 22000, 11000]) },
   Almendras: fixedPrice("", null),
@@ -52,7 +52,7 @@ const productPricing = {
   Quinua: { variants: standardVariants([29000, 17000, 9000, 4500]) },
   Resveratrol: fixedPrice("90g (90 und)", 63900),
   "Sales de Magnesio Mg2": fixedPrice("1.000g", 89900),
-  "Semillas de Amapola": { variants: standardVariants([81000, 43000, 22000, 11000]) },
+  Amapola: { variants: standardVariants([81000, 43000, 22000, 11000]) },
   "Te Chai": fixedPrice("250g", 31900),
   "Uvas Pasas": { variants: standardVariants([24000, 13000, 7000, 3500]) },
   "Almendras con Cobertura al 60% Cacao": fixedPrice("", null),
@@ -91,9 +91,9 @@ export const PRODUCT_CATEGORIES = Object.freeze([
 
 const productDefinitions = [
   ["7-colagenos", "7 Colagenos", "Suplementos"],
-  ["ajonjoli-negro", "Ajonjoli Negro", "Frutos secos, semillas y granos"],
-  ["ajonjoli-tostado", "Ajonjoli Tostado", "Frutos secos, semillas y granos"],
-  ["ajonjoli", "Ajonjoli", "Frutos secos, semillas y granos"],
+  ["ajonjoli-negro", "Ajonjolí Negro", "Frutos secos, semillas y granos"],
+  ["ajonjoli-tostado", "Ajonjolí Tostado", "Frutos secos, semillas y granos"],
+  ["ajonjoli", "Ajonjolí Natural", "Frutos secos, semillas y granos"],
   ["albaricoques", "Albaricoques", "Deshidratados"],
   ["almendra-laminada", "Almendra Laminada", "Frutos secos, semillas y granos"],
   ["almendras", "Almendras", "Frutos secos, semillas y granos"],
@@ -134,7 +134,7 @@ const productDefinitions = [
   ["quinua", "Quinua", "Frutos secos, semillas y granos"],
   ["resveratrol", "Resveratrol", "Suplementos"],
   ["sales-de-magnesio-mg2", "Sales de Magnesio Mg2", "Suplementos"],
-  ["semillas-de-amapola", "Semillas de Amapola", "Frutos secos, semillas y granos"],
+  ["semillas-de-amapola", "Amapola", "Frutos secos, semillas y granos"],
   ["te-chai", "Te Chai", "Alimentos naturales"],
   ["uvas-pasas", "Uvas Pasas", "Deshidratados"],
   ["almendras-con-cobertura-al-60-cacao", "Almendras con Cobertura al 60% Cacao", "Frutos secos, semillas y granos"],
@@ -295,6 +295,12 @@ const productImages = {
   "macadamia-acaramelada": numberedImages("macadamia-acaramelada"),
   "coco-laminado-deshidratado": numberedImages("coco-laminado-deshidratado"),
   "coco-acaramelado": numberedImages("coco-acaramelado"),
+  quinua: numberedImages("quinua"),
+  "flor-de-jamaica": numberedImages("flor-de-jamaica"),
+  "semillas-de-amapola": numberedImages("semillas-de-amapola"),
+  ajonjoli: numberedImages("ajonjoli"),
+  "ajonjoli-negro": numberedImages("ajonjoli-negro"),
+  "ajonjoli-tostado": numberedImages("ajonjoli-tostado"),
 };
 
 const productCompositions = {

@@ -48,7 +48,7 @@ test("las diez fichas autorizadas usan cinco imágenes nuevas en orden", () => {
 
 test("las 56 carpetas nuevas alimentan catálogo y ficha reutilizable", () => {
   assert.equal(catalogUpdateSlugs.length, 56);
-  assert.equal([...productBySlug.values()].filter(({ detailPath }) => detailPath).length, 66);
+  assert.equal([...productBySlug.values()].filter(({ detailPath }) => detailPath).length, 72);
   for (const slug of catalogUpdateSlugs) {
     const product = productBySlug.get(slug);
     assert.ok(product, slug);
@@ -62,6 +62,28 @@ test("las 56 carpetas nuevas alimentan catálogo y ficha reutilizable", () => {
     assert.match(html, new RegExp(`data-product-slug="${slug}"`));
     assert.match(html, /src="\/product-page\.mjs"/);
   }
+});
+
+test("los seis productos existentes conservan IDs y precios y reciben ficha e imagen nuevas", () => {
+  const expected = {
+    quinua: "Quinua",
+    "flor-de-jamaica": "Flor de Jamaica",
+    "semillas-de-amapola": "Amapola",
+    ajonjoli: "Ajonjolí Natural",
+    "ajonjoli-negro": "Ajonjolí Negro",
+    "ajonjoli-tostado": "Ajonjolí Tostado",
+  };
+  Object.entries(expected).forEach(([slug, name]) => {
+    const product = productBySlug.get(slug);
+    assert.equal(product.id, slug);
+    assert.equal(product.name, name);
+    assert.equal(product.image, `/assets/images/products/${slug}/01.webp`);
+    assert.equal(product.detailPath, `/productos/${slug}/`);
+    assert.equal(existsSync(new URL(`..${product.image}`, import.meta.url)), true);
+    assert.match(read(`productos/${slug}/index.html`), new RegExp(`data-product-slug="${slug}"`));
+    const priced = priceOrder([{ id: `${slug}-${product.variants[0].id}`, quantity: 1 }]);
+    assert.equal(priced.items[0].price, product.variants[0].price);
+  });
 });
 
 test("cada URL directa carga la plantilla común mediante rutas absolutas", () => {
@@ -84,15 +106,18 @@ test("la estructura reutilizable renderiza galería y datos reales sin duplicarl
   assert.match(page, /data-product-presentation/);
   assert.match(page, /data-product-price/);
   assert.match(page, /data-product-add/);
+  assert.match(page, /data-product-composition/);
   assert.match(page, /initializeProductDetail\(slug\)/);
   assert.match(detail, /product\.images\.forEach/);
   assert.match(detail, /name\.textContent = product\.name/);
   assert.match(detail, /category\.textContent = product\.category/);
+  assert.match(detail, /product\.composition\.forEach/);
 });
 
-test("imagen y nombre enlazan solo las fichas existentes y Agregar sigue directo", () => {
+test("imagen y nombre enlazan las fichas existentes y Agregar sigue directo", () => {
   assert.equal(productBySlug.get("almendras").detailPath, "/productos/almendras/");
-  assert.equal(productBySlug.get("ajonjoli").detailPath, "");
+  assert.equal(productBySlug.get("ajonjoli").detailPath, "/productos/ajonjoli/");
+  assert.equal([...productBySlug.values()].filter(({ detailPath }) => detailPath).length, 72);
   const catalog = read("product-catalog.mjs");
   assert.match(catalog, /imageLink\.href = product\.detailPath/);
   assert.match(catalog, /nameLink\.href = product\.detailPath/);

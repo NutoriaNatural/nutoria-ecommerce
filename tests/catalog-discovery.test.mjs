@@ -97,6 +97,14 @@ test("filtra las tarjetas existentes sin duplicar catálogo ni romper Agregar", 
   assert.match(cart, /fetch\("\/api\/wompi\/checkout"/);
 });
 
+test("muestra un resumen de composición de los Mix sin duplicar ingredientes", () => {
+  const catalog = read("product-catalog.mjs");
+  assert.match(catalog, /product\.composition\.slice\(0, 3\)/);
+  assert.match(catalog, /visibleIngredients\.join\(", "\)/);
+  assert.match(catalog, /product-card__composition/);
+  assert.doesNotMatch(catalog, /maní horneado|nuez de Brasil|semillas de calabaza/);
+});
+
 test("mantiene dos columnas móviles y contiene el desplazamiento en las categorías", () => {
   const css = read("styles.css");
   const desktopCss = css.split("@media (max-width: 719px)")[0];
