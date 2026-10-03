@@ -10,28 +10,28 @@ import {
 
 const read = (path) => readFileSync(new URL(`../${path}`, import.meta.url), "utf8");
 
-test("clasifica los 47 productos en las cuatro categorías aprobadas", () => {
+test("clasifica los 72 productos en las cuatro categorías aprobadas", () => {
   assert.deepEqual(PRODUCT_CATEGORIES, [
     "Frutos secos, semillas y granos",
     "Deshidratados",
     "Alimentos naturales",
     "Suplementos",
   ]);
-  assert.equal(products.length, 47);
+  assert.equal(products.length, 72);
   assert.deepEqual(
     Object.fromEntries(PRODUCT_CATEGORIES.map((category) => [
       category,
       products.filter((product) => product.category === category).length,
     ])),
     {
-      "Frutos secos, semillas y granos": 20,
-      Deshidratados: 12,
-      "Alimentos naturales": 7,
+      "Frutos secos, semillas y granos": 41,
+      Deshidratados: 14,
+      "Alimentos naturales": 9,
       Suplementos: 8,
     },
   );
-  assert.equal(products.find(({ name }) => name === "Avena en Hojuelas sin Gluten")?.category, "Alimentos naturales");
-  assert.equal(products.find(({ name }) => name === "Harina de Almendras")?.category, "Alimentos naturales");
+  assert.equal(products.find(({ name }) => name === "Avena en Hojuelas Sin Gluten")?.category, "Alimentos naturales");
+  assert.equal(products.find(({ name }) => name === "Harina de Almendra")?.category, "Alimentos naturales");
   assert.equal(products.find(({ name }) => name === "Flor de Jamaica")?.category, "Alimentos naturales");
 });
 
@@ -40,14 +40,14 @@ test("busca por nombre sin distinguir mayúsculas ni acentos", () => {
   assert.equal(filterProducts(products, { query: "colageno" }).length, 4);
   assert.equal(filterProducts(products, { query: "COLÁGENO" }).length, 4);
   assert.equal(filterProducts(products, { query: "maca" })[0]?.name, "Maca Negra, Roja, Shihua Y Amarilla");
-  assert.equal(filterProducts(products, { query: "almendra" }).length, 3);
+  assert.equal(filterProducts(products, { query: "almendra" }).length, 4);
 });
 
 test("combina categoría y búsqueda y permite volver a Todos", () => {
-  assert.equal(filterProducts(products, { category: "Todos" }).length, 47);
-  assert.equal(filterProducts(products, { category: "Frutos secos, semillas y granos" }).length, 20);
-  assert.equal(filterProducts(products, { category: "Deshidratados" }).length, 12);
-  assert.equal(filterProducts(products, { category: "Alimentos naturales" }).length, 7);
+  assert.equal(filterProducts(products, { category: "Todos" }).length, 72);
+  assert.equal(filterProducts(products, { category: "Frutos secos, semillas y granos" }).length, 41);
+  assert.equal(filterProducts(products, { category: "Deshidratados" }).length, 14);
+  assert.equal(filterProducts(products, { category: "Alimentos naturales" }).length, 9);
   assert.equal(filterProducts(products, { category: "Suplementos" }).length, 8);
   assert.equal(filterProducts(products, { category: "Suplementos", query: "colageno" }).length, 4);
   assert.deepEqual(filterProducts(products, { category: "Deshidratados", query: "colageno" }), []);

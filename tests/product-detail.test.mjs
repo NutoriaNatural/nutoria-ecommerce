@@ -17,10 +17,23 @@ const detailSlugs = [
   "sales-de-magnesio-mg2",
   "te-chai",
 ];
+const catalogUpdateSlugs = [
+  "albaricoques", "almendras", "arandanos", "avellanas", "banano-con-cobertura-al-60-cacao",
+  "brevas-meladas", "cafe-con-cobertura-60-cacao", "chia", "ciruelas-pasas", "colageno-hidrolizado",
+  "datiles", "habas-con-miel-mostaza", "habas-con-queso", "habas-con-sal", "habas-saladas",
+  "macadamia", "maiz-con-chile", "maiz-con-miel-mostaza", "maiz-con-queso", "mani-con-sal",
+  "mani-horneado", "maranon", "mix-mani-y-pasas", "lentejas-tostadas", "mix-especial",
+  "mix-rojos-deshidratado", "mix-nuts", "mix-premium", "mix-saludable", "nuez-nogal",
+  "pina-deshidratada", "semillas-de-calabaza", "mix-mani-confitado-y-pasas", "mix-combinado",
+  "semillas-de-girasol", "uchuvas-con-cobertura-al-60-cacao", "maiz-salado",
+  "avena-en-hojuelas-sin-gluten", "almendras-con-cobertura-al-60-cacao", "gelatina-sin-sabor",
+  "nibs-de-cacao", "garbanzo-tostados", "harina-de-almendras", "amaranto",
+  "avellanas-con-cobertura-al-60-cacao", "almendra-laminada", "uvas-pasas", "pistachos",
+  "nuez-pecana", "nuez-del-brasil", "mix-tropical-deshidratado", "mani-confitado",
+  "mango-deshidratado", "macadamia-acaramelada", "coco-laminado-deshidratado", "coco-acaramelado",
+];
 
 test("las diez fichas autorizadas usan cinco imágenes nuevas en orden", () => {
-  const detailed = [...productBySlug.values()].filter(({ detailPath }) => detailPath);
-  assert.deepEqual(detailed.map(({ slug }) => slug).sort(), [...detailSlugs].sort());
   for (const slug of detailSlugs) {
     const product = productBySlug.get(slug);
     assert.equal(product.detailPath, `/productos/${slug}/`);
@@ -30,6 +43,24 @@ test("las diez fichas autorizadas usan cinco imágenes nuevas en orden", () => {
       assert.match(image, new RegExp(`/assets/images/products/${slug}/0${index + 1}\\.(?:webp|jpeg)$`));
       assert.equal(existsSync(new URL(`..${image}`, import.meta.url)), true, image);
     });
+  }
+});
+
+test("las 56 carpetas nuevas alimentan catálogo y ficha reutilizable", () => {
+  assert.equal(catalogUpdateSlugs.length, 56);
+  assert.equal([...productBySlug.values()].filter(({ detailPath }) => detailPath).length, 66);
+  for (const slug of catalogUpdateSlugs) {
+    const product = productBySlug.get(slug);
+    assert.ok(product, slug);
+    assert.equal(product.detailPath, `/productos/${slug}/`);
+    assert.equal(product.image, product.images[0]);
+    assert.ok(product.images.length >= 1, slug);
+    product.images.forEach((image) => {
+      assert.equal(existsSync(new URL(`..${image}`, import.meta.url)), true, image);
+    });
+    const html = read(`productos/${slug}/index.html`);
+    assert.match(html, new RegExp(`data-product-slug="${slug}"`));
+    assert.match(html, /src="\/product-page\.mjs"/);
   }
 });
 
@@ -60,7 +91,8 @@ test("la estructura reutilizable renderiza galería y datos reales sin duplicarl
 });
 
 test("imagen y nombre enlazan solo las fichas existentes y Agregar sigue directo", () => {
-  assert.equal(productBySlug.get("almendras").detailPath, "");
+  assert.equal(productBySlug.get("almendras").detailPath, "/productos/almendras/");
+  assert.equal(productBySlug.get("ajonjoli").detailPath, "");
   const catalog = read("product-catalog.mjs");
   assert.match(catalog, /imageLink\.href = product\.detailPath/);
   assert.match(catalog, /nameLink\.href = product\.detailPath/);

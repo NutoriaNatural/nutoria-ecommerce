@@ -12,11 +12,11 @@ import { priceOrder, productIndex } from "../lib/order-pricing.mjs";
 const catalogSource = readFileSync(new URL("../product-catalog.mjs", import.meta.url), "utf8");
 const checkoutSource = readFileSync(new URL("../cart.mjs", import.meta.url), "utf8");
 
-test("mantiene exactamente los 47 productos y define identificadores permanentes únicos", () => {
-  assert.equal(products.length, 47);
-  assert.equal(new Set(products.map(({ id }) => id)).size, 47);
-  assert.equal(new Set(products.map(({ slug }) => slug)).size, 47);
-  assert.equal(new Set(products.map(({ legacyId }) => legacyId)).size, 47);
+test("mantiene 72 productos e identificadores permanentes únicos", () => {
+  assert.equal(products.length, 72);
+  assert.equal(new Set(products.map(({ id }) => id)).size, 72);
+  assert.equal(new Set(products.map(({ slug }) => slug)).size, 72);
+  assert.equal(new Set(products.map(({ legacyId }) => legacyId)).size, 72);
   products.forEach((product, index) => {
     assert.equal(product.id, product.slug);
     assert.equal(product.legacyId, `producto-${index + 1}`);
@@ -24,6 +24,13 @@ test("mantiene exactamente los 47 productos y define identificadores permanentes
     assert.equal(productBySlug.get(product.slug), product);
     assert.equal(productByLegacyId.get(product.legacyId), product);
   });
+});
+
+test("conserva los 47 IDs legacy anteriores y añade los nuevos al final", () => {
+  assert.equal(productById.get("7-colagenos").legacyId, "producto-1");
+  assert.equal(productById.get("uvas-pasas").legacyId, "producto-47");
+  assert.equal(productById.get("almendras-con-cobertura-al-60-cacao").legacyId, "producto-48");
+  assert.equal(productById.get("uchuvas-con-cobertura-al-60-cacao").legacyId, "producto-72");
 });
 
 test("conserva imágenes, categorías, presentaciones y precios en la fuente única", () => {
@@ -58,6 +65,23 @@ test("deja vacíos los campos futuros cuando no existe información aprobada", (
     assert.equal(product.additionalInformation, "");
     assert.equal(product.seoTitle, "");
     assert.equal(product.seoDescription, "");
+  });
+});
+
+test("guarda exactamente la composición aprobada de los nueve Mix", () => {
+  const expected = {
+    "mix-mani-y-pasas": ["maní horneado", "uvas pasas"],
+    "mix-mani-confitado-y-pasas": ["maní horneado", "maní confitado", "uvas pasas"],
+    "mix-especial": ["maní horneado", "maní confitado", "uvas pasas", "arándanos", "coco acaramelado", "habas saladas", "almendras", "nuez de Brasil"],
+    "mix-rojos-deshidratado": ["manzana", "papaya", "fresa", "mora"],
+    "mix-nuts": ["almendras", "marañón", "macadamia", "nuez de Brasil", "arándanos"],
+    "mix-premium": ["almendras", "marañón", "macadamia", "nuez pecana", "semillas de calabaza"],
+    "mix-saludable": ["almendras", "marañón", "macadamia", "nuez de Brasil", "nuez de nogal"],
+    "mix-combinado": ["maní horneado", "arándanos", "almendras", "nuez de Brasil", "macadamia"],
+    "mix-tropical-deshidratado": ["manzana", "papaya", "piña", "mango", "banano", "uchuva", "fresa"],
+  };
+  Object.entries(expected).forEach(([id, composition]) => {
+    assert.deepEqual(productById.get(id).composition, composition);
   });
 });
 
