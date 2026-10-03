@@ -159,3 +159,10 @@ test("la galería es responsive y conserva las imágenes completas", () => {
   assert.match(css, /@media\s*\(min-width:\s*800px\)[\s\S]*?\.product-detail\s*{[^}]*grid-template-columns:/s);
   assert.match(css, /@media\s*\(max-width:\s*799px\)/);
 });
+
+test("la composición de los Mix usa separadores uniformes y salto flexible", () => {
+  const css = read("product-detail.css");
+  assert.match(css, /\.product-purchase__composition ul\s*{[^}]*display:\s*flex[^}]*flex-wrap:\s*wrap[^}]*list-style:\s*none/s);
+  assert.match(css, /\.product-purchase__composition li\s*{[^}]*display:\s*inline-flex/s);
+  assert.match(css, /\.product-purchase__composition li \+ li::before\s*{[^}]*content:\s*"·"/s);
+});

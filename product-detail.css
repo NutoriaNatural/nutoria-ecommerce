@@ -112,11 +112,24 @@
 .product-purchase__composition ul {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.4rem 1.1rem;
+  gap: 0.35rem 0.45rem;
   margin: 0;
-  padding-left: 1.15rem;
+  padding: 0;
+  list-style: none;
   font-size: 0.9rem;
   line-height: 1.45;
+}
+
+.product-purchase__composition li {
+  display: inline-flex;
+  align-items: baseline;
+}
+
+.product-purchase__composition li + li::before {
+  content: "·";
+  margin-right: 0.45rem;
+  color: var(--dorado-nutoria);
+  font-weight: 700;
 }
 
 .product-purchase__field {
