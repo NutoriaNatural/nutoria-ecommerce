@@ -4,6 +4,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
 import { productIndex } from "../lib/order-pricing.mjs";
+import { products } from "../data/products.mjs";
 import { secureConnectionString } from "../db/client.mjs";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
@@ -33,9 +34,14 @@ test("no publica texto con codificación corrupta", () => {
   }
 });
 
-test("productos sin precio suministrado no pueden entrar al checkout", () => {
-  assert.equal(productIndex.has("producto-1"), false);
-  assert.equal(productIndex.has("producto-7"), false);
+test("todos los productos publicados tienen precio y presentación válidos", () => {
+  assert.equal(productIndex.has("producto-1"), true);
+  assert.equal(productIndex.has("producto-7-125g"), true);
+  assert.equal(products.every((product) => (
+    product.variants.length
+      ? product.variants.every(({ presentation, price }) => presentation && Number.isInteger(price) && price > 0)
+      : product.presentation && Number.isInteger(product.price) && product.price > 0
+  )), true);
 });
 
 test("el checkout exige el documento sin publicarlo en URLs", () => {

@@ -40,10 +40,10 @@ test("conserva imágenes, categorías, presentaciones y precios en la fuente ún
   assert.deepEqual(
     ajonjoli.variants.map(({ presentation, price }) => ({ presentation, price })),
     [
-      { presentation: "1.000g", price: 51000 },
-      { presentation: "500g", price: 27000 },
-      { presentation: "250g", price: 14000 },
       { presentation: "125g", price: 7000 },
+      { presentation: "250g", price: 14000 },
+      { presentation: "500g", price: 27000 },
+      { presentation: "1.000g", price: 51000 },
     ],
   );
   const whey = productById.get("proteina-whey");
@@ -51,7 +51,57 @@ test("conserva imágenes, categorías, presentaciones y precios en la fuente ún
   assert.equal(whey.price, 179900);
   const naturalSesame = productById.get("ajonjoli");
   assert.equal(naturalSesame.name, "Ajonjolí Natural");
-  assert.deepEqual(naturalSesame.variants.map(({ price }) => price), [35000, 19000, 10000, 5000]);
+  assert.deepEqual(naturalSesame.variants.map(({ price }) => price), [5000, 10000, 19000, 35000]);
+});
+
+test("aplica exactamente los nuevos precios y el orden de presentaciones", () => {
+  const expected = {
+    "avena-en-hojuelas-sin-gluten": [2000, 4000, 7500, 14000],
+    "coco-acaramelado": [11000, 22000, 43000, 81000],
+    almendras: [10000, 20000, 39000, 73000],
+    "habas-saladas": [11000, 22000, 43000, 81000],
+    "almendras-con-cobertura-al-60-cacao": [25000, 49000, 95000, 180000],
+    "avellanas-con-cobertura-al-60-cacao": [25000, 49000, 95000, 180000],
+    "banano-con-cobertura-al-60-cacao": [25000, 49000, 95000, 180000],
+    "cafe-con-cobertura-60-cacao": [25000, 49000, 95000, 180000],
+    chia: [5500, 11000, 21000, 39000],
+    "gelatina-sin-sabor": [11000, 22000, 43000, 81000],
+    "habas-con-miel-mostaza": [11000, 22000, 43000, 81000],
+    "habas-con-queso": [11000, 22000, 43000, 81000],
+    "habas-con-sal": [6500, 13000, 25000, 45000],
+    "maiz-con-chile": [9000, 18000, 35000, 67000],
+    "maiz-con-miel-mostaza": [9000, 18000, 35000, 67000],
+    "maiz-con-queso": [9000, 18000, 35000, 67000],
+    "maiz-salado": [9000, 18000, 35000, 67000],
+    "mani-con-sal": [4000, 8000, 15000, 28000],
+    "mani-horneado": [4000, 8000, 15000, 28000],
+    "mix-combinado": [9500, 19000, 37000, 69000],
+    "mix-especial": [8000, 16000, 31000, 57000],
+    "mix-mani-confitado-y-pasas": [4000, 8000, 15000, 28000],
+    "mix-mani-y-pasas": [4000, 8000, 15000, 28000],
+    "mix-nuts": [12500, 25000, 49000, 93000],
+    "mix-premium": [15500, 31000, 61000, 117000],
+    "mix-saludable": [14500, 29000, 57000, 109000],
+    "semillas-de-calabaza": [9000, 18000, 35000, 65000],
+    "semillas-de-girasol": [5000, 10000, 19000, 33000],
+    "uchuvas-con-cobertura-al-60-cacao": [25000, 49000, 95000, 180000],
+  };
+  const presentations = ["125g", "250g", "500g", "1.000g"];
+  Object.entries(expected).forEach(([id, prices]) => {
+    const product = productById.get(id);
+    assert.deepEqual(product.variants.map(({ presentation }) => presentation), presentations, id);
+    assert.deepEqual(product.variants.map(({ price }) => price), prices, id);
+    product.variants.forEach((variant, index) => {
+      const priced = priceOrder([{ id: `${id}-${variant.id}`, quantity: 1 }]);
+      assert.equal(priced.items[0].presentation, presentations[index], id);
+      assert.equal(priced.items[0].price, prices[index], id);
+    });
+  });
+  const collagen = productById.get("7-colagenos");
+  assert.equal(collagen.name, "7 Colágeno");
+  assert.equal(collagen.presentation, "1.000g");
+  assert.equal(collagen.price, 89900);
+  assert.equal(priceOrder([{ id: "7-colagenos", quantity: 1 }]).items[0].price, 89900);
 });
 
 test("deja vacíos los campos futuros cuando no existe información aprobada", () => {

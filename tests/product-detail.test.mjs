@@ -149,7 +149,8 @@ test("precios y presentaciones oficiales continúan en la validación server-sid
     assert.equal(priced.items[0].presentation, product.presentation, slug);
     assert.equal(priced.items[0].price, product.price, slug);
   }
-  assert.equal(productBySlug.get("7-colagenos").price, null);
+  assert.equal(productBySlug.get("7-colagenos").name, "7 Colágeno");
+  assert.equal(productBySlug.get("7-colagenos").price, 89900);
 });
 
 test("la galería es responsive y conserva las imágenes completas", () => {

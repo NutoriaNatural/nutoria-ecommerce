@@ -30,7 +30,7 @@ test("clasifica los 72 productos en las cuatro categorías aprobadas", () => {
       Suplementos: 8,
     },
   );
-  assert.equal(products.find(({ name }) => name === "Avena en Hojuelas Sin Gluten")?.category, "Alimentos naturales");
+  assert.equal(products.find(({ name }) => name === "Avena en Hojuelas sin Gluten")?.category, "Alimentos naturales");
   assert.equal(products.find(({ name }) => name === "Harina de Almendra")?.category, "Alimentos naturales");
   assert.equal(products.find(({ name }) => name === "Flor de Jamaica")?.category, "Alimentos naturales");
 });
