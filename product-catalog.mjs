@@ -123,6 +123,8 @@ function createProductCard(product) {
       option.textContent = formatPresentation(variant.presentation);
       presentationValue.append(option);
     });
+    const defaultVariantIndex = product.variants.findIndex(({ presentation }) => presentation === "250g");
+    if (defaultVariantIndex >= 0) presentationValue.value = String(defaultVariantIndex);
   } else {
     presentationValue.textContent = formatPresentation(product.presentation);
   }

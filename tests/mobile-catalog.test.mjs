@@ -29,11 +29,14 @@ test("las tarjetas móviles priorizan compra y conservan objetivos táctiles", (
 });
 
 test("uniforma el área de presentación y normaliza solo su texto visible", () => {
+  const catalogSource = read("product-catalog.mjs");
   assert.equal(formatPresentation("1.000g"), "1.000 g");
   assert.equal(formatPresentation("500g"), "500 g");
   assert.equal(formatPresentation("90g (90 und)"), "90 g (90 und)");
   assert.equal(formatPresentation("250 g"), "250 g");
   assert.equal(products.find((product) => product.variants.length)?.variants[0].presentation, "125g");
+  assert.match(catalogSource, /findIndex\(\(\{ presentation \}\) => presentation === "250g"\)/);
+  assert.match(catalogSource, /presentationValue\.value = String\(defaultVariantIndex\)/);
 });
 
 test("solo conserva el WhatsApp flotante general en móvil y desktop", () => {

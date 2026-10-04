@@ -76,6 +76,10 @@ export function initializeProductDetail(slug) {
     element.textContent = formatPresentation(option.presentation);
     presentation.append(element);
   });
+  if (product.variants.length) {
+    const defaultVariantIndex = product.variants.findIndex(({ presentation: value }) => value === "250g");
+    if (defaultVariantIndex >= 0) presentation.value = String(defaultVariantIndex);
+  }
 
   const updateSelection = () => {
     const selected = purchasableOptions[Number(presentation.value)];

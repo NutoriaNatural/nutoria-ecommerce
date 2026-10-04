@@ -153,6 +153,13 @@ test("precios y presentaciones oficiales continúan en la validación server-sid
   assert.equal(productBySlug.get("7-colagenos").price, 89900);
 });
 
+test("las fichas seleccionan 250 g por defecto sin alterar productos de presentación única", () => {
+  const detail = read("product-detail.mjs");
+  assert.match(detail, /if \(product\.variants\.length\)/);
+  assert.match(detail, /findIndex\(\(\{ presentation: value \}\) => value === "250g"\)/);
+  assert.match(detail, /presentation\.value = String\(defaultVariantIndex\)/);
+});
+
 test("la galería es responsive y conserva las imágenes completas", () => {
   const css = read("product-detail.css");
   assert.match(css, /\.product-gallery__main img\s*{[^}]*object-fit:\s*contain/s);
