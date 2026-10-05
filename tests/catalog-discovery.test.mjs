@@ -10,46 +10,82 @@ import {
 
 const read = (path) => readFileSync(new URL(`../${path}`, import.meta.url), "utf8");
 
-test("clasifica los 72 productos en las cuatro categorías aprobadas", () => {
+test("clasifica los 74 productos en las cuatro categorías aprobadas", () => {
   assert.deepEqual(PRODUCT_CATEGORIES, [
-    "Frutos secos, semillas y granos",
+    "Frutos secos y más",
+    "Semillas",
     "Deshidratados",
-    "Alimentos naturales",
-    "Suplementos",
+    "Suplementos y alimentos naturales",
   ]);
-  assert.equal(products.length, 72);
+  assert.equal(products.length, 74);
   assert.deepEqual(
     Object.fromEntries(PRODUCT_CATEGORIES.map((category) => [
       category,
       products.filter((product) => product.category === category).length,
     ])),
     {
-      "Frutos secos, semillas y granos": 41,
-      Deshidratados: 14,
-      "Alimentos naturales": 9,
-      Suplementos: 8,
+      "Frutos secos y más": 42,
+      Semillas: 10,
+      Deshidratados: 11,
+      "Suplementos y alimentos naturales": 11,
     },
   );
-  assert.equal(products.find(({ name }) => name === "Avena en Hojuelas sin Gluten")?.category, "Alimentos naturales");
-  assert.equal(products.find(({ name }) => name === "Harina de Almendra")?.category, "Alimentos naturales");
-  assert.equal(products.find(({ name }) => name === "Flor de Jamaica")?.category, "Alimentos naturales");
+  assert.equal(products.every(({ category }) => PRODUCT_CATEGORIES.includes(category)), true);
+});
+
+test("conserva exactamente los nombres y la clasificación comercial aprobada", () => {
+  const expected = {
+    "Frutos secos y más": [
+      "Almendra laminada", "Almendras", "Almendras con cobertura al 60% cacao", "Anís estrellado",
+      "Avellanas", "Avellanas con cobertura al 60% cacao", "Avena en hojuelas sin gluten",
+      "Banano con cobertura al 60% cacao", "Café con cobertura al 60% cacao", "Coco acaramelado",
+      "Flor de Jamaica", "Garbanzos tostados", "Gelatina sin sabor", "Habas con miel mostaza",
+      "Habas con queso", "Habas con sal", "Habas saladas importadas", "Harina de almendra",
+      "Lentejas tostadas", "Macadamia", "Macadamia acaramelada", "Maíz con chile",
+      "Maíz con miel mostaza", "Maíz con queso", "Maíz salado", "Maní confitado", "Maní con sal",
+      "Maní horneado", "Marañón", "Mix combinado", "Mix especial", "Mix Maní Confitado y Pasas",
+      "Mix Maní y Pasas", "Mix Nuts", "Mix Premium", "Mix Saludable", "Nibs de cacao al 100%",
+      "Nuez de Brasil", "Nuez de nogal", "Nuez pecana", "Pistachos", "Uchuvas con cobertura al 60% cacao",
+    ],
+    Semillas: [
+      "Ajonjolí natural", "Ajonjolí negro", "Ajonjolí tostado", "Amaranto", "Chía", "Linaza",
+      "Quinua", "Semillas de amapola", "Semillas de calabaza", "Semillas de girasol",
+    ],
+    Deshidratados: [
+      "Albaricoques", "Arándanos", "Brevas meladas", "Ciruelas pasas", "Coco laminado deshidratado",
+      "Dátiles", "Mango deshidratado", "Mix Frutos Rojos Deshidratados", "Mix Tropical Deshidratado",
+      "Piña deshidratada", "Uvas pasas",
+    ],
+    "Suplementos y alimentos naturales": [
+      "7 Colágeno", "Calcio coral marino", "Coffee + Colágeno", "Colágeno hidrolizado",
+      "Colágeno marino", "Maca Negra, Roja, Shihua y Amarilla", "Mix Golden (leche dorada)",
+      "Proteína Whey", "Resveratrol", "Sales de Magnesio Mg2+", "Té Chai",
+    ],
+  };
+  Object.entries(expected).forEach(([category, names]) => {
+    assert.deepEqual(
+      products.filter((product) => product.category === category).map(({ name }) => name).sort(),
+      [...names].sort(),
+      category,
+    );
+  });
 });
 
 test("busca por nombre sin distinguir mayúsculas ni acentos", () => {
   assert.equal(normalizeSearchText("  COLÁGENO  "), "colageno");
   assert.equal(filterProducts(products, { query: "colageno" }).length, 4);
   assert.equal(filterProducts(products, { query: "COLÁGENO" }).length, 4);
-  assert.equal(filterProducts(products, { query: "maca" })[0]?.name, "Maca Negra, Roja, Shihua Y Amarilla");
+  assert.equal(filterProducts(products, { query: "maca" })[0]?.name, "Maca Negra, Roja, Shihua y Amarilla");
   assert.equal(filterProducts(products, { query: "almendra" }).length, 4);
 });
 
 test("combina categoría y búsqueda y permite volver a Todos", () => {
-  assert.equal(filterProducts(products, { category: "Todos" }).length, 72);
-  assert.equal(filterProducts(products, { category: "Frutos secos, semillas y granos" }).length, 41);
-  assert.equal(filterProducts(products, { category: "Deshidratados" }).length, 14);
-  assert.equal(filterProducts(products, { category: "Alimentos naturales" }).length, 9);
-  assert.equal(filterProducts(products, { category: "Suplementos" }).length, 8);
-  assert.equal(filterProducts(products, { category: "Suplementos", query: "colageno" }).length, 4);
+  assert.equal(filterProducts(products, { category: "Todos" }).length, 74);
+  assert.equal(filterProducts(products, { category: "Frutos secos y más" }).length, 42);
+  assert.equal(filterProducts(products, { category: "Semillas" }).length, 10);
+  assert.equal(filterProducts(products, { category: "Deshidratados" }).length, 11);
+  assert.equal(filterProducts(products, { category: "Suplementos y alimentos naturales" }).length, 11);
+  assert.equal(filterProducts(products, { category: "Suplementos y alimentos naturales", query: "colageno" }).length, 4);
   assert.deepEqual(filterProducts(products, { category: "Deshidratados", query: "colageno" }), []);
 });
 
@@ -77,8 +113,7 @@ test("las cuatro tarjetas visuales reutilizan los filtros y desplazan al catálo
   PRODUCT_CATEGORIES.forEach((category) => {
     assert.ok(categoryCards.includes(`data-catalog-category="${category}"`));
   });
-  assert.doesNotMatch(html, /data-catalog-category="Frutos secos"/);
-  assert.doesNotMatch(html, /data-catalog-category="Semillas"/);
+  assert.doesNotMatch(html, /data-catalog-category="Frutos secos, semillas y granos"/);
   assert.match(html, /<h2 id="titulo-categorias">Categorías principales<\/h2>/);
   assert.match(catalog, /featuredCategoryLinks\.forEach/);
   assert.match(catalog, /selectCategory\(link\.dataset\.catalogCategory\)/);

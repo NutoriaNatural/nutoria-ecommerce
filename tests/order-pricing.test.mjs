@@ -14,7 +14,7 @@ test("calcula todos los rangos de envío en el servidor", () => {
 
 test("ignora precios y nombres enviados por el navegador", () => {
   const result = priceOrder([{ id: "producto-2-125g", quantity: 2, price: 1, name: "Alterado" }]);
-  assert.equal(result.items[0].name, "Ajonjolí Negro");
+  assert.equal(result.items[0].name, "Ajonjolí negro");
   assert.equal(result.items[0].presentation, "125g");
   assert.equal(result.items[0].price, 7000);
   assert.equal(result.subtotal, 14000);

@@ -48,7 +48,7 @@ test("las diez fichas autorizadas usan cinco imágenes nuevas en orden", () => {
 
 test("las 56 carpetas nuevas alimentan catálogo y ficha reutilizable", () => {
   assert.equal(catalogUpdateSlugs.length, 56);
-  assert.equal([...productBySlug.values()].filter(({ detailPath }) => detailPath).length, 72);
+  assert.equal([...productBySlug.values()].filter(({ detailPath }) => detailPath).length, 74);
   for (const slug of catalogUpdateSlugs) {
     const product = productBySlug.get(slug);
     assert.ok(product, slug);
@@ -64,14 +64,26 @@ test("las 56 carpetas nuevas alimentan catálogo y ficha reutilizable", () => {
   }
 });
 
+test("Anís estrellado y Linaza cargan imagen, ficha y plantilla reutilizable", () => {
+  for (const slug of ["anis-estrellado", "linaza"]) {
+    const product = productBySlug.get(slug);
+    assert.equal(product.detailPath, `/productos/${slug}/`);
+    assert.equal(product.images.length, 1);
+    assert.equal(existsSync(new URL(`..${product.image}`, import.meta.url)), true);
+    const html = read(`productos/${slug}/index.html`);
+    assert.match(html, new RegExp(`data-product-slug="${slug}"`));
+    assert.match(html, /src="\/product-page\.mjs"/);
+  }
+});
+
 test("los seis productos existentes conservan IDs y precios y reciben ficha e imagen nuevas", () => {
   const expected = {
     quinua: "Quinua",
     "flor-de-jamaica": "Flor de Jamaica",
-    "semillas-de-amapola": "Amapola",
-    ajonjoli: "Ajonjolí Natural",
-    "ajonjoli-negro": "Ajonjolí Negro",
-    "ajonjoli-tostado": "Ajonjolí Tostado",
+    "semillas-de-amapola": "Semillas de amapola",
+    ajonjoli: "Ajonjolí natural",
+    "ajonjoli-negro": "Ajonjolí negro",
+    "ajonjoli-tostado": "Ajonjolí tostado",
   };
   Object.entries(expected).forEach(([slug, name]) => {
     const product = productBySlug.get(slug);
@@ -117,7 +129,7 @@ test("la estructura reutilizable renderiza galería y datos reales sin duplicarl
 test("imagen y nombre enlazan las fichas existentes y Agregar sigue directo", () => {
   assert.equal(productBySlug.get("almendras").detailPath, "/productos/almendras/");
   assert.equal(productBySlug.get("ajonjoli").detailPath, "/productos/ajonjoli/");
-  assert.equal([...productBySlug.values()].filter(({ detailPath }) => detailPath).length, 72);
+  assert.equal([...productBySlug.values()].filter(({ detailPath }) => detailPath).length, 74);
   const catalog = read("product-catalog.mjs");
   assert.match(catalog, /imageLink\.href = product\.detailPath/);
   assert.match(catalog, /nameLink\.href = product\.detailPath/);

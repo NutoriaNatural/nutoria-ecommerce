@@ -12,11 +12,11 @@ import { priceOrder, productIndex } from "../lib/order-pricing.mjs";
 const catalogSource = readFileSync(new URL("../product-catalog.mjs", import.meta.url), "utf8");
 const checkoutSource = readFileSync(new URL("../cart.mjs", import.meta.url), "utf8");
 
-test("mantiene 72 productos e identificadores permanentes únicos", () => {
-  assert.equal(products.length, 72);
-  assert.equal(new Set(products.map(({ id }) => id)).size, 72);
-  assert.equal(new Set(products.map(({ slug }) => slug)).size, 72);
-  assert.equal(new Set(products.map(({ legacyId }) => legacyId)).size, 72);
+test("mantiene 74 productos e identificadores permanentes únicos", () => {
+  assert.equal(products.length, 74);
+  assert.equal(new Set(products.map(({ id }) => id)).size, 74);
+  assert.equal(new Set(products.map(({ slug }) => slug)).size, 74);
+  assert.equal(new Set(products.map(({ legacyId }) => legacyId)).size, 74);
   products.forEach((product, index) => {
     assert.equal(product.id, product.slug);
     assert.equal(product.legacyId, `producto-${index + 1}`);
@@ -31,12 +31,14 @@ test("conserva los 47 IDs legacy anteriores y añade los nuevos al final", () =>
   assert.equal(productById.get("uvas-pasas").legacyId, "producto-47");
   assert.equal(productById.get("almendras-con-cobertura-al-60-cacao").legacyId, "producto-48");
   assert.equal(productById.get("uchuvas-con-cobertura-al-60-cacao").legacyId, "producto-72");
+  assert.equal(productById.get("anis-estrellado").legacyId, "producto-73");
+  assert.equal(productById.get("linaza").legacyId, "producto-74");
 });
 
 test("conserva imágenes, categorías, presentaciones y precios en la fuente única", () => {
   const ajonjoli = productById.get("ajonjoli-negro");
   assert.equal(ajonjoli.image, "/assets/images/products/ajonjoli-negro/01.webp");
-  assert.equal(ajonjoli.category, "Frutos secos, semillas y granos");
+  assert.equal(ajonjoli.category, "Semillas");
   assert.deepEqual(
     ajonjoli.variants.map(({ presentation, price }) => ({ presentation, price })),
     [
@@ -50,7 +52,7 @@ test("conserva imágenes, categorías, presentaciones y precios en la fuente ún
   assert.equal(whey.presentation, "900g");
   assert.equal(whey.price, 179900);
   const naturalSesame = productById.get("ajonjoli");
-  assert.equal(naturalSesame.name, "Ajonjolí Natural");
+  assert.equal(naturalSesame.name, "Ajonjolí natural");
   assert.deepEqual(naturalSesame.variants.map(({ price }) => price), [5000, 10000, 19000, 35000]);
 });
 
@@ -102,6 +104,27 @@ test("aplica exactamente los nuevos precios y el orden de presentaciones", () =>
   assert.equal(collagen.presentation, "1.000g");
   assert.equal(collagen.price, 89900);
   assert.equal(priceOrder([{ id: "7-colagenos", quantity: 1 }]).items[0].price, 89900);
+});
+
+test("integra Anís estrellado y Linaza en la fuente y validación autoritativas", () => {
+  const expected = {
+    "anis-estrellado": { name: "Anís estrellado", category: "Frutos secos y más", prices: [12000, 24000, 47000, 89000] },
+    linaza: { name: "Linaza", category: "Semillas", prices: [2500, 5000, 9000, 17000] },
+  };
+  Object.entries(expected).forEach(([id, specification]) => {
+    const product = productById.get(id);
+    assert.equal(product.name, specification.name);
+    assert.equal(product.category, specification.category);
+    assert.equal(product.detailPath, `/productos/${id}/`);
+    assert.equal(product.image, `/assets/images/products/${id}/01.webp`);
+    assert.deepEqual(product.variants.map(({ presentation }) => presentation), ["125g", "250g", "500g", "1.000g"]);
+    assert.deepEqual(product.variants.map(({ price }) => price), specification.prices);
+    product.variants.forEach((variant, index) => {
+      const priced = priceOrder([{ id: `${id}-${variant.id}`, quantity: 1 }]);
+      assert.equal(priced.items[0].price, specification.prices[index]);
+      assert.equal(priced.items[0].name, specification.name);
+    });
+  });
 });
 
 test("deja vacíos los campos futuros cuando no existe información aprobada", () => {
