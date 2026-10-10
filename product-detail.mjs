@@ -22,9 +22,43 @@ export function initializeProductDetail(slug) {
   const addButton = root.querySelector("[data-product-add]");
   const composition = root.querySelector("[data-product-composition]");
   const compositionList = root.querySelector("[data-product-composition-list]");
+  const shortDescription = root.querySelector("[data-product-short-description]");
+  const description = root.querySelector("[data-product-description]");
+  const descriptionContent = root.querySelector("[data-product-description-content]");
+  const productInfo = root.querySelector("[data-product-info]");
+  const productInfoList = root.querySelector("[data-product-info-list]");
+  const quantityOutput = root.querySelector("[data-product-quantity]");
+  const decreaseQuantity = root.querySelector("[data-product-quantity-decrease]");
+  const increaseQuantity = root.querySelector("[data-product-quantity-increase]");
 
   name.textContent = product.name;
   category.textContent = product.category;
+
+  if (product.shortDescription && shortDescription) {
+    shortDescription.textContent = product.shortDescription;
+    shortDescription.hidden = false;
+  }
+
+  if (product.description && description && descriptionContent) {
+    product.description.split(/\n\s*\n/u).forEach((paragraph) => {
+      const element = document.createElement("p");
+      element.textContent = paragraph;
+      descriptionContent.append(element);
+    });
+    description.hidden = false;
+  }
+
+  if (product.productInfo.length && productInfo && productInfoList) {
+    product.productInfo.forEach(({ label, value }) => {
+      if (!label || !value) return;
+      const term = document.createElement("dt");
+      const detail = document.createElement("dd");
+      term.textContent = label;
+      detail.textContent = value;
+      productInfoList.append(term, detail);
+    });
+    if (productInfoList.children.length) productInfo.hidden = false;
+  }
 
   if (product.composition.length && composition && compositionList) {
     product.composition.forEach((ingredient) => {
@@ -98,5 +132,35 @@ export function initializeProductDetail(slug) {
 
   presentation.addEventListener("change", updateSelection);
   updateSelection();
+
+  let quantity = 1;
+  let programmaticAddsRemaining = 0;
+  const updateQuantity = () => {
+    quantityOutput.value = String(quantity);
+    quantityOutput.textContent = String(quantity);
+    quantityOutput.setAttribute("aria-label", `Cantidad actual: ${quantity}`);
+    decreaseQuantity.disabled = quantity <= 1;
+  };
+  decreaseQuantity.addEventListener("click", () => {
+    quantity = Math.max(1, quantity - 1);
+    updateQuantity();
+  });
+  increaseQuantity.addEventListener("click", () => {
+    quantity += 1;
+    updateQuantity();
+  });
+  addButton.addEventListener("click", () => {
+    if (programmaticAddsRemaining > 0) {
+      programmaticAddsRemaining -= 1;
+      return;
+    }
+    programmaticAddsRemaining = quantity - 1;
+    for (let index = 1; index < quantity; index += 1) addButton.click();
+  });
+  const labelObserver = new MutationObserver(() => {
+    if (addButton.textContent === "Agregar") addButton.textContent = "AGREGAR AL CARRITO";
+  });
+  labelObserver.observe(addButton, { childList: true });
+  updateQuantity();
   return true;
 }

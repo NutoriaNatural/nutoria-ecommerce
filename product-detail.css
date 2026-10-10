@@ -158,6 +158,95 @@
   font-weight: 800;
 }
 
+.product-purchase__quantity {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  font-weight: 700;
+}
+
+.product-purchase__quantity-control {
+  display: grid;
+  grid-template-columns: 44px 3rem 44px;
+  align-items: center;
+  overflow: hidden;
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+  background: var(--blanco);
+}
+
+.product-purchase__quantity-control button,
+.product-purchase__quantity-control output {
+  display: grid;
+  min-height: 44px;
+  place-items: center;
+  border: 0;
+  color: var(--verde-nutoria);
+  background: transparent;
+  font: inherit;
+  font-weight: 700;
+}
+
+.product-purchase__quantity-control button {
+  cursor: pointer;
+}
+
+.product-purchase__quantity-control button:disabled {
+  cursor: default;
+  opacity: 0.4;
+}
+
+.product-purchase__add {
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+.product-purchase__short-description {
+  margin: 0;
+  color: rgba(4, 38, 22, 0.82);
+  line-height: 1.65;
+}
+
+.product-purchase__details {
+  border-top: 1px solid var(--borde);
+}
+
+.product-purchase__details summary {
+  padding: 1rem 2rem 1rem 0;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.product-purchase__details > div,
+.product-purchase__details dl {
+  margin: 0;
+  padding: 0 0 1rem;
+  line-height: 1.65;
+}
+
+.product-purchase__details p {
+  margin: 0 0 0.85rem;
+}
+
+.product-purchase__details p:last-child {
+  margin-bottom: 0;
+}
+
+.product-purchase__details dl {
+  display: grid;
+  grid-template-columns: minmax(7.5rem, 0.4fr) minmax(0, 1fr);
+  gap: 0.65rem 1rem;
+}
+
+.product-purchase__details dt {
+  font-weight: 700;
+}
+
+.product-purchase__details dd {
+  margin: 0;
+}
+
 .product-purchase .product-card__button {
   width: 100%;
   min-height: 52px;
@@ -183,5 +272,31 @@
     flex-basis: 4.25rem;
     width: 4.25rem;
     height: 4.25rem;
+  }
+
+  .product-page {
+    padding-block: 1.25rem 2.5rem;
+  }
+
+  .product-detail {
+    gap: 1rem;
+  }
+
+  .product-purchase {
+    gap: 0.9rem;
+    padding: 1rem;
+  }
+
+  .product-purchase h1 {
+    font-size: clamp(2.15rem, 12vw, 3rem);
+  }
+
+  .product-purchase__details dl {
+    grid-template-columns: 1fr;
+    gap: 0.15rem;
+  }
+
+  .product-purchase__details dd + dt {
+    margin-top: 0.65rem;
   }
 }

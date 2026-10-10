@@ -27,13 +27,30 @@ if (!product || !product.detailPath) {
           <a class="product-purchase__back" href="/#productos">← Volver a productos</a>
           <p class="product-purchase__category" data-product-category></p>
           <h1 id="product-name" data-product-name></h1>
+          <p class="product-purchase__price" data-product-price aria-live="polite"></p>
+          <div class="product-purchase__field"><label for="product-presentation">Presentación</label><select id="product-presentation" data-product-presentation></select></div>
+          <div class="product-purchase__quantity" role="group" aria-label="Cantidad">
+            <span>Cantidad</span>
+            <div class="product-purchase__quantity-control">
+              <button type="button" data-product-quantity-decrease aria-label="Disminuir cantidad">−</button>
+              <output data-product-quantity aria-live="polite" aria-label="Cantidad actual">1</output>
+              <button type="button" data-product-quantity-increase aria-label="Aumentar cantidad">+</button>
+            </div>
+          </div>
+          <button class="product-card__button product-purchase__add" data-product-add type="button">AGREGAR AL CARRITO</button>
+          <p class="product-purchase__short-description" data-product-short-description hidden></p>
+          <details class="product-purchase__details" data-product-description hidden>
+            <summary>Descripción</summary>
+            <div data-product-description-content></div>
+          </details>
+          <details class="product-purchase__details" data-product-info hidden>
+            <summary>Información del producto</summary>
+            <dl data-product-info-list></dl>
+          </details>
           <section class="product-purchase__composition" data-product-composition hidden>
             <h2>Composición</h2>
             <ul data-product-composition-list></ul>
           </section>
-          <div class="product-purchase__field"><label for="product-presentation">Presentación</label><select id="product-presentation" data-product-presentation></select></div>
-          <p class="product-purchase__price" data-product-price aria-live="polite"></p>
-          <button class="product-card__button" data-product-add type="button">Agregar</button>
         </section>
       </article>
     </main>

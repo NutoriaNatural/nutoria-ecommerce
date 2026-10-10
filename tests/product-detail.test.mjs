@@ -118,12 +118,43 @@ test("la estructura reutilizable renderiza galería y datos reales sin duplicarl
   assert.match(page, /data-product-presentation/);
   assert.match(page, /data-product-price/);
   assert.match(page, /data-product-add/);
+  assert.match(page, /data-product-quantity-decrease/);
+  assert.match(page, /data-product-short-description/);
+  assert.match(page, /data-product-description/);
+  assert.match(page, /data-product-info/);
   assert.match(page, /data-product-composition/);
   assert.match(page, /initializeProductDetail\(slug\)/);
   assert.match(detail, /product\.images\.forEach/);
   assert.match(detail, /name\.textContent = product\.name/);
   assert.match(detail, /category\.textContent = product\.category/);
   assert.match(detail, /product\.composition\.forEach/);
+  assert.match(detail, /product\.productInfo\.forEach/);
+});
+
+test("la ficha piloto prioriza compra y oculta información opcional vacía", () => {
+  const page = read("product-page.mjs");
+  const detail = read("product-detail.mjs");
+  const addPosition = page.indexOf("data-product-add");
+  assert.ok(addPosition > page.indexOf("data-product-price"));
+  assert.ok(addPosition > page.indexOf("data-product-presentation"));
+  assert.ok(addPosition > page.indexOf("data-product-quantity"));
+  assert.ok(addPosition < page.indexOf("data-product-short-description"));
+  assert.match(page, />AGREGAR AL CARRITO</);
+  assert.match(page, /<details[^>]+data-product-description[^>]+hidden>/);
+  assert.match(page, /<details[^>]+data-product-info[^>]+hidden>/);
+  assert.match(detail, /if \(product\.shortDescription/);
+  assert.match(detail, /if \(product\.description/);
+  assert.match(detail, /if \(product\.productInfo\.length/);
+  assert.doesNotMatch(page, /Información no disponible|Envíos a toda Colombia|2 a 5 días hábiles|¿Tienes dudas\?|Productos relacionados/);
+});
+
+test("el control de cantidad conserva el carrito compartido y cantidades positivas", () => {
+  const detail = read("product-detail.mjs");
+  assert.match(detail, /quantity = Math\.max\(1, quantity - 1\)/);
+  assert.match(detail, /quantity \+= 1/);
+  assert.match(detail, /programmaticAddsRemaining = quantity - 1/);
+  assert.match(detail, /addButton\.click\(\)/);
+  assert.match(read("cart.mjs"), /const STORAGE_KEY = "nutoria_cart"/);
 });
 
 test("imagen y nombre enlazan las fichas existentes y Agregar sigue directo", () => {

@@ -128,9 +128,10 @@ test("integra Anís estrellado y Linaza en la fuente y validación autoritativas
 });
 
 test("deja vacíos los campos futuros cuando no existe información aprobada", () => {
-  products.forEach((product) => {
+  products.filter(({ id }) => id !== "colageno-marino").forEach((product) => {
     assert.equal(product.shortDescription, "");
     assert.equal(product.description, "");
+    assert.deepEqual(product.productInfo, []);
     assert.deepEqual(product.highlights, []);
     assert.equal(product.ingredients, "");
     assert.equal(product.content, "");
@@ -142,6 +143,21 @@ test("deja vacíos los campos futuros cuando no existe información aprobada", (
     assert.equal(product.seoTitle, "");
     assert.equal(product.seoDescription, "");
   });
+});
+
+test("Colágeno Marino contiene únicamente la información comercial verificada", () => {
+  const product = productById.get("colageno-marino");
+  assert.match(product.shortDescription, /colágeno marino hidrolizado/);
+  assert.match(product.description, /Colágeno Marino Hidrolizado Colavina/);
+  assert.deepEqual(product.productInfo.map(({ label }) => label), [
+    "Contenido neto",
+    "Porción",
+    "Porciones por envase",
+    "Preparación",
+    "Conservación",
+    "Registro sanitario",
+  ]);
+  assert.equal(product.productInfo.at(-1).value, "RSA-0037096-2025");
 });
 
 test("guarda exactamente la composición aprobada de los nueve Mix", () => {

@@ -321,6 +321,21 @@ const productCompositions = {
   "mix-tropical-deshidratado": ["manzana", "papaya", "piña", "mango", "banano", "uchuva", "fresa"],
 };
 
+const productDetails = {
+  "colageno-marino": {
+    shortDescription: "Fórmula con colágeno marino hidrolizado, vitamina C, minerales, probióticos, resveratrol y cúrcuma. Una combinación diseñada para complementar la alimentación y aportar nutrientes relacionados con la formación normal de colágeno, músculos, huesos y sistema inmunológico.",
+    description: "Colágeno Marino Hidrolizado Colavina es una mezcla en polvo para preparar bebida instantánea que combina colágeno marino hidrolizado con vitamina C, calcio, magnesio, zinc, resveratrol, cúrcuma y probióticos, además de otras vitaminas y componentes indicados en su fórmula.\n\nDe acuerdo con la información disponible del producto, sus nutrientes contribuyen a la formación normal de colágeno y apoyan la salud de la piel, huesos y cartílagos. También contribuyen al funcionamiento normal de músculos y huesos, al sistema inmunológico, al metabolismo energético y al sistema nervioso.\n\nEs una alternativa práctica para complementar la alimentación diaria. Es un producto efervescente, sabor original, sin soya, sin gluten y sin maltodextrina.",
+    productInfo: [
+      { label: "Contenido neto", value: "1.000 g" },
+      { label: "Porción", value: "1 cucharada (20 g)" },
+      { label: "Porciones por envase", value: "50 aprox." },
+      { label: "Preparación", value: "Disolver 1 cucharada (20 g) en 200 ml de agua. Mezclar hasta que esté completamente disuelto y consumir inmediatamente después de preparar." },
+      { label: "Conservación", value: "Mantener en un lugar fresco, seco y alejado de la luz. Cerrar bien después de cada uso y evitar usar cucharas húmedas." },
+      { label: "Registro sanitario", value: "RSA-0037096-2025" },
+    ],
+  },
+};
+
 // Fuente única del catálogo. Los campos futuros permanecen vacíos hasta contar con información aprobada.
 export const products = productDefinitions.map(([id, name, category, pricingName = name], index) => {
   const pricing = productPricing[pricingName];
@@ -328,6 +343,7 @@ export const products = productDefinitions.map(([id, name, category, pricingName
   const firstVariant = variants[0];
   const images = productImages[id] ?? [`assets/images/optimized/${name}.jpg`];
   const image = images[0];
+  const details = productDetails[id] ?? {};
 
   return Object.freeze({
     id,
@@ -341,8 +357,9 @@ export const products = productDefinitions.map(([id, name, category, pricingName
     presentation: pricing.presentation ?? firstVariant.presentation,
     price: Object.hasOwn(pricing, "price") ? pricing.price : firstVariant.price,
     variants: Object.freeze(variants.map((variant) => Object.freeze({ ...variant }))),
-    shortDescription: "",
-    description: "",
+    shortDescription: details.shortDescription ?? "",
+    description: details.description ?? "",
+    productInfo: Object.freeze((details.productInfo ?? []).map((item) => Object.freeze({ ...item }))),
     highlights: Object.freeze([]),
     ingredients: "",
     composition: Object.freeze([...(productCompositions[id] ?? [])]),
