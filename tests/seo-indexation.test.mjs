@@ -111,6 +111,12 @@ test("solo publica meta descriptions respaldadas por contenido aprobado", () => 
 });
 
 test("genera Product y BreadcrumbList reales para las 74 fichas", () => {
+  const multiplePresentationProducts = products.filter(({ variants }) => variants.length > 0);
+  const singlePresentationProducts = products.filter(({ variants }) => variants.length === 0);
+
+  assert.equal(multiplePresentationProducts.length, 64);
+  assert.equal(singlePresentationProducts.length, 10);
+
   for (const product of products) {
     const html = read(`productos/${product.slug}/index.html`);
     const scripts = [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/gu)];
@@ -130,9 +136,13 @@ test("genera Product y BreadcrumbList reales para las 74 fichas", () => {
     assert.deepEqual(productEntity.image, product.images.map((image) => `https://nutoria.com.co${image}`));
     assert.equal(productEntity.category, product.category);
 
-    const expectedOffers = product.variants.length ? product.variants : [product];
-    assert.equal(productEntity.offers.length, expectedOffers.length);
-    assert.deepEqual(productEntity.offers.map(({ price }) => price), expectedOffers.map(({ price }) => price));
+    const expectedOffer = product.variants.length
+      ? product.variants.find(({ presentation }) => presentation === "250g")
+      : product;
+    assert.ok(expectedOffer, `${product.slug}: falta la presentación predeterminada 250 g`);
+    assert.equal(productEntity.offers.length, 1, product.slug);
+    assert.equal(productEntity.offers[0].name, `${product.name} - ${expectedOffer.presentation.replace(/(\d[\d.]*)\s*(mg|kg|g|ml|l)\b/giu, "$1 $2")}`);
+    assert.equal(productEntity.offers[0].price, expectedOffer.price, product.slug);
     assert.equal(productEntity.offers.every(({ priceCurrency }) => priceCurrency === "COP"), true);
     assert.equal(productEntity.offers.every(({ url }) => url === canonicalForProduct(product)), true);
 
@@ -144,6 +154,39 @@ test("genera Product y BreadcrumbList reales para las 74 fichas", () => {
     const serialized = JSON.stringify(data);
     assert.doesNotMatch(serialized, /vercel\.app|nutoria-ecommerce-/u);
     assert.doesNotMatch(serialized, /aggregateRating|review|gtin|sku|mpn|brand|availability|itemCondition/u);
+  }
+});
+
+test("los 64 multipresentación publican solo la oferta predeterminada de 250 g", () => {
+  const multiplePresentationProducts = products.filter(({ variants }) => variants.length > 0);
+  assert.equal(multiplePresentationProducts.length, 64);
+
+  for (const product of multiplePresentationProducts) {
+    const expected = product.variants.find(({ presentation }) => presentation === "250g");
+    assert.ok(expected, product.slug);
+    const productEntity = structuredDataForProduct(product)["@graph"]
+      .find(({ "@type": type }) => type === "Product");
+
+    assert.equal(productEntity.offers.length, 1, product.slug);
+    assert.equal(productEntity.offers[0].name, `${product.name} - 250 g`, product.slug);
+    assert.equal(productEntity.offers[0].price, expected.price, product.slug);
+    assert.equal(productEntity.offers[0].priceCurrency, "COP", product.slug);
+    assert.equal(productEntity.offers[0].url, canonicalForProduct(product), product.slug);
+  }
+});
+
+test("los 10 productos de presentación única conservan su oferta real", () => {
+  const singlePresentationProducts = products.filter(({ variants }) => variants.length === 0);
+  assert.equal(singlePresentationProducts.length, 10);
+
+  for (const product of singlePresentationProducts) {
+    const productEntity = structuredDataForProduct(product)["@graph"]
+      .find(({ "@type": type }) => type === "Product");
+
+    assert.equal(productEntity.offers.length, 1, product.slug);
+    assert.equal(productEntity.offers[0].price, product.price, product.slug);
+    assert.equal(productEntity.offers[0].priceCurrency, "COP", product.slug);
+    assert.equal(productEntity.offers[0].url, canonicalForProduct(product), product.slug);
   }
 });
 
