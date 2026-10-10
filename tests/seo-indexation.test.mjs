@@ -6,6 +6,7 @@ import {
   canonicalForProduct,
   renderProductDocument,
   renderSitemap,
+  seoMetadataForProduct,
 } from "../lib/product-page-template.mjs";
 
 const read = (path) => readFileSync(new URL(`../${path}`, import.meta.url), "utf8");
@@ -54,4 +55,56 @@ test("el HTML inicial incluye el contenido aprobado sin inventar bloques vacíos
   assert.match(almonds, /Almendras/u);
   assert.match(almonds, /Frutos secos y más/u);
   assert.match(almonds, /125 g|250 g|500 g|1\.000 g/u);
+});
+
+test("genera title, Open Graph y Twitter desde la fuente única", () => {
+  const titles = new Set();
+
+  for (const product of products) {
+    const html = read(`productos/${product.slug}/index.html`);
+    const metadata = seoMetadataForProduct(product);
+
+    assert.equal((html.match(/<title>/gu) || []).length, 1, product.slug);
+    assert.match(html, new RegExp(`<title>${escapeRegExp(metadata.title)}<\\/title>`));
+    assert.equal(titles.has(metadata.title), false, metadata.title);
+    titles.add(metadata.title);
+
+    assert.match(html, new RegExp(`<meta property="og:title" content="${escapeRegExp(metadata.title)}" \\/>`));
+    assert.match(html, new RegExp(`<meta property="og:url" content="${escapeRegExp(metadata.canonical)}" \\/>`));
+    assert.match(html, new RegExp(`<meta property="og:image" content="${escapeRegExp(metadata.image)}" \\/>`));
+    assert.match(html, new RegExp(`<meta property="og:image:alt" content="${escapeRegExp(metadata.imageAlt)}" \\/>`));
+    assert.match(html, /<meta property="og:type" content="product" \/>/u);
+    assert.match(html, /<meta property="og:site_name" content="Nutoria" \/>/u);
+    assert.match(html, /<meta property="og:locale" content="es_CO" \/>/u);
+
+    assert.match(html, /<meta name="twitter:card" content="summary_large_image" \/>/u);
+    assert.match(html, new RegExp(`<meta name="twitter:title" content="${escapeRegExp(metadata.title)}" \\/>`));
+    assert.match(html, new RegExp(`<meta name="twitter:image" content="${escapeRegExp(metadata.image)}" \\/>`));
+    assert.match(html, new RegExp(`<meta name="twitter:image:alt" content="${escapeRegExp(metadata.imageAlt)}" \\/>`));
+
+    assert.doesNotMatch(html, /vercel\.app/u, product.slug);
+  }
+
+  assert.equal(titles.size, products.length);
+});
+
+test("solo publica meta descriptions respaldadas por contenido aprobado", () => {
+  const withDescription = products.filter((product) => seoMetadataForProduct(product).description);
+  const withoutDescription = products.filter((product) => !seoMetadataForProduct(product).description);
+
+  assert.deepEqual(withDescription.map(({ slug }) => slug), ["colageno-marino"]);
+  assert.equal(withoutDescription.length, 73);
+
+  for (const product of products) {
+    const html = read(`productos/${product.slug}/index.html`);
+    const metadata = seoMetadataForProduct(product);
+    const descriptionTags = html.match(/<meta name="description"/gu) || [];
+    const ogDescriptionTags = html.match(/<meta property="og:description"/gu) || [];
+    const twitterDescriptionTags = html.match(/<meta name="twitter:description"/gu) || [];
+    const expectedCount = metadata.description ? 1 : 0;
+
+    assert.equal(descriptionTags.length, expectedCount, product.slug);
+    assert.equal(ogDescriptionTags.length, expectedCount, product.slug);
+    assert.equal(twitterDescriptionTags.length, expectedCount, product.slug);
+  }
 });
