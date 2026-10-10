@@ -7,6 +7,7 @@ import {
   renderProductDocument,
   renderSitemap,
   seoMetadataForProduct,
+  structuredDataForProduct,
 } from "../lib/product-page-template.mjs";
 
 const read = (path) => readFileSync(new URL(`../${path}`, import.meta.url), "utf8");
@@ -107,4 +108,71 @@ test("solo publica meta descriptions respaldadas por contenido aprobado", () => 
     assert.equal(ogDescriptionTags.length, expectedCount, product.slug);
     assert.equal(twitterDescriptionTags.length, expectedCount, product.slug);
   }
+});
+
+test("genera Product y BreadcrumbList reales para las 74 fichas", () => {
+  for (const product of products) {
+    const html = read(`productos/${product.slug}/index.html`);
+    const scripts = [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/gu)];
+    assert.equal(scripts.length, 1, product.slug);
+
+    const data = JSON.parse(scripts[0][1]);
+    assert.deepEqual(data, structuredDataForProduct(product), product.slug);
+    assert.equal(data["@context"], "https://schema.org");
+    assert.equal(data["@graph"].length, 2);
+
+    const productEntity = data["@graph"].find(({ "@type": type }) => type === "Product");
+    const breadcrumb = data["@graph"].find(({ "@type": type }) => type === "BreadcrumbList");
+    assert.ok(productEntity, product.slug);
+    assert.ok(breadcrumb, product.slug);
+    assert.equal(productEntity.name, product.name);
+    assert.equal(productEntity.url, canonicalForProduct(product));
+    assert.deepEqual(productEntity.image, product.images.map((image) => `https://nutoria.com.co${image}`));
+    assert.equal(productEntity.category, product.category);
+
+    const expectedOffers = product.variants.length ? product.variants : [product];
+    assert.equal(productEntity.offers.length, expectedOffers.length);
+    assert.deepEqual(productEntity.offers.map(({ price }) => price), expectedOffers.map(({ price }) => price));
+    assert.equal(productEntity.offers.every(({ priceCurrency }) => priceCurrency === "COP"), true);
+    assert.equal(productEntity.offers.every(({ url }) => url === canonicalForProduct(product)), true);
+
+    assert.deepEqual(breadcrumb.itemListElement, [
+      { "@type": "ListItem", position: 1, name: "Inicio", item: "https://nutoria.com.co/" },
+      { "@type": "ListItem", position: 2, name: product.name },
+    ]);
+
+    const serialized = JSON.stringify(data);
+    assert.doesNotMatch(serialized, /vercel\.app|nutoria-ecommerce-/u);
+    assert.doesNotMatch(serialized, /aggregateRating|review|gtin|sku|mpn|brand|availability|itemCondition/u);
+  }
+});
+
+test("Product solo usa descripción aprobada y no inventa variantes", () => {
+  for (const product of products) {
+    const data = structuredDataForProduct(product);
+    const productEntity = data["@graph"].find(({ "@type": type }) => type === "Product");
+    const description = seoMetadataForProduct(product).description;
+
+    assert.equal(productEntity.description, description || undefined, product.slug);
+    assert.equal("hasVariant" in productEntity, false);
+    assert.equal("productGroupID" in productEntity, false);
+  }
+});
+
+test("la portada conserva OnlineStore y añade WebSite conectado", () => {
+  const html = read("index.html");
+  const data = [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/gu)]
+    .map((match) => JSON.parse(match[1]));
+  const store = data.find(({ "@type": type }) => type === "OnlineStore");
+  const website = data.find(({ "@type": type }) => type === "WebSite");
+
+  assert.ok(store);
+  assert.equal(store["@id"], "https://nutoria.com.co/#organization");
+  assert.equal(store.url, "https://nutoria.com.co/");
+  assert.ok(website);
+  assert.equal(website["@id"], "https://nutoria.com.co/#website");
+  assert.equal(website.name, "Nutoria");
+  assert.equal(website.url, "https://nutoria.com.co/");
+  assert.deepEqual(website.publisher, { "@id": store["@id"] });
+  assert.equal("potentialAction" in website, false);
 });
