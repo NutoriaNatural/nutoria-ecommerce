@@ -111,18 +111,20 @@ test("cada URL directa carga la plantilla común mediante rutas absolutas", () =
 
 test("la estructura reutilizable renderiza galería y datos reales sin duplicarlos en HTML", () => {
   const page = read("product-page.mjs");
+  const template = read("lib/product-page-template.mjs");
   const detail = read("product-detail.mjs");
   assert.match(page, /productBySlug\.get\(slug\)/);
-  assert.match(page, /data-product-main-image/);
-  assert.match(page, /data-product-thumbnails/);
-  assert.match(page, /data-product-presentation/);
-  assert.match(page, /data-product-price/);
-  assert.match(page, /data-product-add/);
-  assert.match(page, /data-product-quantity-decrease/);
-  assert.match(page, /data-product-short-description/);
-  assert.match(page, /data-product-description/);
-  assert.match(page, /data-product-info/);
-  assert.match(page, /data-product-composition/);
+  assert.match(page, /renderProductBody\(product\)/);
+  assert.match(template, /data-product-main-image/);
+  assert.match(template, /data-product-thumbnails/);
+  assert.match(template, /data-product-presentation/);
+  assert.match(template, /data-product-price/);
+  assert.match(template, /data-product-add/);
+  assert.match(template, /data-product-quantity-decrease/);
+  assert.match(template, /data-product-short-description/);
+  assert.match(template, /data-product-description/);
+  assert.match(template, /data-product-info/);
+  assert.match(template, /data-product-composition/);
   assert.match(page, /initializeProductDetail\(slug\)/);
   assert.match(detail, /product\.images\.forEach/);
   assert.match(detail, /name\.textContent = product\.name/);
@@ -132,7 +134,8 @@ test("la estructura reutilizable renderiza galería y datos reales sin duplicarl
 });
 
 test("la ficha piloto prioriza compra y oculta información opcional vacía", () => {
-  const page = read("product-page.mjs");
+  const page = read("productos/colageno-marino/index.html");
+  const template = read("lib/product-page-template.mjs");
   const detail = read("product-detail.mjs");
   const addPosition = page.indexOf("data-product-add");
   assert.ok(addPosition > page.indexOf("data-product-price"));
@@ -140,8 +143,8 @@ test("la ficha piloto prioriza compra y oculta información opcional vacía", ()
   assert.ok(addPosition > page.indexOf("data-product-quantity"));
   assert.ok(addPosition < page.indexOf("data-product-short-description"));
   assert.match(page, /product-purchase__add-icon[\s\S]*?<span>AGREGAR AL CARRITO<\/span>/);
-  assert.match(page, /<details[^>]+data-product-description[^>]+hidden>/);
-  assert.match(page, /<details[^>]+data-product-info[^>]+hidden>/);
+  assert.match(template, /if \(!product\.description\) return ""/);
+  assert.match(template, /if \(!product\.productInfo\.length\) return ""/);
   assert.match(detail, /if \(product\.shortDescription/);
   assert.match(detail, /if \(product\.description/);
   assert.match(detail, /if \(product\.productInfo\.length/);
@@ -180,12 +183,13 @@ test("imagen y nombre enlazan las fichas existentes y Agregar sigue directo", ()
 
 test("todas las fichas reutilizan el mismo carrito, badge, persistencia y checkout", () => {
   const page = read("product-page.mjs");
+  const template = read("lib/product-page-template.mjs");
   const detail = read("product-detail.mjs");
   const cart = read("cart.mjs");
-  assert.equal((page.match(/id=\"cart-dialog\"/g) || []).length, 1);
-  assert.equal((page.match(/data-cart-open/g) || []).length, 2);
-  assert.equal((page.match(/data-cart-count/g) || []).length, 2);
-  assert.match(page, /data-whatsapp-general/);
+  assert.equal((template.match(/id=\"cart-dialog\"/g) || []).length, 1);
+  assert.equal((template.match(/data-cart-open/g) || []).length, 2);
+  assert.equal((template.match(/data-cart-count/g) || []).length, 2);
+  assert.match(template, /data-whatsapp-general/);
   assert.match(page, /await import\("\.\/cart\.mjs"\)/);
   assert.match(page, /await import\("\.\/whatsapp\.mjs"\)/);
   assert.match(detail, /addButton\.dataset\.productId = selected\.id/);

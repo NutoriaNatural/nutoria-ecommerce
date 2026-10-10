@@ -40,6 +40,7 @@ export function initializeProductDetail(slug) {
   }
 
   if (product.description && description && descriptionContent) {
+    descriptionContent.replaceChildren();
     product.description.split(/\n\s*\n/u).forEach((paragraph) => {
       const element = document.createElement("p");
       element.textContent = paragraph;
@@ -49,6 +50,7 @@ export function initializeProductDetail(slug) {
   }
 
   if (product.productInfo.length && productInfo && productInfoList) {
+    productInfoList.replaceChildren();
     product.productInfo.forEach(({ label, value }) => {
       if (!label || !value) return;
       const term = document.createElement("dt");
@@ -61,6 +63,7 @@ export function initializeProductDetail(slug) {
   }
 
   if (product.composition.length && composition && compositionList) {
+    compositionList.replaceChildren();
     product.composition.forEach((ingredient) => {
       const item = document.createElement("li");
       item.textContent = ingredient;
@@ -69,6 +72,7 @@ export function initializeProductDetail(slug) {
     composition.hidden = false;
   }
 
+  thumbnails.replaceChildren();
   product.images.forEach((src, index) => {
     const button = document.createElement("button");
     button.className = "product-gallery__thumbnail";
@@ -104,6 +108,7 @@ export function initializeProductDetail(slug) {
       }))
     : [{ id: product.id, presentation: product.presentation, price: product.price }];
 
+  presentation.replaceChildren();
   purchasableOptions.forEach((option, index) => {
     const element = document.createElement("option");
     element.value = String(index);
