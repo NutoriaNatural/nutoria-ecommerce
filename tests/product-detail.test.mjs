@@ -139,7 +139,7 @@ test("la ficha piloto prioriza compra y oculta información opcional vacía", ()
   assert.ok(addPosition > page.indexOf("data-product-presentation"));
   assert.ok(addPosition > page.indexOf("data-product-quantity"));
   assert.ok(addPosition < page.indexOf("data-product-short-description"));
-  assert.match(page, />AGREGAR AL CARRITO</);
+  assert.match(page, /product-purchase__add-icon[\s\S]*?<span>AGREGAR AL CARRITO<\/span>/);
   assert.match(page, /<details[^>]+data-product-description[^>]+hidden>/);
   assert.match(page, /<details[^>]+data-product-info[^>]+hidden>/);
   assert.match(detail, /if \(product\.shortDescription/);
@@ -159,8 +159,11 @@ test("el control de cantidad conserva el carrito compartido y cantidades positiv
 
 test("el ajuste móvil compacta solo espacios y centra el icono SVG del botón", () => {
   const css = read("product-detail.css");
+  const detail = read("product-detail.mjs");
   assert.match(css, /\.product-purchase__add\s*{[^}]*display:\s*inline-flex[^}]*align-items:\s*center[^}]*justify-content:\s*center/s);
-  assert.match(css, /\.product-purchase__add::before\s*{[^}]*mask:\s*url\("data:image\/svg\+xml/s);
+  assert.match(css, /\.product-purchase__add-icon\s*{[^}]*stroke:\s*currentColor/s);
+  assert.doesNotMatch(css, /\.product-purchase__add::before|data:image\/svg\+xml/);
+  assert.match(detail, /defaultAddButtonContent[\s\S]*?replaceChildren/);
   assert.match(css, /@media\s*\(max-width:\s*799px\)[\s\S]*?\.product-purchase\s*{[^}]*gap:\s*0\.72rem/s);
   assert.match(css, /@media\s*\(min-width:\s*800px\)[\s\S]*?\.product-purchase\s*{[^}]*position:\s*sticky/s);
 });

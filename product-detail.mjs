@@ -157,8 +157,11 @@ export function initializeProductDetail(slug) {
     programmaticAddsRemaining = quantity - 1;
     for (let index = 1; index < quantity; index += 1) addButton.click();
   });
+  const defaultAddButtonContent = [...addButton.childNodes].map((node) => node.cloneNode(true));
   const labelObserver = new MutationObserver(() => {
-    if (addButton.textContent === "Agregar") addButton.textContent = "AGREGAR AL CARRITO";
+    if (addButton.textContent === "Agregar") {
+      addButton.replaceChildren(...defaultAddButtonContent.map((node) => node.cloneNode(true)));
+    }
   });
   labelObserver.observe(addButton, { childList: true });
   updateQuantity();

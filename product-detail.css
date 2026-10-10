@@ -206,14 +206,15 @@
   letter-spacing: 0.02em;
 }
 
-.product-purchase__add::before {
+.product-purchase__add-icon {
   width: 1.15rem;
   height: 1.15rem;
   flex: 0 0 1.15rem;
-  background: currentColor;
-  content: "";
-  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='none' stroke='black' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.8' d='M3 3h2l2.4 10.2a2 2 0 0 0 2 1.55h7.75a2 2 0 0 0 1.95-1.56L20.5 7H6.1M9.5 20a1.25 1.25 0 1 1-2.5 0 1.25 1.25 0 0 1 2.5 0Zm9 0a1.25 1.25 0 1 1-2.5 0 1.25 1.25 0 0 1 2.5 0Z'/%3E%3C/svg%3E") center / contain no-repeat;
-  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='none' stroke='black' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.8' d='M3 3h2l2.4 10.2a2 2 0 0 0 2 1.95-1.56L20.5 7H6.1M9.5 20a1.25 1.25 0 1 1-2.5 0 1.25 1.25 0 0 1 2.5 0Zm9 0a1.25 1.25 0 1 1-2.5 0 1.25 1.25 0 0 1 2.5 0Z'/%3E%3C/svg%3E") center / contain no-repeat;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .product-purchase__short-description {

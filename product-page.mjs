@@ -37,7 +37,10 @@ if (!product || !product.detailPath) {
               <button type="button" data-product-quantity-increase aria-label="Aumentar cantidad">+</button>
             </div>
           </div>
-          <button class="product-card__button product-purchase__add" data-product-add type="button">AGREGAR AL CARRITO</button>
+          <button class="product-card__button product-purchase__add" data-product-add type="button">
+            <svg class="product-purchase__add-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 3h2l2.4 10.2a2 2 0 0 0 2 1.55h7.75a2 2 0 0 0 1.95-1.56L20.5 7H6.1M9.5 20a1.25 1.25 0 1 1-2.5 0 1.25 1.25 0 0 1 2.5 0Zm9 0a1.25 1.25 0 1 1-2.5 0 1.25 1.25 0 0 1 2.5 0Z" /></svg>
+            <span>AGREGAR AL CARRITO</span>
+          </button>
           <p class="product-purchase__short-description" data-product-short-description hidden></p>
           <details class="product-purchase__details" data-product-description hidden>
             <summary>Descripción</summary>
