@@ -157,6 +157,14 @@ test("el control de cantidad conserva el carrito compartido y cantidades positiv
   assert.match(read("cart.mjs"), /const STORAGE_KEY = "nutoria_cart"/);
 });
 
+test("el ajuste móvil compacta solo espacios y centra el icono SVG del botón", () => {
+  const css = read("product-detail.css");
+  assert.match(css, /\.product-purchase__add\s*{[^}]*display:\s*inline-flex[^}]*align-items:\s*center[^}]*justify-content:\s*center/s);
+  assert.match(css, /\.product-purchase__add::before\s*{[^}]*mask:\s*url\("data:image\/svg\+xml/s);
+  assert.match(css, /@media\s*\(max-width:\s*799px\)[\s\S]*?\.product-purchase\s*{[^}]*gap:\s*0\.72rem/s);
+  assert.match(css, /@media\s*\(min-width:\s*800px\)[\s\S]*?\.product-purchase\s*{[^}]*position:\s*sticky/s);
+});
+
 test("imagen y nombre enlazan las fichas existentes y Agregar sigue directo", () => {
   assert.equal(productBySlug.get("almendras").detailPath, "/productos/almendras/");
   assert.equal(productBySlug.get("ajonjoli").detailPath, "/productos/ajonjoli/");
