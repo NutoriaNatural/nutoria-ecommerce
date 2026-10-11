@@ -82,6 +82,11 @@ export function initializeProductDetail(slug) {
     button.setAttribute("aria-pressed", String(index === 0));
     const image = document.createElement("img");
     image.src = src;
+    if (index === 0) {
+      const responsiveThumbnail = productImageAttributes(src, "160px");
+      image.srcset = responsiveThumbnail.srcset;
+      image.sizes = responsiveThumbnail.sizes;
+    }
     image.alt = "";
     image.width = 160;
     image.height = 160;

@@ -230,6 +230,7 @@ test("la galería es responsive y conserva las imágenes completas", () => {
   assert.match(template, /sizes="\$\{escapeHtml\(mainImage\.sizes\)\}"/);
   assert.match(template, /fetchpriority="high"/);
   assert.match(detail, /mainImage\.removeAttribute\("srcset"\)/);
+  assert.match(detail, /if \(index === 0\)[\s\S]*?productImageAttributes\(src, "160px"\)/);
   for (const product of productBySlug.values()) {
     for (const width of [320, 800]) {
       const derived = product.image.replace(/\.webp$/u, `-${width}.webp`);
