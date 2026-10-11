@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { existsSync, readFileSync } from "node:fs";
 import { productBySlug } from "../data/products.mjs";
+import { productThumbnailPath } from "../lib/responsive-product-images.mjs";
 import { priceOrder } from "../lib/order-pricing.mjs";
 
 const read = (path) => readFileSync(new URL(`../${path}`, import.meta.url), "utf8");
@@ -230,12 +231,39 @@ test("la galería es responsive y conserva las imágenes completas", () => {
   assert.match(template, /sizes="\$\{escapeHtml\(mainImage\.sizes\)\}"/);
   assert.match(template, /fetchpriority="high"/);
   assert.match(detail, /mainImage\.removeAttribute\("srcset"\)/);
-  assert.match(detail, /if \(index === 0\)[\s\S]*?productImageAttributes\(src, "160px"\)/);
+  assert.match(detail, /image\.src = productThumbnailPath\(src\)/);
   for (const product of productBySlug.values()) {
     for (const width of [320, 800]) {
       const derived = product.image.replace(/\.webp$/u, `-${width}.webp`);
       assert.equal(existsSync(new URL(`..${derived}`, import.meta.url)), true, derived);
     }
+  }
+});
+
+test("la galería difiere los originales secundarios y reutiliza miniaturas de 320 px", () => {
+  const detail = read("product-detail.mjs");
+  const products = [...productBySlug.values()];
+  const secondaryImages = products.flatMap(({ images }) => images.slice(1));
+  assert.equal(secondaryImages.length, 41);
+  assert.match(detail, /const galleryImageLoads = new Map\(\)/);
+  assert.match(detail, /await loadGalleryImage\(src\)/);
+  assert.match(detail, /button\.dataset\.fullImageSrc = src/);
+  assert.doesNotMatch(detail, /image\.src = src/);
+  for (const source of secondaryImages) {
+    const thumbnail = productThumbnailPath(source);
+    assert.match(thumbnail, /-320\.webp$/u);
+    assert.equal(existsSync(new URL(`..${thumbnail}`, import.meta.url)), true, thumbnail);
+  }
+});
+
+test("los productos con una sola imagen conservan la principal inmediata y sin carga diferida", () => {
+  const singleImageProducts = [...productBySlug.values()].filter(({ images }) => images.length === 1);
+  assert.ok(singleImageProducts.length > 0);
+  for (const product of singleImageProducts) {
+    const html = read(`productos/${product.slug}/index.html`);
+    assert.match(html, /data-product-main-image/);
+    assert.match(html, /fetchpriority="high"/);
+    assert.doesNotMatch(html, /data-product-main-image[^>]*loading="lazy"/);
   }
 });
 

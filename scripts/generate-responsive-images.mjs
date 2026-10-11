@@ -6,10 +6,13 @@ import { products } from "../data/products.mjs";
 import {
   PRODUCT_IMAGE_SOURCE_WIDTH,
   PRODUCT_IMAGE_WIDTHS,
+  PRODUCT_THUMBNAIL_WIDTH,
+  productThumbnailPath,
 } from "../lib/responsive-product-images.mjs";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const sources = [...new Set(products.map(({ image }) => image))];
+const secondarySources = [...new Set(products.flatMap(({ images }) => images.slice(1)))];
 let outputBytes = 0;
 let outputCount = 0;
 
@@ -33,6 +36,22 @@ for (const source of sources) {
     outputBytes += (await stat(output)).size;
     outputCount += 1;
   }
+}
+
+for (const source of secondarySources) {
+  const input = resolve(root, `.${source}`);
+  const output = resolve(root, `.${productThumbnailPath(source)}`);
+  await sharp(input)
+    .resize({
+      width: PRODUCT_THUMBNAIL_WIDTH,
+      height: PRODUCT_THUMBNAIL_WIDTH,
+      fit: "inside",
+      withoutEnlargement: true,
+    })
+    .webp({ quality: 88, effort: 6, smartSubsample: true })
+    .toFile(output);
+  outputBytes += (await stat(output)).size;
+  outputCount += 1;
 }
 
 console.log(`Imágenes responsive generadas: ${outputCount} archivos (${(outputBytes / 1024 / 1024).toFixed(2)} MiB).`);

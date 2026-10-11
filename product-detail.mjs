@@ -1,5 +1,9 @@
 import { productBySlug } from "./data/products.mjs";
-import { PRODUCT_DETAIL_IMAGE_SIZES, productImageAttributes } from "./lib/responsive-product-images.mjs";
+import {
+  PRODUCT_DETAIL_IMAGE_SIZES,
+  productImageAttributes,
+  productThumbnailPath,
+} from "./lib/responsive-product-images.mjs";
 
 const formatPresentation = (value) =>
   value.replace(/(\d[\d.]*)\s*(mg|kg|g|ml|l)\b/giu, "$1 $2");
@@ -31,6 +35,24 @@ export function initializeProductDetail(slug) {
   const quantityOutput = root.querySelector("[data-product-quantity]");
   const decreaseQuantity = root.querySelector("[data-product-quantity-decrease]");
   const increaseQuantity = root.querySelector("[data-product-quantity-increase]");
+  const galleryImageLoads = new Map();
+  let gallerySelection = 0;
+
+  const loadGalleryImage = (src) => {
+    if (!galleryImageLoads.has(src)) {
+      const loader = new Image();
+      const pending = new Promise((resolve, reject) => {
+        loader.addEventListener("load", () => resolve(src), { once: true });
+        loader.addEventListener("error", reject, { once: true });
+        loader.src = src;
+      }).catch((error) => {
+        galleryImageLoads.delete(src);
+        throw error;
+      });
+      galleryImageLoads.set(src, pending);
+    }
+    return galleryImageLoads.get(src);
+  };
 
   name.textContent = product.name;
   category.textContent = product.category;
@@ -80,32 +102,41 @@ export function initializeProductDetail(slug) {
     button.type = "button";
     button.setAttribute("aria-label", `Ver imagen ${index + 1} de ${product.name}`);
     button.setAttribute("aria-pressed", String(index === 0));
+    button.dataset.fullImageSrc = src;
     const image = document.createElement("img");
-    image.src = src;
-    if (index === 0) {
-      const responsiveThumbnail = productImageAttributes(src, "160px");
-      image.srcset = responsiveThumbnail.srcset;
-      image.sizes = responsiveThumbnail.sizes;
-    }
+    image.src = productThumbnailPath(src);
     image.alt = "";
     image.width = 160;
     image.height = 160;
     image.loading = index === 0 ? "eager" : "lazy";
     button.append(image);
-    button.addEventListener("click", () => {
-      mainImage.src = src;
-      if (index === 0) {
-        const responsiveImage = productImageAttributes(src, PRODUCT_DETAIL_IMAGE_SIZES);
-        mainImage.srcset = responsiveImage.srcset;
-        mainImage.sizes = responsiveImage.sizes;
-      } else {
-        mainImage.removeAttribute("srcset");
-        mainImage.removeAttribute("sizes");
-      }
-      mainImage.alt = `${product.name}, imagen ${index + 1} de ${product.images.length}`;
+    button.addEventListener("click", async () => {
+      const selection = ++gallerySelection;
       thumbnails.querySelectorAll("button").forEach((item) => {
         item.setAttribute("aria-pressed", String(item === button));
       });
+      if (index === 0) {
+        const responsiveImage = productImageAttributes(src, PRODUCT_DETAIL_IMAGE_SIZES);
+        mainImage.src = responsiveImage.src;
+        mainImage.srcset = responsiveImage.srcset;
+        mainImage.sizes = responsiveImage.sizes;
+        mainImage.alt = `${product.name}, imagen 1 de ${product.images.length}`;
+        mainImage.removeAttribute("aria-busy");
+      } else {
+        mainImage.setAttribute("aria-busy", "true");
+        try {
+          await loadGalleryImage(src);
+        } catch {
+          if (selection === gallerySelection) mainImage.removeAttribute("aria-busy");
+          return;
+        }
+        if (selection !== gallerySelection) return;
+        mainImage.src = src;
+        mainImage.removeAttribute("srcset");
+        mainImage.removeAttribute("sizes");
+        mainImage.alt = `${product.name}, imagen ${index + 1} de ${product.images.length}`;
+        mainImage.removeAttribute("aria-busy");
+      }
     });
     thumbnails.append(button);
   });
