@@ -311,27 +311,29 @@ function initializeCart() {
     if (event.target === dialog) dialog.close();
   });
 
-  document.querySelectorAll(".product-card__button[data-product-id]").forEach((button) => {
-    let feedbackTimer;
-    button.addEventListener("click", () => {
-      cart.add({
-        id: button.dataset.productId,
-        name: button.dataset.productName,
-        displayName: button.dataset.productDisplayName,
-        presentation: button.dataset.productPresentation,
-        price: Number(button.dataset.productPrice),
-        image: button.dataset.productImage,
-      });
-      persist();
-      render();
-      window.clearTimeout(feedbackTimer);
-      button.classList.add("is-added");
-      button.textContent = "Agregado ✓";
-      feedbackTimer = window.setTimeout(() => {
-        button.classList.remove("is-added");
-        button.textContent = "Agregar";
-      }, 1400);
+  const feedbackTimers = new WeakMap();
+  document.addEventListener("click", (event) => {
+    const button = event.target.closest?.(".product-card__button[data-product-id]");
+    if (!button) return;
+    const feedbackTimer = feedbackTimers.get(button);
+    cart.add({
+      id: button.dataset.productId,
+      name: button.dataset.productName,
+      displayName: button.dataset.productDisplayName,
+      presentation: button.dataset.productPresentation,
+      price: Number(button.dataset.productPrice),
+      image: button.dataset.productImage,
     });
+    persist();
+    render();
+    window.clearTimeout(feedbackTimer);
+    button.classList.add("is-added");
+    button.textContent = "Agregado ✓";
+    const nextFeedbackTimer = window.setTimeout(() => {
+      button.classList.remove("is-added");
+      button.textContent = "Agregar";
+    }, 1400);
+    feedbackTimers.set(button, nextFeedbackTimer);
   });
 
   checkoutForm.addEventListener("submit", async (event) => {

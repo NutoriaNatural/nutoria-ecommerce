@@ -120,13 +120,18 @@ test("las cuatro tarjetas visuales reutilizan los filtros y desplazan al catálo
   assert.match(catalog, /scrollIntoView\(\{ behavior: "smooth", block: "start" \}\)/);
 });
 
-test("filtra las tarjetas existentes sin duplicar catálogo ni romper Agregar", () => {
+test("renderiza el catálogo progresivamente sin romper Agregar", () => {
   const catalog = read("product-catalog.mjs");
   const cart = read("cart.mjs");
-  assert.match(catalog, /const cards = products\.map\(createProductCard\)/);
-  assert.match(catalog, /cards\.forEach\(\(card, index\) => \{ card\.hidden = !matches\.has\(products\[index\]\.id\); \}\)/);
-  assert.equal((catalog.match(/grid\.replaceChildren/g) || []).length, 1);
-  assert.match(cart, /document\.querySelectorAll\("\.product-card__button\[data-product-id\]"\)/);
+  assert.match(catalog, /INITIAL_CATALOG_BATCH_SIZE = 12/);
+  assert.match(catalog, /CATALOG_BATCH_SIZE = 8/);
+  assert.match(catalog, /requestIdleCallback/);
+  assert.match(catalog, /window\.setTimeout\(callback, 0\)/);
+  assert.match(catalog, /activeRenderer\?\.cancel\(\)/);
+  assert.match(catalog, /items: matches/);
+  assert.match(catalog, /renderItem: createProductCard/);
+  assert.match(cart, /document\.addEventListener\("click"/);
+  assert.match(cart, /event\.target\.closest\?\.\("\.product-card__button\[data-product-id\]"\)/);
   assert.match(cart, /cart\.add\(/);
   assert.match(cart, /localStorage\.setItem\(STORAGE_KEY/);
   assert.match(cart, /fetch\("\/api\/wompi\/checkout"/);

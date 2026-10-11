@@ -58,7 +58,7 @@ function createProductDetails(product) {
   return details;
 }
 
-function createProductCard(product) {
+export function createProductCard(product) {
   const card = document.createElement("article");
   card.className = "product-card";
   card.dataset.category = product.category;
@@ -184,11 +184,74 @@ function createProductCard(product) {
   return card;
 }
 
+export const INITIAL_CATALOG_BATCH_SIZE = 12;
+export const CATALOG_BATCH_SIZE = 8;
+
+const scheduleIdle = (callback) => {
+  if (typeof window.requestIdleCallback === "function") {
+    return { type: "idle", id: window.requestIdleCallback(callback, { timeout: 250 }) };
+  }
+  return { type: "timer", id: window.setTimeout(callback, 0) };
+};
+
+const cancelIdle = (scheduled) => {
+  if (!scheduled) return;
+  if (scheduled.type === "idle") window.cancelIdleCallback(scheduled.id);
+  else window.clearTimeout(scheduled.id);
+};
+
+export function createProgressiveRenderer({
+  container,
+  items,
+  renderItem,
+  initialBatchSize = INITIAL_CATALOG_BATCH_SIZE,
+  batchSize = CATALOG_BATCH_SIZE,
+  schedule = scheduleIdle,
+  cancel = cancelIdle,
+}) {
+  let cursor = 0;
+  let scheduled = null;
+  let cancelled = false;
+
+  container.replaceChildren();
+  container.dataset.initialProductCount = String(Math.min(initialBatchSize, items.length));
+  container.dataset.renderedProductCount = "0";
+  container.dataset.catalogComplete = String(items.length === 0);
+
+  const appendBatch = (size) => {
+    if (cancelled) return;
+    const end = Math.min(cursor + size, items.length);
+    const nodes = items.slice(cursor, end).map(renderItem);
+    if (nodes.length) container.append(...nodes);
+    cursor = end;
+    container.dataset.renderedProductCount = String(cursor);
+    container.dataset.catalogComplete = String(cursor >= items.length);
+  };
+
+  const scheduleNext = () => {
+    if (cancelled || cursor >= items.length) return;
+    scheduled = schedule(() => {
+      scheduled = null;
+      appendBatch(batchSize);
+      scheduleNext();
+    });
+  };
+
+  appendBatch(initialBatchSize);
+  scheduleNext();
+
+  return {
+    cancel() {
+      cancelled = true;
+      cancel(scheduled);
+      scheduled = null;
+    },
+    get renderedCount() { return cursor; },
+  };
+}
+
 const grid = typeof document !== "undefined" ? document.querySelector("[data-product-grid]") : null;
 if (grid) {
-  const cards = products.map(createProductCard);
-  grid.replaceChildren(...cards);
-
   const searchInput = document.querySelector("[data-product-search]");
   const categoryContainer = document.querySelector("[data-category-filters]");
   const resultCount = document.querySelector("[data-product-count]");
@@ -197,6 +260,7 @@ if (grid) {
   const featuredCategoryLinks = document.querySelectorAll("[data-catalog-category]");
   const productSection = document.querySelector("#productos");
   let activeCategory = "Todos";
+  let activeRenderer = null;
 
   const categoryButtons = ["Todos", ...PRODUCT_CATEGORIES].map((category) => {
     const button = document.createElement("button");
@@ -210,16 +274,21 @@ if (grid) {
   });
 
   const applyFilters = () => {
-    const matches = new Set(filterProducts(products, {
+    const matches = filterProducts(products, {
       query: searchInput?.value,
       category: activeCategory,
-    }).map((product) => product.id));
+    });
 
-    cards.forEach((card, index) => { card.hidden = !matches.has(products[index].id); });
+    activeRenderer?.cancel();
+    activeRenderer = createProgressiveRenderer({
+      container: grid,
+      items: matches,
+      renderItem: createProductCard,
+    });
     categoryButtons.forEach((button) => {
       button.setAttribute("aria-pressed", String(button.dataset.category === activeCategory));
     });
-    const count = matches.size;
+    const count = matches.length;
     if (resultCount) resultCount.textContent = `${count} ${count === 1 ? "producto" : "productos"}`;
     if (emptyState) emptyState.hidden = count > 0;
   };

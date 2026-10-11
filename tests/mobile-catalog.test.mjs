@@ -62,7 +62,7 @@ test("solo conserva el WhatsApp flotante general en móvil y desktop", () => {
 
 test("agregar actualiza el carrito, confirma visualmente y no abre el checkout", () => {
   const cart = read("cart.mjs");
-  const handler = cart.match(/document\.querySelectorAll\("\.product-card__button\[data-product-id\]"\)[\s\S]*?checkoutForm\.addEventListener/)?.[0] || "";
+  const handler = cart.match(/document\.addEventListener\("click"[\s\S]*?checkoutForm\.addEventListener/)?.[0] || "";
   assert.match(handler, /cart\.add\(/);
   assert.match(handler, /persist\(\)/);
   assert.match(handler, /render\(\)/);
