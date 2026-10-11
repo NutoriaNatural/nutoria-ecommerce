@@ -26,6 +26,9 @@ test("las tarjetas móviles priorizan compra y conservan objetivos táctiles", (
   assert.match(css, /@media\s*\(max-width:\s*719px\)[\s\S]*?\.product-card__label\s*{[^}]*display:\s*none/s);
   assert.match(css, /@media\s*\(max-width:\s*719px\)[\s\S]*?\.product-card__presentation,\s*\.product-card__presentation-value\s*{[^}]*min-height:\s*40px/s);
   assert.match(catalog, /product-card__value product-card__presentation-value/);
+  assert.match(catalog, /image\.srcset = responsiveImage\.srcset/);
+  assert.match(catalog, /image\.sizes = responsiveImage\.sizes/);
+  assert.match(catalog, /image\.loading = "lazy"/);
 });
 
 test("uniforma el área de presentación y normaliza solo su texto visible", () => {

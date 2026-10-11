@@ -220,10 +220,22 @@ test("las fichas seleccionan 250 g por defecto sin alterar productos de presenta
 
 test("la galería es responsive y conserva las imágenes completas", () => {
   const css = read("product-detail.css");
+  const detail = read("product-detail.mjs");
+  const template = read("lib/product-page-template.mjs");
   assert.match(css, /\.product-gallery__main img\s*{[^}]*object-fit:\s*contain/s);
   assert.match(css, /\.product-gallery__thumbnails\s*{[^}]*overflow-x:\s*auto[^}]*scroll-snap-type:\s*inline proximity/s);
   assert.match(css, /@media\s*\(min-width:\s*800px\)[\s\S]*?\.product-detail\s*{[^}]*grid-template-columns:/s);
   assert.match(css, /@media\s*\(max-width:\s*799px\)/);
+  assert.match(template, /srcset="\$\{escapeHtml\(mainImage\.srcset\)\}"/);
+  assert.match(template, /sizes="\$\{escapeHtml\(mainImage\.sizes\)\}"/);
+  assert.match(template, /fetchpriority="high"/);
+  assert.match(detail, /mainImage\.removeAttribute\("srcset"\)/);
+  for (const product of productBySlug.values()) {
+    for (const width of [320, 800]) {
+      const derived = product.image.replace(/\.webp$/u, `-${width}.webp`);
+      assert.equal(existsSync(new URL(`..${derived}`, import.meta.url)), true, derived);
+    }
+  }
 });
 
 test("la composición de los Mix usa separadores uniformes y salto flexible", () => {

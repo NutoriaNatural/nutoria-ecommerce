@@ -3,6 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "images:generate": "node scripts/generate-responsive-images.mjs",
     "seo:generate": "node scripts/generate-seo-pages.mjs",
     "db:inspect": "node scripts/inspect-database.mjs",
     "db:migrate": "node scripts/migrate-database.mjs",
@@ -11,5 +12,8 @@
   },
   "dependencies": {
     "pg": "^8.13.1"
+  },
+  "devDependencies": {
+    "sharp": "^0.34.4"
   }
 }

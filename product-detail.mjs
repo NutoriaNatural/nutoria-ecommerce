@@ -1,4 +1,5 @@
 import { productBySlug } from "./data/products.mjs";
+import { PRODUCT_DETAIL_IMAGE_SIZES, productImageAttributes } from "./lib/responsive-product-images.mjs";
 
 const formatPresentation = (value) =>
   value.replace(/(\d[\d.]*)\s*(mg|kg|g|ml|l)\b/giu, "$1 $2");
@@ -88,6 +89,14 @@ export function initializeProductDetail(slug) {
     button.append(image);
     button.addEventListener("click", () => {
       mainImage.src = src;
+      if (index === 0) {
+        const responsiveImage = productImageAttributes(src, PRODUCT_DETAIL_IMAGE_SIZES);
+        mainImage.srcset = responsiveImage.srcset;
+        mainImage.sizes = responsiveImage.sizes;
+      } else {
+        mainImage.removeAttribute("srcset");
+        mainImage.removeAttribute("sizes");
+      }
       mainImage.alt = `${product.name}, imagen ${index + 1} de ${product.images.length}`;
       thumbnails.querySelectorAll("button").forEach((item) => {
         item.setAttribute("aria-pressed", String(item === button));
@@ -96,7 +105,10 @@ export function initializeProductDetail(slug) {
     thumbnails.append(button);
   });
 
-  mainImage.src = product.image;
+  const responsiveMainImage = productImageAttributes(product.image, PRODUCT_DETAIL_IMAGE_SIZES);
+  mainImage.src = responsiveMainImage.src;
+  mainImage.srcset = responsiveMainImage.srcset;
+  mainImage.sizes = responsiveMainImage.sizes;
   mainImage.alt = `${product.name}, imagen 1 de ${product.images.length}`;
   name.textContent = product.name;
 

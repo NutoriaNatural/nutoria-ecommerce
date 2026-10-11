@@ -1,5 +1,6 @@
 export { PRODUCT_CATEGORIES, products } from "./data/products.mjs";
 import { PRODUCT_CATEGORIES, products } from "./data/products.mjs";
+import { CATALOG_IMAGE_SIZES, productImageAttributes } from "./lib/responsive-product-images.mjs";
 
 const formatMoney = (value) =>
   new Intl.NumberFormat("es-CO", {
@@ -65,10 +66,13 @@ function createProductCard(product) {
   const imageContainer = document.createElement("div");
   imageContainer.className = "product-card__image";
   const image = document.createElement("img");
-  image.src = product.image;
+  const responsiveImage = productImageAttributes(product.image, CATALOG_IMAGE_SIZES);
+  image.src = responsiveImage.src;
+  image.srcset = responsiveImage.srcset;
+  image.sizes = responsiveImage.sizes;
   image.alt = `Fotografía de ${product.name}`;
-  image.width = 600;
-  image.height = 600;
+  image.width = 1563;
+  image.height = 1563;
   image.loading = "lazy";
   if (product.detailPath) {
     const imageLink = document.createElement("a");
