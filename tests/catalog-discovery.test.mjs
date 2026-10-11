@@ -127,6 +127,7 @@ test("renderiza el catálogo progresivamente sin romper Agregar", () => {
   assert.match(catalog, /CATALOG_BATCH_SIZE = 16/);
   assert.match(catalog, /container\.ownerDocument\.createDocumentFragment\(\)/);
   assert.match(catalog, /requestIdleCallback/);
+  assert.match(catalog, /requestAnimationFrame/);
   assert.match(catalog, /window\.setTimeout\(callback, 0\)/);
   assert.match(catalog, /activeRenderer\?\.cancel\(\)/);
   assert.match(catalog, /items: matches/);

@@ -188,16 +188,23 @@ export const INITIAL_CATALOG_BATCH_SIZE = 12;
 export const CATALOG_BATCH_SIZE = 16;
 
 const scheduleIdle = (callback) => {
-  if (typeof window.requestIdleCallback === "function") {
-    return { type: "idle", id: window.requestIdleCallback(callback, { timeout: 250 }) };
-  }
-  return { type: "timer", id: window.setTimeout(callback, 0) };
+  const scheduled = { frameId: null, idleId: null, timerId: null };
+  scheduled.frameId = window.requestAnimationFrame(() => {
+    scheduled.frameId = null;
+    if (typeof window.requestIdleCallback === "function") {
+      scheduled.idleId = window.requestIdleCallback(callback, { timeout: 250 });
+    } else {
+      scheduled.timerId = window.setTimeout(callback, 0);
+    }
+  });
+  return scheduled;
 };
 
 const cancelIdle = (scheduled) => {
   if (!scheduled) return;
-  if (scheduled.type === "idle") window.cancelIdleCallback(scheduled.id);
-  else window.clearTimeout(scheduled.id);
+  if (scheduled.frameId !== null) window.cancelAnimationFrame(scheduled.frameId);
+  if (scheduled.idleId !== null) window.cancelIdleCallback(scheduled.idleId);
+  if (scheduled.timerId !== null) window.clearTimeout(scheduled.timerId);
 };
 
 export function createProgressiveRenderer({
