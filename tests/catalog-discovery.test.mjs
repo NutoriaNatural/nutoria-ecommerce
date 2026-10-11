@@ -124,7 +124,8 @@ test("renderiza el catálogo progresivamente sin romper Agregar", () => {
   const catalog = read("product-catalog.mjs");
   const cart = read("cart.mjs");
   assert.match(catalog, /INITIAL_CATALOG_BATCH_SIZE = 12/);
-  assert.match(catalog, /CATALOG_BATCH_SIZE = 8/);
+  assert.match(catalog, /CATALOG_BATCH_SIZE = 16/);
+  assert.match(catalog, /container\.ownerDocument\.createDocumentFragment\(\)/);
   assert.match(catalog, /requestIdleCallback/);
   assert.match(catalog, /window\.setTimeout\(callback, 0\)/);
   assert.match(catalog, /activeRenderer\?\.cancel\(\)/);

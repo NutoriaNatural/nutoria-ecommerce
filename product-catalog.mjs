@@ -185,7 +185,7 @@ export function createProductCard(product) {
 }
 
 export const INITIAL_CATALOG_BATCH_SIZE = 12;
-export const CATALOG_BATCH_SIZE = 8;
+export const CATALOG_BATCH_SIZE = 16;
 
 const scheduleIdle = (callback) => {
   if (typeof window.requestIdleCallback === "function") {
@@ -222,7 +222,11 @@ export function createProgressiveRenderer({
     if (cancelled) return;
     const end = Math.min(cursor + size, items.length);
     const nodes = items.slice(cursor, end).map(renderItem);
-    if (nodes.length) container.append(...nodes);
+    if (nodes.length) {
+      const fragment = container.ownerDocument.createDocumentFragment();
+      fragment.append(...nodes);
+      container.append(fragment);
+    }
     cursor = end;
     container.dataset.renderedProductCount = String(cursor);
     container.dataset.catalogComplete = String(cursor >= items.length);

@@ -12,8 +12,21 @@ function createContainer() {
   return {
     children: [],
     dataset: {},
+    ownerDocument: {
+      createDocumentFragment() {
+        return {
+          children: [],
+          append(...nodes) { this.children.push(...nodes); },
+        };
+      },
+    },
     replaceChildren(...nodes) { this.children = [...nodes]; },
-    append(...nodes) { this.children.push(...nodes); },
+    append(...nodes) {
+      nodes.forEach((node) => {
+        if (Array.isArray(node.children)) this.children.push(...node.children);
+        else this.children.push(node);
+      });
+    },
   };
 }
 
@@ -50,7 +63,7 @@ test("crea un bloque inicial y completa los 74 productos en lotes ordenados", ()
   assert.deepEqual(container.children.map(({ id }) => id), products.map(({ id }) => id));
   assert.equal(new Set(container.children.map(({ id }) => id)).size, 74);
   assert.equal(container.dataset.catalogComplete, "true");
-  assert.equal(CATALOG_BATCH_SIZE, 8);
+  assert.equal(CATALOG_BATCH_SIZE, 16);
 });
 
 test("cancelar un render impide que lotes obsoletos reaparezcan tras un filtro", () => {
