@@ -83,6 +83,20 @@ export class Cart {
     return this.snapshot();
   }
 
+  replace(items) {
+    const replacement = new Map();
+    items.forEach((item) => {
+      this.#validateProduct(item);
+      const quantity = Number(item.quantity);
+      if (!Number.isInteger(quantity) || quantity < 1) {
+        throw new TypeError("La cantidad debe ser un número entero positivo.");
+      }
+      replacement.set(item.id, { ...item, quantity });
+    });
+    this.#items = replacement;
+    return this.snapshot();
+  }
+
   setQuantity(productId, quantity) {
     const item = this.#items.get(productId);
     if (!item) return this.snapshot();
@@ -124,6 +138,8 @@ const formatMoney = (value) =>
     currency: "COP",
     maximumFractionDigits: 0,
   }).format(value);
+
+const formatPresentation = (value) => String(value || "").replace(/(\d)g$/u, "$1 g");
 
 const readStoredItems = () => {
   try {
@@ -176,6 +192,8 @@ function initializeCart() {
 
   const cart = new Cart(readStoredItems());
   const persist = () => localStorage.setItem(STORAGE_KEY, JSON.stringify(cart.snapshot().items));
+  let checkoutBlocked = false;
+  let checkoutInFlight = false;
 
   const render = () => {
     const state = cart.snapshot();
@@ -192,7 +210,7 @@ function initializeCart() {
         shippingDetails.hidden = !progress.secondary;
       }
     }
-    checkoutButton.disabled = state.items.length === 0;
+    checkoutButton.disabled = state.items.length === 0 || checkoutBlocked || checkoutInFlight;
 
     if (!state.items.length) {
       const empty = document.createElement("p");
@@ -300,9 +318,69 @@ function initializeCart() {
     );
   };
 
+  const cartSignature = (items) => JSON.stringify(items.map(({ id, quantity }) => ({ id, quantity })));
+  const reconcileCart = async ({ announce = false } = {}) => {
+    const currentItems = cart.snapshot().items;
+    if (!currentItems.length) return { ready: false, changed: false };
+
+    const requestedSignature = cartSignature(currentItems);
+    checkoutBlocked = true;
+    render();
+    try {
+      const response = await fetch("/api/cart/reconcile", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          items: currentItems.map(({ id, quantity }) => ({ id, quantity })),
+        }),
+      });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error || "No fue posible verificar el carrito.");
+
+      if (cartSignature(cart.snapshot().items) !== requestedSignature) {
+        checkoutBlocked = false;
+        render();
+        return { ready: true, changed: false };
+      }
+
+      const storedById = new Map(currentItems.map((item) => [item.id, item]));
+      const reconciledItems = result.items.map((item) => ({
+        ...storedById.get(item.id),
+        ...item,
+        presentation: formatPresentation(item.presentation),
+        displayName: item.name,
+      }));
+      const changed = result.invalidItemIds.length > 0 || reconciledItems.some((item) => {
+        const stored = storedById.get(item.id);
+        const storedPresentation = String(stored?.presentation || "").replace(/\s+/gu, "");
+        const currentPresentation = String(item.presentation || "").replace(/\s+/gu, "");
+        return !stored || stored.price !== item.price || storedPresentation !== currentPresentation ||
+          (stored.displayName || stored.name) !== item.name;
+      });
+
+      cart.replace(reconciledItems);
+      persist();
+      checkoutBlocked = false;
+      render();
+
+      if (announce && result.invalidItemIds.length) {
+        message.textContent = "Retiramos del carrito productos o presentaciones que ya no están disponibles. Revisa el resumen antes de pagar.";
+      } else if (announce && changed) {
+        message.textContent = "Actualizamos el carrito con los precios y presentaciones vigentes. Revisa el total antes de pagar.";
+      }
+      return { ready: reconciledItems.length > 0, changed };
+    } catch (error) {
+      checkoutBlocked = true;
+      render();
+      if (announce) message.textContent = error.message;
+      return { ready: false, changed: false };
+    }
+  };
+
   const openCart = () => {
     dialog.showModal();
     document.body.classList.add("cart-open");
+    reconcileCart({ announce: true });
   };
   openButtons.forEach((button) => button.addEventListener("click", openCart));
   closeButton.addEventListener("click", () => dialog.close());
@@ -340,10 +418,18 @@ function initializeCart() {
     event.preventDefault();
     if (!checkoutForm.reportValidity()) return;
 
-    const state = cart.snapshot();
-    if (!state.items.length) return;
-    checkoutButton.disabled = true;
+    if (!cart.snapshot().items.length) return;
+    checkoutInFlight = true;
+    render();
     message.textContent = "Preparando el pago seguro…";
+
+    const reconciliation = await reconcileCart({ announce: true });
+    if (!reconciliation.ready || reconciliation.changed) {
+      checkoutInFlight = false;
+      render();
+      return;
+    }
+    const state = cart.snapshot();
 
     const formData = new FormData(checkoutForm);
     let idempotencyKey = sessionStorage.getItem(CHECKOUT_KEY);
@@ -390,7 +476,8 @@ function initializeCart() {
       wompiForm.submit();
     } catch (error) {
       message.textContent = error.message;
-      checkoutButton.disabled = false;
+      checkoutInFlight = false;
+      render();
     }
   });
 
@@ -432,6 +519,7 @@ function initializeCart() {
   }
 
   render();
+  reconcileCart({ announce: true });
 }
 
 if (typeof document !== "undefined") initializeCart();
