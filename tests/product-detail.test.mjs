@@ -114,8 +114,9 @@ test("la estructura reutilizable renderiza galería y datos reales sin duplicarl
   const page = read("product-page.mjs");
   const template = read("lib/product-page-template.mjs");
   const detail = read("product-detail.mjs");
-  assert.match(page, /productBySlug\.get\(slug\)/);
-  assert.match(page, /renderProductBody\(product\)/);
+  assert.doesNotMatch(page, /data\/products\.mjs|product-page-template\.mjs|renderProductBody/);
+  assert.match(page, /#product-runtime-data/);
+  assert.match(page, /JSON\.parse/);
   assert.match(template, /data-product-main-image/);
   assert.match(template, /data-product-thumbnails/);
   assert.match(template, /data-product-presentation/);
@@ -126,12 +127,10 @@ test("la estructura reutilizable renderiza galería y datos reales sin duplicarl
   assert.match(template, /data-product-description/);
   assert.match(template, /data-product-info/);
   assert.match(template, /data-product-composition/);
-  assert.match(page, /initializeProductDetail\(slug\)/);
+  assert.match(template, /id="product-runtime-data" type="application\/json"/);
+  assert.match(page, /initializeProductDetail\(product\)/);
   assert.match(detail, /product\.images\.forEach/);
-  assert.match(detail, /name\.textContent = product\.name/);
-  assert.match(detail, /category\.textContent = product\.category/);
-  assert.match(detail, /product\.composition\.forEach/);
-  assert.match(detail, /product\.productInfo\.forEach/);
+  assert.doesNotMatch(detail, /data\/products\.mjs/);
 });
 
 test("la ficha piloto prioriza compra y oculta información opcional vacía", () => {
@@ -146,9 +145,7 @@ test("la ficha piloto prioriza compra y oculta información opcional vacía", ()
   assert.match(page, /product-purchase__add-icon[\s\S]*?<span>AGREGAR AL CARRITO<\/span>/);
   assert.match(template, /if \(!product\.description\) return ""/);
   assert.match(template, /if \(!product\.productInfo\.length\) return ""/);
-  assert.match(detail, /if \(product\.shortDescription/);
-  assert.match(detail, /if \(product\.description/);
-  assert.match(detail, /if \(product\.productInfo\.length/);
+  assert.doesNotMatch(detail, /shortDescription|productInfo|descriptionContent/);
   assert.doesNotMatch(page, /Información no disponible|Envíos a toda Colombia|2 a 5 días hábiles|¿Tienes dudas\?|Productos relacionados/);
 });
 

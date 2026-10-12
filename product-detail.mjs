@@ -1,4 +1,3 @@
-import { productBySlug } from "./data/products.mjs";
 import {
   PRODUCT_DETAIL_IMAGE_SIZES,
   productImageAttributes,
@@ -14,24 +13,14 @@ const formatMoney = (value) => new Intl.NumberFormat("es-CO", {
   maximumFractionDigits: 0,
 }).format(value);
 
-export function initializeProductDetail(slug) {
-  const product = productBySlug.get(slug);
+export function initializeProductDetail(product) {
   const root = document.querySelector("[data-product-detail]");
   if (!product || !root) return false;
   const mainImage = root.querySelector("[data-product-main-image]");
   const thumbnails = root.querySelector("[data-product-thumbnails]");
-  const name = root.querySelector("[data-product-name]");
-  const category = root.querySelector("[data-product-category]");
   const presentation = root.querySelector("[data-product-presentation]");
   const price = root.querySelector("[data-product-price]");
   const addButton = root.querySelector("[data-product-add]");
-  const composition = root.querySelector("[data-product-composition]");
-  const compositionList = root.querySelector("[data-product-composition-list]");
-  const shortDescription = root.querySelector("[data-product-short-description]");
-  const description = root.querySelector("[data-product-description]");
-  const descriptionContent = root.querySelector("[data-product-description-content]");
-  const productInfo = root.querySelector("[data-product-info]");
-  const productInfoList = root.querySelector("[data-product-info-list]");
   const quantityOutput = root.querySelector("[data-product-quantity]");
   const decreaseQuantity = root.querySelector("[data-product-quantity-decrease]");
   const increaseQuantity = root.querySelector("[data-product-quantity-increase]");
@@ -53,47 +42,6 @@ export function initializeProductDetail(slug) {
     }
     return galleryImageLoads.get(src);
   };
-
-  name.textContent = product.name;
-  category.textContent = product.category;
-
-  if (product.shortDescription && shortDescription) {
-    shortDescription.textContent = product.shortDescription;
-    shortDescription.hidden = false;
-  }
-
-  if (product.description && description && descriptionContent) {
-    descriptionContent.replaceChildren();
-    product.description.split(/\n\s*\n/u).forEach((paragraph) => {
-      const element = document.createElement("p");
-      element.textContent = paragraph;
-      descriptionContent.append(element);
-    });
-    description.hidden = false;
-  }
-
-  if (product.productInfo.length && productInfo && productInfoList) {
-    productInfoList.replaceChildren();
-    product.productInfo.forEach(({ label, value }) => {
-      if (!label || !value) return;
-      const term = document.createElement("dt");
-      const detail = document.createElement("dd");
-      term.textContent = label;
-      detail.textContent = value;
-      productInfoList.append(term, detail);
-    });
-    if (productInfoList.children.length) productInfo.hidden = false;
-  }
-
-  if (product.composition.length && composition && compositionList) {
-    compositionList.replaceChildren();
-    product.composition.forEach((ingredient) => {
-      const item = document.createElement("li");
-      item.textContent = ingredient;
-      compositionList.append(item);
-    });
-    composition.hidden = false;
-  }
 
   thumbnails.replaceChildren();
   product.images.forEach((src, index) => {
@@ -146,8 +94,6 @@ export function initializeProductDetail(slug) {
   mainImage.srcset = responsiveMainImage.srcset;
   mainImage.sizes = responsiveMainImage.sizes;
   mainImage.alt = `${product.name}, imagen 1 de ${product.images.length}`;
-  name.textContent = product.name;
-
   const purchasableOptions = product.variants.length
     ? product.variants.map((variant) => ({
         id: `${product.id}-${variant.id}`,
