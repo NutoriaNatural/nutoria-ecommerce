@@ -13,6 +13,7 @@ const itemFromButton = (button, quantity = 1) => ({
 
 function observeProducts() {
   const viewed = new WeakSet();
+  const observed = new WeakSet();
   const observer = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
@@ -33,7 +34,26 @@ function observeProducts() {
     { threshold: 0.5 },
   );
 
-  document.querySelectorAll(".product-card").forEach((card) => observer.observe(card));
+  const observeCard = (card) => {
+    if (observed.has(card)) return;
+    observed.add(card);
+    observer.observe(card);
+  };
+
+  const observeWithin = (root) => {
+    if (root.matches?.(".product-card")) observeCard(root);
+    root.querySelectorAll?.(".product-card").forEach(observeCard);
+  };
+
+  observeWithin(document);
+  const mutations = new MutationObserver((records) => {
+    records.forEach(({ addedNodes }) => {
+      addedNodes.forEach((node) => {
+        if (node.nodeType === Node.ELEMENT_NODE) observeWithin(node);
+      });
+    });
+  });
+  mutations.observe(document.body, { childList: true, subtree: true });
 }
 
 function initializeAnalytics() {

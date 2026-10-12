@@ -18,6 +18,28 @@ test("usa el dominio oficial en SEO, datos estructurados y rastreo", () => {
   assert.match(read("sitemap.xml"), /<loc>https:\/\/nutoria\.com\.co\/<\/loc>/);
 });
 
+test("centraliza GA4 y conserva la cola antes de cargar el script externo", () => {
+  const index = read("index.html");
+  const loader = read("ga4-loader.js");
+  assert.equal((index.match(/src="\/ga4-loader\.js"/g) || []).length, 1);
+  assert.doesNotMatch(index, /googletagmanager\.com\/gtag\/js/);
+  assert.match(loader, /G-PKDWSJSZSD/);
+  assert.match(loader, /window\.dataLayer = window\.dataLayer \|\| \[\]/);
+  assert.match(loader, /window\.gtag = window\.gtag \|\| function gtag/);
+  assert.match(loader, /window\.dataLayer\.push\(arguments\)/);
+  assert.match(loader, /requestAnimationFrame\(\(\) => window\.requestAnimationFrame\(loadExternalScript\)\)/);
+  assert.match(loader, /script\[data-nutoria-ga4\]/);
+});
+
+test("GA4 cubre fichas y observa tarjetas agregadas progresivamente", () => {
+  const analytics = read("analytics.mjs");
+  assert.match(read("lib/product-page-template.mjs"), /<script src="\/ga4-loader\.js"><\/script>/);
+  assert.match(analytics, /new MutationObserver/);
+  assert.match(analytics, /addedNodes/);
+  assert.match(analytics, /observeWithin\(node\)/);
+  assert.match(analytics, /const observed = new WeakSet\(\)/);
+});
+
 test("todas las imágenes declaradas existen y tienen atributo alt", () => {
   const index = read("index.html");
   const images = [...index.matchAll(/<img\b[^>]*src="([^"]+)"[^>]*>/g)];
