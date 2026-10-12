@@ -266,8 +266,8 @@ a {
 
 .payment-brand {
   display: inline-flex;
-  width: clamp(4.25rem, 18vw, 6rem);
-  height: 3.75rem;
+  width: clamp(5rem, 20vw, 6rem);
+  height: clamp(3.5rem, 14vw, 4rem);
   align-items: center;
   justify-content: center;
   padding: 0;
@@ -281,32 +281,10 @@ a {
 }
 
 .payment-brand--wompi img,
+.payment-brand--pse img,
 .payment-brand--nequi img,
 .payment-brand--daviplata img {
   mix-blend-mode: multiply;
-}
-
-.payment-brand--wompi {
-  width: clamp(6.5rem, 27vw, 8.5rem);
-}
-
-.payment-brand--visa {
-  width: clamp(4.5rem, 18vw, 6rem);
-}
-
-.payment-brand--mastercard,
-.payment-brand--amex {
-  width: clamp(3.75rem, 15vw, 4.75rem);
-}
-
-.payment-brand--pse,
-.payment-brand--nequi {
-  width: clamp(3.75rem, 15vw, 4.6rem);
-  height: 4.25rem;
-}
-
-.payment-brand--daviplata {
-  width: clamp(5.5rem, 22vw, 7rem);
 }
 
 .hero-grid {
