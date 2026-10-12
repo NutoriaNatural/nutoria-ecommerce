@@ -1,5 +1,5 @@
 import { stat } from "node:fs/promises";
-import { dirname, resolve } from "node:path";
+import { extname, dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import sharp from "sharp";
 import { products } from "../data/products.mjs";
@@ -11,6 +11,12 @@ import {
 } from "../lib/responsive-product-images.mjs";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
+const homepageSources = [
+  "/assets/images/optimized/Almendras.jpg",
+  "/assets/images/optimized/Ajonjoli.jpg",
+  "/assets/images/optimized/Mango Deshidratado.jpg",
+  "/assets/images/optimized/Colageno Marino.jpg",
+];
 const sources = [...new Set(products.map(({ image }) => image))];
 const secondarySources = [...new Set(products.flatMap(({ images }) => images.slice(1)))];
 let outputBytes = 0;
@@ -53,5 +59,28 @@ for (const source of secondarySources) {
   outputBytes += (await stat(output)).size;
   outputCount += 1;
 }
+
+for (const source of homepageSources) {
+  const input = resolve(root, `.${source}`);
+  const extension = extname(input);
+  for (const width of [320, 480]) {
+    const output = input.replace(extension, `-${width}.webp`);
+    await sharp(input)
+      .resize({ width, height: width, fit: "inside", withoutEnlargement: true })
+      .webp({ quality: 88, effort: 6, smartSubsample: true })
+      .toFile(output);
+    outputBytes += (await stat(output)).size;
+    outputCount += 1;
+  }
+}
+
+const logoInput = resolve(root, "assets/images/logo-nutoria-180.png");
+const logoOutput = resolve(root, "assets/images/logo-nutoria-header-120.webp");
+await sharp(logoInput)
+  .resize({ width: 120, height: 120, fit: "contain", withoutEnlargement: true })
+  .webp({ quality: 92, effort: 6, smartSubsample: true })
+  .toFile(logoOutput);
+outputBytes += (await stat(logoOutput)).size;
+outputCount += 1;
 
 console.log(`Imágenes responsive generadas: ${outputCount} archivos (${(outputBytes / 1024 / 1024).toFixed(2)} MiB).`);

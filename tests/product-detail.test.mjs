@@ -230,14 +230,14 @@ test("la galería es responsive y conserva las imágenes completas", () => {
   assert.match(detail, /mainImage\.removeAttribute\("srcset"\)/);
   assert.match(detail, /image\.src = productThumbnailPath\(src\)/);
   for (const product of productBySlug.values()) {
-    for (const width of [320, 800]) {
+    for (const width of [320, 480, 800]) {
       const derived = product.image.replace(/\.webp$/u, `-${width}.webp`);
       assert.equal(existsSync(new URL(`..${derived}`, import.meta.url)), true, derived);
     }
   }
 });
 
-test("la galería difiere los originales secundarios y reutiliza miniaturas de 320 px", () => {
+test("la galería difiere los originales secundarios y utiliza miniaturas de 160 px", () => {
   const detail = read("product-detail.mjs");
   const products = [...productBySlug.values()];
   const secondaryImages = products.flatMap(({ images }) => images.slice(1));
@@ -248,7 +248,7 @@ test("la galería difiere los originales secundarios y reutiliza miniaturas de 3
   assert.doesNotMatch(detail, /image\.src = src/);
   for (const source of secondaryImages) {
     const thumbnail = productThumbnailPath(source);
-    assert.match(thumbnail, /-320\.webp$/u);
+    assert.match(thumbnail, /-160\.webp$/u);
     assert.equal(existsSync(new URL(`..${thumbnail}`, import.meta.url)), true, thumbnail);
   }
 });
