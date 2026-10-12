@@ -266,145 +266,47 @@ a {
 
 .payment-brand {
   display: inline-flex;
+  width: clamp(4.25rem, 18vw, 6rem);
+  height: 3.75rem;
   align-items: center;
   justify-content: center;
-  min-width: 3.25rem;
-  padding: 0.1rem;
-  color: var(--verde-nutoria);
-  background: transparent;
-  font-size: 0.88rem;
-  font-weight: 700;
-  line-height: 1.05;
+  padding: 0;
+}
+
+.payment-brand img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.payment-brand--wompi img,
+.payment-brand--nequi img,
+.payment-brand--daviplata img {
+  mix-blend-mode: multiply;
 }
 
 .payment-brand--wompi {
-  flex-direction: column;
-  color: #5736d5;
-  align-items: flex-start;
-  color: #220045;
-  font-size: 1.8rem;
-  letter-spacing: -0.08em;
-}
-
-.payment-brand--wompi small {
-  margin-top: 0.15rem;
-  color: #302d31;
-  font-size: 0.42rem;
-  font-weight: 500;
-  letter-spacing: 0;
-  white-space: nowrap;
+  width: clamp(6.5rem, 27vw, 8.5rem);
 }
 
 .payment-brand--visa {
-  color: #172b85;
-  font-size: 1.7rem;
-  font-style: italic;
+  width: clamp(4.5rem, 18vw, 6rem);
 }
 
-.payment-brand--mastercard {
-  min-width: 3.75rem;
-}
-
-.payment-brand--mastercard > span {
-  position: relative;
-  width: 3.25rem;
-  height: 2rem;
-}
-
-.payment-brand--mastercard > span::before,
-.payment-brand--mastercard > span::after {
-  position: absolute;
-  top: 0;
-  width: 2rem;
-  height: 2rem;
-  border-radius: 50%;
-  content: "";
-}
-
-.payment-brand--mastercard > span::before {
-  left: 0;
-  background: #eb001b;
-}
-
-.payment-brand--mastercard > span::after {
-  right: 0;
-  background: rgba(247, 158, 27, 0.9);
-}
-
+.payment-brand--mastercard,
 .payment-brand--amex {
-  min-width: 3.3rem;
-  min-height: 3.3rem;
-  padding: 0.4rem;
-  border-radius: 0.2rem;
-  color: var(--blanco);
-  background: #2877bc;
-  font-size: 0.63rem;
-  letter-spacing: 0.02em;
+  width: clamp(3.75rem, 15vw, 4.75rem);
 }
 
-.payment-brand--pse {
-  position: relative;
-  display: grid;
-  width: 3.65rem;
-  min-width: 3.65rem;
-  height: 3.65rem;
-  align-content: center;
-  border-radius: 50%;
-  color: var(--blanco);
-  background: #075293;
-  font-size: 1.35rem;
-  font-style: italic;
-  font-weight: 400;
-}
-
-.payment-brand--pse small {
-  position: absolute;
-  top: 0.62rem;
-  left: 0.8rem;
-  font-size: 0.35rem;
-  font-style: normal;
-}
-
-.payment-brand--pse span {
-  line-height: 1;
-}
-
+.payment-brand--pse,
 .payment-brand--nequi {
-  flex-direction: column;
-  gap: 0.25rem;
-  color: #3d1152;
-  font-size: 0.78rem;
-  letter-spacing: 0.14em;
-}
-
-.payment-brand--nequi > span {
-  width: 2.35rem;
-  height: 2.35rem;
-  border-radius: 0.45rem;
-  background: linear-gradient(135deg, #ff004f 0 24%, #02003e 25% 74%, #00d6d2 75% 100%);
-  transform: rotate(45deg) scale(0.78);
+  width: clamp(3.75rem, 15vw, 4.6rem);
+  height: 4.25rem;
 }
 
 .payment-brand--daviplata {
-  position: relative;
-  min-width: 6rem;
-  padding: 0.75rem 0.3rem;
-  color: #d71920;
-  font-size: 1rem;
-  font-weight: 600;
-}
-
-.payment-brand--daviplata::after {
-  position: absolute;
-  inset: 0.15rem 0;
-  border: 1.5px solid currentColor;
-  border-radius: 48% 42% 50% 45%;
-  content: "";
-}
-
-.payment-brand--daviplata span {
-  font-style: italic;
-  font-weight: 800;
+  width: clamp(5.5rem, 22vw, 7rem);
 }
 
 .hero-grid {
