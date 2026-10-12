@@ -272,6 +272,7 @@ if (grid) {
   const productSection = document.querySelector("#productos");
   let activeCategory = "Todos";
   let activeRenderer = null;
+  let initialRenderFrame = null;
 
   const categoryButtons = ["Todos", ...PRODUCT_CATEGORIES].map((category) => {
     const button = document.createElement("button");
@@ -305,6 +306,10 @@ if (grid) {
   };
 
   const selectCategory = (category) => {
+    if (initialRenderFrame !== null) {
+      window.cancelAnimationFrame(initialRenderFrame);
+      initialRenderFrame = null;
+    }
     activeCategory = category;
     applyFilters();
   };
@@ -319,11 +324,22 @@ if (grid) {
       productSection?.scrollIntoView({ behavior: "smooth", block: "start" });
     });
   });
-  searchInput?.addEventListener("input", applyFilters);
+  searchInput?.addEventListener("input", () => {
+    if (initialRenderFrame !== null) {
+      window.cancelAnimationFrame(initialRenderFrame);
+      initialRenderFrame = null;
+    }
+    applyFilters();
+  });
   clearButton?.addEventListener("click", () => {
     if (searchInput) searchInput.value = "";
     selectCategory("Todos");
     searchInput?.focus();
   });
-  applyFilters();
+  window.requestAnimationFrame(() => {
+    initialRenderFrame = window.requestAnimationFrame(() => {
+      initialRenderFrame = null;
+      applyFilters();
+    });
+  });
 }
