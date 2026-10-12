@@ -40,6 +40,23 @@ test("GA4 cubre fichas y observa tarjetas agregadas progresivamente", () => {
   assert.match(analytics, /const observed = new WeakSet\(\)/);
 });
 
+test("sirve localmente solo las fuentes y pesos utilizados", () => {
+  const index = read("index.html");
+  const template = read("lib/product-page-template.mjs");
+  const fonts = read("fonts.css");
+  for (const markup of [index, template]) {
+    assert.doesNotMatch(markup, /fonts\.(?:googleapis|gstatic)\.com/);
+    assert.match(markup, /href="\/fonts\.css"/);
+    assert.match(markup, /rel="preload"[^>]*cormorant-garamond-600-latin\.woff2[^>]*as="font"/);
+  }
+  assert.equal(existsSync(resolve(root, "assets/fonts/cormorant-garamond-600-latin.woff2")), true);
+  assert.equal(existsSync(resolve(root, "assets/fonts/montserrat-latin.woff2")), true);
+  assert.match(fonts, /font-family: "Cormorant Garamond";[\s\S]*?font-weight: 600;[\s\S]*?font-display: swap;/);
+  for (const weight of [400, 500, 600, 700]) {
+    assert.match(fonts, new RegExp(`font-family: Montserrat;[\\s\\S]*?font-weight: ${weight};[\\s\\S]*?font-display: swap;`));
+  }
+});
+
 test("todas las imágenes declaradas existen y tienen atributo alt", () => {
   const index = read("index.html");
   const images = [...index.matchAll(/<img\b[^>]*src="([^"]+)"[^>]*>/g)];
