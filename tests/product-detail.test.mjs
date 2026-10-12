@@ -240,13 +240,14 @@ test("la galería es responsive y conserva las imágenes completas", () => {
 test("la galería difiere los originales secundarios y utiliza miniaturas de 160 px", () => {
   const detail = read("product-detail.mjs");
   const products = [...productBySlug.values()];
+  const galleryImages = products.flatMap(({ images }) => images);
   const secondaryImages = products.flatMap(({ images }) => images.slice(1));
   assert.equal(secondaryImages.length, 41);
   assert.match(detail, /const galleryImageLoads = new Map\(\)/);
   assert.match(detail, /await loadGalleryImage\(src\)/);
   assert.match(detail, /button\.dataset\.fullImageSrc = src/);
   assert.doesNotMatch(detail, /image\.src = src/);
-  for (const source of secondaryImages) {
+  for (const source of galleryImages) {
     const thumbnail = productThumbnailPath(source);
     assert.match(thumbnail, /-160\.webp$/u);
     assert.equal(existsSync(new URL(`..${thumbnail}`, import.meta.url)), true, thumbnail);

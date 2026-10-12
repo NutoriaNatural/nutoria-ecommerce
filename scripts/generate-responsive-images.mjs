@@ -18,7 +18,7 @@ const homepageSources = [
   "/assets/images/optimized/Colageno Marino.jpg",
 ];
 const sources = [...new Set(products.map(({ image }) => image))];
-const secondarySources = [...new Set(products.flatMap(({ images }) => images.slice(1)))];
+const gallerySources = [...new Set(products.flatMap(({ images }) => images))];
 let outputBytes = 0;
 let outputCount = 0;
 
@@ -44,7 +44,7 @@ for (const source of sources) {
   }
 }
 
-for (const source of secondarySources) {
+for (const source of gallerySources) {
   const input = resolve(root, `.${source}`);
   const output = resolve(root, `.${productThumbnailPath(source)}`);
   await sharp(input)
