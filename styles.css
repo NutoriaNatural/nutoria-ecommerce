@@ -287,6 +287,10 @@ a {
   mix-blend-mode: multiply;
 }
 
+.payment-brand--wompi img {
+  transform: scale(1.35);
+}
+
 .hero-grid {
   display: grid;
   min-width: 0;
