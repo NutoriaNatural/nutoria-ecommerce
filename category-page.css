@@ -1,0 +1,100 @@
+.category-page {
+  padding-block: clamp(2rem, 6vw, 5rem);
+}
+
+.category-page__header {
+  max-width: 48rem;
+}
+
+.category-page__header h1 {
+  margin: 0;
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: clamp(2.6rem, 7vw, 5rem);
+  font-weight: 600;
+  line-height: 0.98;
+}
+
+.category-page__header > p:not(.category-page__count) {
+  margin: 1.25rem 0 0;
+  font-size: clamp(1rem, 2vw, 1.15rem);
+}
+
+.category-page__count {
+  margin: 0.75rem 0 0;
+  color: rgba(4, 38, 22, 0.68);
+  font-size: 0.9rem;
+}
+
+.category-product-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 2rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.category-product-card {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+  background: var(--blanco);
+}
+
+.category-product-card > a {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  color: inherit;
+  text-decoration: none;
+}
+
+.category-product-card__image {
+  display: block;
+  aspect-ratio: 1;
+  border-bottom: 1px dashed var(--dorado-nutoria);
+  background: var(--marfil-natural);
+}
+
+.category-product-card__image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.category-product-card__name {
+  padding: 0.9rem 0.9rem 0;
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: clamp(1.2rem, 3vw, 1.55rem);
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+.category-product-card__link {
+  margin-top: auto;
+  padding: 0.65rem 0.9rem 0.9rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.category-product-card > a:hover .category-product-card__link,
+.category-product-card > a:focus-visible .category-product-card__link {
+  color: var(--dorado-nutoria);
+}
+
+@media (min-width: 720px) {
+  .category-product-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.25rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .category-product-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}

@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { products } from "../data/products.mjs";
+import { categories, categoryByName } from "../data/categories.mjs";
 import {
   canonicalForProduct,
   renderProductDocument,
@@ -28,14 +29,15 @@ test("las 74 fichas generadas permanecen sincronizadas con la fuente única", ()
   }
 });
 
-test("el sitemap contiene portada y 74 fichas canónicas sin duplicados", () => {
+test("el sitemap contiene portada, cuatro categorías y 74 fichas sin duplicados", () => {
   const sitemap = read("sitemap.xml");
   assert.equal(sitemap, renderSitemap(products));
   const urls = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/gu)].map((match) => match[1]);
-  assert.equal(urls.length, 75);
-  assert.equal(new Set(urls).size, 75);
+  assert.equal(urls.length, 79);
+  assert.equal(new Set(urls).size, 79);
   assert.equal(urls[0], "https://nutoria.com.co/");
-  assert.deepEqual(urls.slice(1), products.map((product) => canonicalForProduct(product)));
+  assert.deepEqual(urls.slice(1, 5), categories.map(({ path }) => `https://nutoria.com.co${path}`));
+  assert.deepEqual(urls.slice(5), products.map((product) => canonicalForProduct(product)));
   assert.equal(urls.some((url) => /vercel\.app|\/admin\/|\/api\/|\/index\.html|[?&]/u.test(url)), false);
 });
 
@@ -146,10 +148,15 @@ test("genera Product y BreadcrumbList reales para las 74 fichas", () => {
     assert.equal(productEntity.offers.every(({ priceCurrency }) => priceCurrency === "COP"), true);
     assert.equal(productEntity.offers.every(({ url }) => url === canonicalForProduct(product)), true);
 
+    const category = categoryByName.get(product.category);
+    assert.ok(category, product.category);
     assert.deepEqual(breadcrumb.itemListElement, [
       { "@type": "ListItem", position: 1, name: "Inicio", item: "https://nutoria.com.co/" },
-      { "@type": "ListItem", position: 2, name: product.name },
+      { "@type": "ListItem", position: 2, name: category.name, item: `https://nutoria.com.co${category.path}` },
+      { "@type": "ListItem", position: 3, name: product.name },
     ]);
+
+    assert.match(html, new RegExp(`<a href="${escapeRegExp(category.path)}">${escapeRegExp(category.name)}<\\/a>`));
 
     const serialized = JSON.stringify(data);
     assert.doesNotMatch(serialized, /vercel\.app|nutoria-ecommerce-/u);

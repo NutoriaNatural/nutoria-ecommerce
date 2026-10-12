@@ -319,6 +319,7 @@ if (grid) {
   });
   featuredCategoryLinks.forEach((link) => {
     link.addEventListener("click", (event) => {
+      if (link.getAttribute("href") !== "#productos") return;
       event.preventDefault();
       selectCategory(link.dataset.catalogCategory);
       productSection?.scrollIntoView({ behavior: "smooth", block: "start" });

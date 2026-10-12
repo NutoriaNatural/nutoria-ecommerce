@@ -30,6 +30,26 @@ a {
   color: inherit;
 }
 
+.breadcrumbs ol {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0 0 1.5rem;
+  padding: 0;
+  color: rgba(4, 38, 22, 0.72);
+  font-size: 0.9rem;
+  list-style: none;
+}
+
+.breadcrumbs li + li::before {
+  margin-right: 0.4rem;
+  content: "›";
+}
+
+.breadcrumbs a {
+  text-underline-offset: 0.2em;
+}
+
 .container {
   width: calc(100% - 2rem);
   max-width: var(--ancho-contenido);
