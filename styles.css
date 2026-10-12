@@ -153,6 +153,173 @@ a {
   background: var(--verde-nutoria);
 }
 
+.trust-payment-section {
+  padding-block: clamp(2.5rem, 6vw, 4.5rem);
+  color: var(--verde-nutoria);
+  background: var(--blanco);
+}
+
+.trust-payment-section__inner {
+  display: grid;
+  gap: clamp(2.25rem, 5vw, 3.75rem);
+}
+
+.trust-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.5rem 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.trust-item {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  text-align: center;
+  font-size: 0.88rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.trust-item__icon {
+  display: grid;
+  width: 3rem;
+  height: 3rem;
+  place-items: center;
+  border: 1px solid rgba(216, 168, 78, 0.72);
+  border-radius: 50%;
+  color: var(--dorado-nutoria);
+  background: var(--marfil-natural);
+}
+
+.trust-item__icon svg {
+  width: 1.65rem;
+  height: 1.65rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.payment-methods {
+  padding-top: clamp(1.75rem, 4vw, 2.75rem);
+  border-top: 1px solid var(--borde);
+  text-align: center;
+}
+
+.payment-methods h2 {
+  margin-bottom: 0.35rem;
+}
+
+.payment-methods > p {
+  margin: 0 auto 1.5rem;
+  color: rgba(4, 38, 22, 0.74);
+}
+
+.payment-methods__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.payment-brand {
+  display: inline-flex;
+  min-width: 5.5rem;
+  min-height: 3rem;
+  align-items: center;
+  justify-content: center;
+  padding: 0.45rem 0.8rem;
+  border: 1px solid var(--borde);
+  border-radius: 0.55rem;
+  color: var(--verde-nutoria);
+  background: var(--blanco);
+  box-shadow: 0 0.3rem 1rem rgba(4, 38, 22, 0.06);
+  font-size: 0.8rem;
+  font-weight: 700;
+  line-height: 1.05;
+}
+
+.payment-brand--wompi {
+  flex-direction: column;
+  color: #5736d5;
+  font-size: 1rem;
+}
+
+.payment-brand--wompi small {
+  color: #1f2724;
+  font-size: 0.55rem;
+  font-weight: 600;
+}
+
+.payment-brand--visa {
+  color: #172b85;
+  font-size: 1.05rem;
+  font-style: italic;
+}
+
+.payment-brand--mastercard {
+  gap: 0.35rem;
+  font-size: 0.68rem;
+}
+
+.payment-brand--mastercard > span {
+  position: relative;
+  width: 1.8rem;
+  height: 1rem;
+}
+
+.payment-brand--mastercard > span::before,
+.payment-brand--mastercard > span::after {
+  position: absolute;
+  top: 0;
+  width: 1rem;
+  height: 1rem;
+  border-radius: 50%;
+  content: "";
+}
+
+.payment-brand--mastercard > span::before {
+  left: 0;
+  background: #eb001b;
+}
+
+.payment-brand--mastercard > span::after {
+  right: 0;
+  background: rgba(247, 158, 27, 0.9);
+}
+
+.payment-brand--amex {
+  color: var(--blanco);
+  background: #2877bc;
+  font-size: 0.62rem;
+  letter-spacing: 0.02em;
+}
+
+.payment-brand--pse {
+  color: #1967a8;
+  font-size: 1.05rem;
+}
+
+.payment-brand--nequi {
+  color: #3d1152;
+  font-size: 1rem;
+}
+
+.payment-brand--daviplata {
+  color: #d71920;
+  font-size: 0.86rem;
+}
+
 .hero-grid {
   display: grid;
   min-width: 0;
@@ -1350,6 +1517,24 @@ h2 {
 
   .checkout-form__row {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .trust-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1.5rem;
+  }
+
+  .trust-item {
+    font-size: 0.95rem;
+  }
+
+  .trust-item__icon {
+    width: 3.5rem;
+    height: 3.5rem;
+  }
+
+  .payment-methods__list {
+    gap: 1rem;
   }
 }
 
