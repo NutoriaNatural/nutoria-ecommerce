@@ -148,6 +148,10 @@ a {
   background: rgba(216, 168, 78, 0.12);
 }
 
+.section--closing {
+  padding-block: clamp(2.75rem, 5vw, 4.5rem);
+}
+
 .section--dark {
   color: var(--marfil-natural);
   background: var(--verde-nutoria);
@@ -452,6 +456,7 @@ a {
 
 .section-frame--closing {
   display: flex;
+  min-height: 8rem;
   flex-direction: column;
   align-items: flex-start;
   justify-content: center;
