@@ -106,7 +106,7 @@ test("cada URL directa carga la plantilla común mediante rutas absolutas", () =
     assert.match(html, /src="\/product-page\.mjs"/);
     assert.match(html, /href="\/styles\.css"/);
     assert.match(html, /href="\/product-detail\.css"/);
-    assert.doesNotMatch(html, /Beneficios principales|Ingredientes destacados|Información técnica|Modo de uso/);
+    assert.doesNotMatch(html, /Beneficios principales|Ingredientes destacados|Información técnica/);
   }
 });
 

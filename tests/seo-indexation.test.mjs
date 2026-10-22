@@ -95,8 +95,14 @@ test("solo publica meta descriptions respaldadas por contenido aprobado", () => 
   const withDescription = products.filter((product) => seoMetadataForProduct(product).description);
   const withoutDescription = products.filter((product) => !seoMetadataForProduct(product).description);
 
-  assert.deepEqual(withDescription.map(({ slug }) => slug), ["colageno-marino"]);
-  assert.equal(withoutDescription.length, 73);
+  assert.deepEqual(withDescription.map(({ slug }) => slug), [
+    "7-colagenos",
+    "calcio-coral-marino",
+    "colageno-marino",
+    "maca-negra-roja-shihua-y-amarilla",
+    "sales-de-magnesio-mg2",
+  ]);
+  assert.equal(withoutDescription.length, 69);
 
   for (const product of products) {
     const html = read(`productos/${product.slug}/index.html`);

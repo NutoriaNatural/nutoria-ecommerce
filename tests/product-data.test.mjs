@@ -128,7 +128,14 @@ test("integra Anís estrellado y Linaza en la fuente y validación autoritativas
 });
 
 test("deja vacíos los campos futuros cuando no existe información aprobada", () => {
-  products.filter(({ id }) => id !== "colageno-marino").forEach((product) => {
+  const productsWithApprovedDetails = new Set([
+    "7-colagenos",
+    "calcio-coral-marino",
+    "colageno-marino",
+    "maca-negra-roja-shihua-y-amarilla",
+    "sales-de-magnesio-mg2",
+  ]);
+  products.filter(({ id }) => !productsWithApprovedDetails.has(id)).forEach((product) => {
     assert.equal(product.shortDescription, "");
     assert.equal(product.description, "");
     assert.deepEqual(product.productInfo, []);
