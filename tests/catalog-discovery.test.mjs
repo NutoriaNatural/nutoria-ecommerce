@@ -111,7 +111,11 @@ test("la interfaz cuenta resultados, muestra estado vacío y restablece filtros"
   assert.match(catalog, /emptyState\.hidden = count > 0/);
   assert.match(catalog, /searchInput\.value = ""/);
   assert.match(catalog, /selectCategory\("Todos"\)/);
-  assert.match(catalog, /searchInput\?\.addEventListener\("input", \(\) => \{[\s\S]*?activeCategory = "Todos";[\s\S]*?applyFilters\(\)/);
+  assert.match(html, /data-header-search-results/);
+  assert.match(catalog, /renderHeaderSearchResults/);
+  assert.match(catalog, /message\.textContent = "No encontramos productos"/);
+  assert.match(catalog, /link\.href = product\.detailPath/);
+  assert.doesNotMatch(catalog, /searchInput\.value\.trim\(\)[\s\S]{0,120}scrollIntoView/);
 });
 
 test("las cuatro tarjetas visuales reutilizan los filtros y desplazan al catálogo", () => {

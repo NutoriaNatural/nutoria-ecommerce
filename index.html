@@ -86,14 +86,17 @@
         <a class="brand" href="/" aria-label="Ir al inicio de Nutoria">
           <img src="assets/images/logo-nutoria-footer.webp" alt="Nutoria" width="4884" height="4884" fetchpriority="high" />
         </a>
-        <label class="catalog-search site-header__search">
-          <span class="catalog-search__label">Buscar productos</span>
-          <svg class="site-header__search-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-            <circle cx="11" cy="11" r="6.5"></circle>
-            <path d="m16 16 4.25 4.25"></path>
-          </svg>
-          <input type="search" placeholder="Buscar productos..." autocomplete="off" data-product-search />
-        </label>
+        <div class="site-header__search-area">
+          <label class="catalog-search site-header__search">
+            <span class="catalog-search__label">Buscar productos</span>
+            <svg class="site-header__search-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <circle cx="11" cy="11" r="6.5"></circle>
+              <path d="m16 16 4.25 4.25"></path>
+            </svg>
+            <input type="search" placeholder="Buscar productos..." autocomplete="off" aria-controls="header-search-results" aria-expanded="false" data-product-search />
+          </label>
+          <div class="site-header__results" id="header-search-results" data-header-search-results aria-live="polite" hidden></div>
+        </div>
         <button class="cart-slot" data-cart-open type="button" aria-controls="cart-dialog" aria-haspopup="dialog" aria-label="Abrir carrito">
           <svg class="cart-slot__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
             <path d="M3 4h2l1.7 9.1a2 2 0 0 0 2 1.7h7.9a2 2 0 0 0 1.9-1.4L20 8H6"></path>

@@ -264,6 +264,7 @@ export function createProgressiveRenderer({
 const grid = typeof document !== "undefined" ? document.querySelector("[data-product-grid]") : null;
 if (grid) {
   const searchInput = document.querySelector("[data-product-search]");
+  const headerSearchResults = document.querySelector("[data-header-search-results]");
   const categoryContainer = document.querySelector("[data-category-filters]");
   const resultCount = document.querySelector("[data-product-count]");
   const emptyState = document.querySelector("[data-catalog-empty]");
@@ -287,7 +288,6 @@ if (grid) {
 
   const applyFilters = () => {
     const matches = filterProducts(products, {
-      query: searchInput?.value,
       category: activeCategory,
     });
 
@@ -314,6 +314,43 @@ if (grid) {
     applyFilters();
   };
 
+  const renderHeaderSearchResults = () => {
+    if (!searchInput || !headerSearchResults) return;
+    const query = searchInput.value.trim();
+    headerSearchResults.replaceChildren();
+    if (!query) {
+      headerSearchResults.hidden = true;
+      searchInput.setAttribute("aria-expanded", "false");
+      return;
+    }
+
+    const matches = filterProducts(products, { query });
+    if (!matches.length) {
+      const message = document.createElement("p");
+      message.className = "site-header__no-results";
+      message.textContent = "No encontramos productos";
+      headerSearchResults.append(message);
+    } else {
+      const fragment = document.createDocumentFragment();
+      matches.forEach((product) => {
+        const link = document.createElement("a");
+        link.className = "site-header__result";
+        link.href = product.detailPath;
+        const name = document.createElement("span");
+        name.className = "site-header__result-name";
+        name.textContent = product.name;
+        const category = document.createElement("span");
+        category.className = "site-header__result-category";
+        category.textContent = product.category;
+        link.append(name, category);
+        fragment.append(link);
+      });
+      headerSearchResults.append(fragment);
+    }
+    headerSearchResults.hidden = false;
+    searchInput.setAttribute("aria-expanded", "true");
+  };
+
   categoryButtons.forEach((button) => {
     button.addEventListener("click", () => selectCategory(button.dataset.category));
   });
@@ -326,15 +363,7 @@ if (grid) {
     });
   });
   searchInput?.addEventListener("input", () => {
-    if (initialRenderFrame !== null) {
-      window.cancelAnimationFrame(initialRenderFrame);
-      initialRenderFrame = null;
-    }
-    activeCategory = "Todos";
-    applyFilters();
-    if (searchInput.value.trim()) {
-      productSection?.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
+    renderHeaderSearchResults();
   });
   clearButton?.addEventListener("click", () => {
     if (searchInput) searchInput.value = "";

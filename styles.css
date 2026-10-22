@@ -83,14 +83,20 @@ a {
   object-position: center;
 }
 
-.catalog-search.site-header__search {
-  display: flex;
-  align-items: center;
+.site-header__search-area {
+  position: relative;
   grid-column: 1 / -1;
   grid-row: 2;
   width: 100%;
   max-width: none;
   min-width: 0;
+}
+
+.catalog-search.site-header__search {
+  display: flex;
+  width: 100%;
+  max-width: none;
+  align-items: center;
   overflow: hidden;
   border: 1px solid rgba(216, 168, 78, 0.65);
   border-radius: 9999px;
@@ -140,6 +146,53 @@ a {
 .catalog-search.site-header__search:focus-within {
   border-color: var(--dorado-nutoria);
   box-shadow: 0 0 0 2px rgba(216, 168, 78, 0.28);
+}
+
+.site-header__results {
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + 0.45rem);
+  left: 0;
+  width: 100%;
+  max-height: min(24rem, 60vh);
+  overflow-y: auto;
+  border: 1px solid var(--borde);
+  border-radius: 1rem;
+  background: var(--blanco);
+  box-shadow: 0 0.8rem 2rem rgba(4, 38, 22, 0.18);
+}
+
+.site-header__result {
+  display: grid;
+  gap: 0.15rem;
+  padding: 0.75rem 1rem;
+  color: var(--verde-nutoria);
+  text-decoration: none;
+}
+
+.site-header__result + .site-header__result {
+  border-top: 1px solid var(--borde);
+}
+
+.site-header__result:hover,
+.site-header__result:focus-visible {
+  background: var(--marfil-natural);
+  outline: 0;
+}
+
+.site-header__result-name {
+  font-weight: 700;
+}
+
+.site-header__result-category {
+  color: rgba(4, 38, 22, 0.68);
+  font-size: 0.78rem;
+}
+
+.site-header__no-results {
+  margin: 0;
+  padding: 0.9rem 1rem;
+  color: var(--verde-nutoria);
 }
 
 #productos {
@@ -1647,7 +1700,7 @@ h2 {
     gap: clamp(1.5rem, 4vw, 4rem);
   }
 
-  .catalog-search.site-header__search {
+  .site-header__search-area {
     grid-column: auto;
     grid-row: auto;
     justify-self: center;
