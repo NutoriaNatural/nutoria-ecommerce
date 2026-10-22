@@ -119,7 +119,7 @@ a {
   pointer-events: none;
 }
 
-.site-header__search input {
+.catalog-search.site-header__search input {
   display: block;
   min-width: 0;
   flex: 1 1 auto;
@@ -128,9 +128,18 @@ a {
   border-radius: inherit;
   appearance: none;
   -webkit-appearance: none;
-  background: var(--marfil-natural);
-  box-shadow: inset 0 0 0 1px rgba(4, 38, 22, 0.08);
+  background: transparent;
+  box-shadow: none;
   line-height: 1.2;
+}
+
+.catalog-search.site-header__search input:focus-visible {
+  outline: 0;
+}
+
+.catalog-search.site-header__search:focus-within {
+  border-color: var(--dorado-nutoria);
+  box-shadow: 0 0 0 2px rgba(216, 168, 78, 0.28);
 }
 
 #productos {
@@ -1638,7 +1647,7 @@ h2 {
     gap: clamp(1.5rem, 4vw, 4rem);
   }
 
-  .site-header__search {
+  .catalog-search.site-header__search {
     grid-column: auto;
     grid-row: auto;
     justify-self: center;
