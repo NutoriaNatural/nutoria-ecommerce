@@ -318,6 +318,16 @@ function initializeCart() {
     );
   };
 
+  const syncFromStorage = () => {
+    cart.replace(readStoredItems());
+    render();
+  };
+
+  window.addEventListener("pageshow", syncFromStorage);
+  window.addEventListener("storage", (event) => {
+    if (event.key === STORAGE_KEY || event.key === null) syncFromStorage();
+  });
+
   const cartSignature = (items) => JSON.stringify(items.map(({ id, quantity }) => ({ id, quantity })));
   const reconcileCart = async ({ announce = false } = {}) => {
     const currentItems = cart.snapshot().items;

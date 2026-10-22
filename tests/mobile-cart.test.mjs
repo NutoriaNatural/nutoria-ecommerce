@@ -26,6 +26,9 @@ test("el botón flotante abre el único carrito y comparte el contador real", ()
   assert.match(cart, /openButtons\.forEach\(\(button\) => button\.addEventListener\("click", openCart\)\)/);
   assert.match(cart, /counts\.forEach\(\(count\) => \{ count\.textContent = String\(state\.quantity\); \}\)/);
   assert.match(cart, /dialog\.addEventListener\("close", \(\) => document\.body\.classList\.remove\("cart-open"\)\)/);
+  assert.match(cart, /window\.addEventListener\("pageshow", syncFromStorage\)/);
+  assert.match(cart, /event\.key === STORAGE_KEY \|\| event\.key === null/);
+  assert.match(cart, /cart\.replace\(readStoredItems\(\)\);\s*render\(\)/);
 });
 
 test("aumentar, disminuir y eliminar conservan cálculos y cantidades válidas", () => {
