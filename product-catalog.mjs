@@ -336,13 +336,24 @@ if (grid) {
         const link = document.createElement("a");
         link.className = "site-header__result";
         link.href = product.detailPath;
+        const image = document.createElement("img");
+        const responsiveImage = productImageAttributes(product.image, "48px");
+        image.className = "site-header__result-image";
+        image.src = responsiveImage.src;
+        image.srcset = responsiveImage.srcset;
+        image.sizes = responsiveImage.sizes;
+        image.alt = "";
+        image.width = 48;
+        image.height = 48;
+        image.loading = "lazy";
         const name = document.createElement("span");
         name.className = "site-header__result-name";
         name.textContent = product.name;
-        const category = document.createElement("span");
-        category.className = "site-header__result-category";
-        category.textContent = product.category;
-        link.append(name, category);
+        link.append(image, name);
+        link.addEventListener("click", () => {
+          headerSearchResults.hidden = true;
+          searchInput.setAttribute("aria-expanded", "false");
+        });
         fragment.append(link);
       });
       headerSearchResults.append(fragment);

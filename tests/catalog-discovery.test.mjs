@@ -115,6 +115,9 @@ test("la interfaz cuenta resultados, muestra estado vacío y restablece filtros"
   assert.match(catalog, /renderHeaderSearchResults/);
   assert.match(catalog, /message\.textContent = "No encontramos productos"/);
   assert.match(catalog, /link\.href = product\.detailPath/);
+  assert.match(catalog, /image\.src = responsiveImage\.src/);
+  assert.match(catalog, /headerSearchResults\.hidden = true/);
+  assert.match(catalog, /searchInput\.setAttribute\("aria-expanded", "false"\)/);
   assert.doesNotMatch(catalog, /searchInput\.value\.trim\(\)[\s\S]{0,120}scrollIntoView/);
 });
 
