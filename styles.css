@@ -1007,6 +1007,10 @@ h2 {
     padding: 0.55rem 0.7rem;
   }
 
+  .site-header__search input {
+    padding-left: 3rem;
+  }
+
   .catalog-category {
     min-height: 44px;
     padding-inline: 0.7rem;
