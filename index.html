@@ -83,14 +83,13 @@
   <body>
     <header class="site-header" aria-label="Encabezado">
       <div class="container site-header__inner">
-        <a class="brand" href="#propuesta" aria-label="Nutoria">
+        <a class="brand" href="/" aria-label="Ir al inicio de Nutoria">
           <img src="assets/images/logo-nutoria-180.png" srcset="assets/images/logo-nutoria-header-120.webp 120w, assets/images/logo-nutoria-180.png 180w" sizes="60px" alt="Nutoria" width="180" height="180" />
         </a>
-        <nav aria-label="Navegación principal">
-          <ul class="site-nav">
-            <li><a href="#productos">Productos</a></li>
-          </ul>
-        </nav>
+        <label class="catalog-search site-header__search">
+          <span class="catalog-search__label">Buscar productos</span>
+          <input type="search" placeholder="Buscar productos..." autocomplete="off" data-product-search />
+        </label>
         <button class="cart-slot" data-cart-open type="button" aria-controls="cart-dialog" aria-haspopup="dialog">
           Carrito <span class="cart-count" data-cart-count aria-label="Productos en el carrito">0</span>
         </button>
@@ -144,10 +143,6 @@
         <div class="container section-frame">
           <h2 id="titulo-productos">Nuestros productos</h2>
           <div class="catalog-tools">
-            <label class="catalog-search">
-              <span class="catalog-search__label">Buscar productos</span>
-              <input type="search" placeholder="Buscar productos..." autocomplete="off" data-product-search />
-            </label>
             <div class="catalog-categories" data-category-filters role="group" aria-label="Filtrar por categoría"></div>
             <p class="catalog-results" data-product-count aria-live="polite"></p>
           </div>
