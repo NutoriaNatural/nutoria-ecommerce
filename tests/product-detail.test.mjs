@@ -185,8 +185,9 @@ test("todas las fichas reutilizan el mismo carrito, badge, persistencia y checko
   const detail = read("product-detail.mjs");
   const cart = read("cart.mjs");
   assert.equal((template.match(/id=\"cart-dialog\"/g) || []).length, 1);
-  assert.equal((template.match(/data-cart-open/g) || []).length, 2);
-  assert.equal((template.match(/data-cart-count/g) || []).length, 2);
+  assert.equal((template.match(/data-cart-open/g) || []).length, 1);
+  assert.equal((template.match(/data-cart-count/g) || []).length, 1);
+  assert.doesNotMatch(template, /<header class="site-header"/);
   assert.match(template, /data-whatsapp-general/);
   assert.match(page, /await import\("\.\/cart\.mjs"\)/);
   assert.match(page, /await import\("\.\/whatsapp\.mjs"\)/);
