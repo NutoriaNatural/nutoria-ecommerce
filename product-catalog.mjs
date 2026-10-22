@@ -331,6 +331,9 @@ if (grid) {
       initialRenderFrame = null;
     }
     applyFilters();
+    if (searchInput.value.trim()) {
+      productSection?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
   });
   clearButton?.addEventListener("click", () => {
     if (searchInput) searchInput.value = "";
