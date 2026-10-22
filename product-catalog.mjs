@@ -330,6 +330,7 @@ if (grid) {
       window.cancelAnimationFrame(initialRenderFrame);
       initialRenderFrame = null;
     }
+    activeCategory = "Todos";
     applyFilters();
     if (searchInput.value.trim()) {
       productSection?.scrollIntoView({ behavior: "smooth", block: "start" });

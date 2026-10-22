@@ -77,6 +77,14 @@ test("busca por nombre sin distinguir mayúsculas ni acentos", () => {
   assert.equal(filterProducts(products, { query: "COLÁGENO" }).length, 4);
   assert.equal(filterProducts(products, { query: "maca" })[0]?.name, "Maca Negra, Roja, Shihua y Amarilla");
   assert.equal(filterProducts(products, { query: "almendra" }).length, 4);
+  assert.deepEqual(
+    filterProducts(products, { query: "magnesio" }).map(({ name }) => name),
+    ["Sales de Magnesio Mg2+"],
+  );
+  assert.deepEqual(
+    filterProducts(products, { query: "MAGNE" }).map(({ name }) => name),
+    ["Sales de Magnesio Mg2+"],
+  );
 });
 
 test("combina categoría y búsqueda y permite volver a Todos", () => {
@@ -103,6 +111,7 @@ test("la interfaz cuenta resultados, muestra estado vacío y restablece filtros"
   assert.match(catalog, /emptyState\.hidden = count > 0/);
   assert.match(catalog, /searchInput\.value = ""/);
   assert.match(catalog, /selectCategory\("Todos"\)/);
+  assert.match(catalog, /searchInput\?\.addEventListener\("input", \(\) => \{[\s\S]*?activeCategory = "Todos";[\s\S]*?applyFilters\(\)/);
 });
 
 test("las cuatro tarjetas visuales reutilizan los filtros y desplazan al catálogo", () => {
