@@ -663,42 +663,42 @@ h2 {
   display: block;
   width: auto;
   height: auto;
-  mix-blend-mode: multiply;
+  filter: drop-shadow(0 0.75rem 0.6rem rgb(31 57 45 / 13%));
 }
 
 .hero-composition__product--almonds {
   z-index: 1;
-  top: 4%;
+  top: 0;
   left: 0;
-  width: 44%;
+  width: 58%;
 }
 
 .hero-composition__product--sesame {
-  z-index: 1;
-  top: 1%;
-  right: 2%;
-  width: 42%;
+  z-index: 2;
+  top: 0;
+  right: 0;
+  width: 55%;
 }
 
 .hero-composition__product--apricots {
   z-index: 3;
-  bottom: 1%;
-  left: 0;
-  width: 45%;
+  bottom: 0;
+  left: 1%;
+  width: 52%;
 }
 
 .hero-composition__product--collagen {
   z-index: 4;
-  right: 20%;
+  right: 22%;
   bottom: 0;
-  width: 38%;
+  width: 50%;
 }
 
 .hero-composition__product--magnesium {
   z-index: 5;
   right: 0;
   bottom: 0;
-  width: 34%;
+  width: 44%;
 }
 
 .placeholder-grid {
