@@ -637,24 +637,116 @@ h2 {
   outline-offset: 4px;
 }
 
-.media-slot {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  min-height: clamp(10rem, 30vh, 18rem);
-  overflow: hidden;
-  border: 1px solid var(--borde);
-  border-radius: var(--radio);
-  background: var(--blanco);
+.hero-composition {
+  position: relative;
+  width: 100%;
+  max-width: 43rem;
+  aspect-ratio: 1.08 / 1;
+  justify-self: center;
+  isolation: isolate;
 }
 
-.media-slot img {
+.hero-composition::after {
+  position: absolute;
+  z-index: -1;
+  right: 5%;
+  bottom: 5%;
+  left: 7%;
+  height: 13%;
+  border-radius: 50%;
+  background: rgb(38 70 54 / 10%);
+  filter: blur(18px);
+  content: "";
+}
+
+.hero-composition__item {
+  position: absolute;
+  overflow: hidden;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0.8rem 1.6rem rgb(31 57 45 / 12%);
+}
+
+.hero-composition__item img {
   display: block;
-  min-width: 0;
   width: 100%;
   height: 100%;
-  min-height: 0;
   object-fit: cover;
-  aspect-ratio: 1 / 1;
+}
+
+.hero-composition__item:not(.hero-composition__item--collagen):not(.hero-composition__item--magnesium) img {
+  width: 132%;
+  height: 132%;
+  transform: translate(-12%, -9%);
+}
+
+.hero-composition__item--almonds {
+  z-index: 1;
+  top: 2%;
+  left: 0;
+  width: 35%;
+}
+
+.hero-composition__item--pistachios {
+  z-index: 2;
+  top: 25%;
+  left: 5%;
+  width: 31%;
+}
+
+.hero-composition__item--chia {
+  z-index: 1;
+  top: 0;
+  left: 30%;
+  width: 27%;
+}
+
+.hero-composition__item--sesame {
+  z-index: 1;
+  top: 5%;
+  left: 53%;
+  width: 26%;
+}
+
+.hero-composition__item--apricots {
+  z-index: 3;
+  top: 48%;
+  left: 15%;
+  width: 30%;
+}
+
+.hero-composition__item--cranberries {
+  z-index: 4;
+  top: 56%;
+  left: 36%;
+  width: 29%;
+}
+
+.hero-composition__item--collagen,
+.hero-composition__item--magnesium {
+  border-radius: 14% 14% 18% 18%;
+  box-shadow: 0 1rem 2rem rgb(31 57 45 / 16%);
+}
+
+.hero-composition__item--collagen {
+  z-index: 5;
+  right: 15%;
+  bottom: 1%;
+  width: 38%;
+}
+
+.hero-composition__item--magnesium {
+  z-index: 6;
+  right: 0;
+  bottom: 0;
+  width: 34%;
+}
+
+.hero-composition__item--collagen img,
+.hero-composition__item--magnesium img {
+  object-position: center top;
+  transform: scale(1.1) translateY(-2%);
 }
 
 .placeholder-grid {
