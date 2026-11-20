@@ -249,8 +249,8 @@ a {
 
 .section--hero {
   display: flex;
-  min-height: calc(100svh - 11.5rem);
-  padding-block: clamp(2.5rem, 7vw, 6rem);
+  min-height: 0;
+  padding-block: clamp(2rem, 4vw, 4rem);
 }
 
 .section--tint,
@@ -638,67 +638,20 @@ h2 {
 }
 
 .hero-composition {
-  position: relative;
+  display: flex;
   width: 100%;
-  max-width: 43rem;
-  aspect-ratio: 1.12 / 1;
+  max-width: 46rem;
+  align-items: center;
+  justify-content: center;
   justify-self: center;
 }
 
-.hero-composition::after {
-  position: absolute;
-  z-index: 0;
-  right: 5%;
-  bottom: 5%;
-  left: 7%;
-  height: 13%;
-  border-radius: 50%;
-  background: rgb(38 70 54 / 10%);
-  filter: blur(18px);
-  content: "";
-}
-
-.hero-composition__product {
-  position: absolute;
+.hero-composition__image {
   display: block;
-  width: auto;
+  width: 100%;
   height: auto;
-  filter: drop-shadow(0 0.75rem 0.6rem rgb(31 57 45 / 13%));
-}
-
-.hero-composition__product--almonds {
-  z-index: 1;
-  top: 0;
-  left: 0;
-  width: 58%;
-}
-
-.hero-composition__product--sesame {
-  z-index: 2;
-  top: 0;
-  right: 0;
-  width: 55%;
-}
-
-.hero-composition__product--apricots {
-  z-index: 3;
-  bottom: 0;
-  left: 1%;
-  width: 52%;
-}
-
-.hero-composition__product--collagen {
-  z-index: 4;
-  right: 22%;
-  bottom: 0;
-  width: 50%;
-}
-
-.hero-composition__product--magnesium {
-  z-index: 5;
-  right: 0;
-  bottom: 0;
-  width: 44%;
+  object-fit: contain;
+  object-position: center;
 }
 
 .placeholder-grid {
@@ -1066,6 +1019,31 @@ h2 {
 }
 
 @media (max-width: 719px) {
+  .section--hero {
+    padding-block: 1.75rem 2.25rem;
+  }
+
+  .hero-grid {
+    gap: 1rem;
+  }
+
+  .section-frame--hero {
+    min-height: 0;
+  }
+
+  .hero-copy {
+    margin-top: 0.75rem;
+  }
+
+  .section-frame--hero .button {
+    margin-top: 1rem;
+  }
+
+  .hero-composition {
+    width: 94%;
+    margin-top: 0.25rem;
+  }
+
   .choice-grid--categories {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 0.75rem;
@@ -1741,7 +1719,7 @@ h2 {
 
 @media (min-width: 720px) {
   .section--hero {
-    min-height: calc(100svh - 5.75rem);
+    min-height: 0;
   }
 
   .site-header__inner {
@@ -1762,7 +1740,8 @@ h2 {
   }
 
   .hero-grid {
-    grid-template-columns: minmax(0, 1fr) minmax(18rem, 0.8fr);
+    grid-template-columns: minmax(0, 1fr) minmax(20rem, 1fr);
+    gap: clamp(2rem, 4vw, 4rem);
   }
 
   .section-frame--split {
