@@ -747,6 +747,7 @@ h2 {
   height: 100%;
   padding: 0.85rem 1.1rem;
   border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.72);
   box-shadow: 0 0.3rem 0.85rem rgba(0, 47, 32, 0.07);
 }
 
