@@ -1073,6 +1073,39 @@ h2 {
 }
 
 @media (max-width: 719px) {
+  .site-header__inner {
+    align-items: center;
+    gap: 0.65rem;
+    padding-block: 0.75rem;
+  }
+
+  .site-header .brand {
+    width: 7.4375rem;
+    height: 3.1875rem;
+  }
+
+  .site-header .cart-slot {
+    min-height: 41px;
+    gap: 0.3rem;
+    padding: 0.38rem 0.47rem;
+  }
+
+  .site-header .cart-slot__icon {
+    width: 1.32rem;
+    height: 1.32rem;
+  }
+
+  .site-header .cart-count {
+    min-width: 1.275rem;
+    min-height: 1.275rem;
+    margin-left: 0.21rem;
+  }
+
+  .catalog-search.site-header__search input {
+    min-height: 35px;
+    padding-block: 0.4rem;
+  }
+
   .section--hero {
     padding-block: 1.15rem 1.3rem;
   }
