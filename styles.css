@@ -248,9 +248,22 @@ a {
 }
 
 .section--hero {
+  position: relative;
   display: flex;
   min-height: 0;
-  padding-block: clamp(1.5rem, 3vw, 2.75rem);
+  overflow: clip;
+  padding-block: clamp(1.35rem, 2.4vw, 2.25rem) clamp(1rem, 1.7vw, 1.4rem);
+}
+
+.section--hero::after {
+  position: absolute;
+  right: 2%;
+  bottom: 0.15rem;
+  left: 2%;
+  height: 0.75rem;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 16' preserveAspectRatio='none'%3E%3Cpath d='M0 8C150 2 300 14 450 8S750 2 900 8s150 6 300 0' fill='none' stroke='%23d8a84e' stroke-width='1.25' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+  content: "";
+  pointer-events: none;
 }
 
 .section--tint,
@@ -1020,7 +1033,7 @@ h2 {
 
 @media (max-width: 719px) {
   .section--hero {
-    padding-block: 1.35rem 1.65rem;
+    padding-block: 1.15rem 1.3rem;
   }
 
   .hero-grid {
@@ -1740,8 +1753,18 @@ h2 {
   }
 
   .hero-grid {
-    grid-template-columns: minmax(0, 45fr) minmax(22rem, 55fr);
-    gap: clamp(1.25rem, 2.5vw, 2.5rem);
+    grid-template-columns: minmax(0, 48fr) minmax(22rem, 52fr);
+    gap: clamp(0.75rem, 1.5vw, 1.5rem);
+  }
+
+  .section-frame--hero h1 {
+    max-width: 20ch;
+  }
+
+  .hero-composition {
+    width: 112%;
+    max-width: 58rem;
+    transform: translateX(-3%);
   }
 
   .section-frame--hero .button {
