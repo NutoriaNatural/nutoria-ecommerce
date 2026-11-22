@@ -142,7 +142,7 @@ test("la ficha piloto prioriza compra y oculta información opcional vacía", ()
   assert.ok(addPosition > page.indexOf("data-product-presentation"));
   assert.ok(addPosition > page.indexOf("data-product-quantity"));
   assert.ok(addPosition < page.indexOf("data-product-short-description"));
-  assert.match(page, /product-purchase__add-icon[\s\S]*?<span>AGREGAR AL CARRITO<\/span>/);
+  assert.match(page, /product-purchase__add-icon[\s\S]*?<span>Agregar al carrito<\/span>/);
   assert.match(template, /if \(!product\.description\) return ""/);
   assert.match(template, /if \(!product\.productInfo\.length\) return ""/);
   assert.doesNotMatch(detail, /shortDescription|productInfo|descriptionContent/);
