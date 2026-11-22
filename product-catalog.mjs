@@ -191,14 +191,6 @@ export function createProductCard(product) {
   }
   updateVariant();
 
-  if (mobileThreeOptions) {
-    const detailLink = document.createElement("a");
-    detailLink.className = "product-card__large-presentation";
-    detailLink.textContent = "También en 1.000 g";
-    detailLink.href = `${product.detailPath}?presentacion=${encodeURIComponent(options[3].id)}`;
-    presentation.append(detailLink);
-  }
-
   const details = createProductDetails(product);
   body.append(name);
   if (product.composition.length) body.append(composition);

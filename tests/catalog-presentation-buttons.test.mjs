@@ -32,9 +32,7 @@ test("tarjetas independientes conservan gramajes, selección inicial y variante 
     const choices = first.filter((n) => n.className === "product-card__presentation-option");
     assert.deepEqual(choices.map((n) => n.textContent), ["125 g", "250 g", "500 g", "1.000 g"]);
     assert.deepEqual(choices.filter((n) => !n.dataset.mobileDetailOnly).map((n) => n.textContent), ["125 g", "250 g", "500 g"]);
-    const detailLink = first.find((n) => n.className === "product-card__large-presentation");
-    assert.equal(detailLink.textContent, "También en 1.000 g");
-    assert.equal(selectedOptionIndex(product, new URL(detailLink.href, "https://nutoria.com.co").search), 3);
+    assert.ok(!first.some((n) => n.className === "product-card__large-presentation"));
     assert.equal(selectedOptionIndex(product, "?presentacion=invalid"), 1);
     const unusual = { ...product, variants: product.variants.slice(0, 3) };
     assert.ok(!flatten(createProductCard(unusual)).some((n) => n.className === "product-card__large-presentation"));
@@ -71,5 +69,7 @@ test("los listados usan las mismas tarjetas y la fila de gramajes no recorta tex
   assert.match(css, /\.product-grid \.product-card__button\s*\{[^}]*height: 34px;[^}]*min-height: 0;[^}]*font-size: 1rem;/);
   assert.match(css, /\.product-grid \.product-card__presentation\[data-mobile-three\]\s*\{[^}]*repeat\(3, minmax\(0, 1fr\)\)/);
   assert.match(css, /\.product-grid \[data-mobile-detail-only\]\s*\{\s*display: none/);
+  assert.match(css, /\.product-grid \.product-card__presentation--buttons\s*\{[^}]*height: 28px;[^}]*gap: 6px;/);
+  assert.match(css, /\.product-grid \.product-card__button\s*\{[^}]*border-radius: 12px;/);
   assert.ok(!read("index.html").includes("typography.css"));
 });
