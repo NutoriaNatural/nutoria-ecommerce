@@ -59,7 +59,8 @@ test("los listados usan las mismas tarjetas y la fila de gramajes no recorta tex
   const css = read("styles.css");
   assert.match(css, /\.product-card__presentation\.product-card__presentation--four\s*\{[^}]*grid-template-columns: repeat\(3, minmax\(0, 1fr\)\) minmax\(0, 1\.4fr\)/);
   assert.match(css, /\.product-card__presentation-option\s*\{[^}]*white-space: nowrap/);
-  assert.match(css, /\.product-grid \.product-card__presentation-option\s*\{[^}]*min-height: 35px/);
-  assert.match(css, /\.product-grid \.product-card__button\s*\{[^}]*min-height: 40px;[^}]*font-size: 1rem;/);
+  assert.match(css, /\.product-grid \.product-card__presentation-option\s*\{[^}]*height: 30px;[^}]*min-height: 0;[^}]*padding: 0 2px;/);
+  assert.match(css, /\.product-grid \.product-card__presentation-option\s*\{[^}]*height: 28px;[^}]*min-height: 0;[^}]*padding: 0 2px;/);
+  assert.match(css, /\.product-grid \.product-card__button\s*\{[^}]*height: 34px;[^}]*min-height: 0;[^}]*font-size: 1rem;/);
   assert.ok(!read("index.html").includes("typography.css"));
 });
