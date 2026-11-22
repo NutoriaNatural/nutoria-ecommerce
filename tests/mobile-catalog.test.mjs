@@ -38,8 +38,8 @@ test("uniforma el área de presentación y normaliza solo su texto visible", () 
   assert.equal(formatPresentation("90g (90 und)"), "90 g (90 und)");
   assert.equal(formatPresentation("250 g"), "250 g");
   assert.equal(products.find((product) => product.variants.length)?.variants[0].presentation, "125g");
-  assert.match(catalogSource, /findIndex\(\(\{ presentation \}\) => presentation === "250g"\)/);
-  assert.match(catalogSource, /presentationValue\.value = String\(defaultVariantIndex\)/);
+  assert.match(catalogSource, /selectedIndex = selectedOptionIndex\(product\)/);
+  assert.match(catalogSource, /const variant = options\[selectedIndex\]/);
 });
 
 test("solo conserva el WhatsApp flotante general en móvil y desktop", () => {

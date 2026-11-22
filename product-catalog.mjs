@@ -1,6 +1,7 @@
 export { PRODUCT_CATEGORIES, products } from "./data/products.mjs";
 import { PRODUCT_CATEGORIES, products } from "./data/products.mjs";
 import { CATALOG_IMAGE_SIZES, productImageAttributes } from "./lib/responsive-product-images.mjs";
+import { productOptions, selectedOptionIndex } from "./lib/product-presentation-options.mjs";
 
 const formatMoney = (value) =>
   new Intl.NumberFormat("es-CO", {
@@ -115,22 +116,18 @@ export function createProductCard(product) {
   const presentationLabel = document.createElement("span");
   presentationLabel.className = "product-card__label";
   presentationLabel.textContent = "Presentación";
-  const presentationValue = document.createElement(product.variants.length ? "select" : "p");
-  presentationValue.className = product.variants.length
-    ? "product-card__presentation"
+  const options = productOptions(product);
+  let selectedIndex = selectedOptionIndex(product);
+  const multiplePresentations = options.length > 1;
+  const presentationValue = document.createElement(multiplePresentations ? "div" : "p");
+  presentationValue.className = multiplePresentations
+    ? `product-card__presentation product-card__presentation--buttons${options.length === 4 ? " product-card__presentation--four" : ""}`
     : "product-card__value product-card__presentation-value";
-  if (product.variants.length) {
+  if (multiplePresentations) {
+    presentationValue.setAttribute("role", "group");
     presentationValue.setAttribute("aria-label", `Presentación de ${product.name}`);
-    product.variants.forEach((variant, variantIndex) => {
-      const option = document.createElement("option");
-      option.value = String(variantIndex);
-      option.textContent = formatPresentation(variant.presentation);
-      presentationValue.append(option);
-    });
-    const defaultVariantIndex = product.variants.findIndex(({ presentation }) => presentation === "250g");
-    if (defaultVariantIndex >= 0) presentationValue.value = String(defaultVariantIndex);
   } else {
-    presentationValue.textContent = formatPresentation(product.presentation);
+    presentationValue.textContent = formatPresentation(options[selectedIndex].presentation);
   }
   presentation.append(presentationLabel, presentationValue);
 
@@ -159,20 +156,35 @@ export function createProductCard(product) {
     button.disabled = true;
   }
 
-  if (product.variants.length) {
-    const updateVariant = () => {
-      const variant = product.variants[Number(presentationValue.value)];
-      priceValue.textContent = formatMoney(variant.price);
-      button.dataset.productId = `${product.id}-${variant.id}`;
-      button.dataset.productName = `${product.name} ${variant.presentation}`;
+  const optionButtons = [];
+  const updateVariant = () => {
+      const variant = options[selectedIndex];
+      priceValue.textContent = Number.isInteger(variant.price) ? formatMoney(variant.price) : "";
+      button.disabled = !Number.isInteger(variant.price) || variant.price <= 0;
+      button.dataset.productId = variant.id;
+      button.dataset.productName = multiplePresentations ? `${product.name} ${variant.presentation}` : product.name;
       button.dataset.productDisplayName = product.name;
       button.dataset.productPresentation = formatPresentation(variant.presentation);
       button.dataset.productPrice = String(variant.price);
       button.dataset.productImage = product.image;
-    };
-    presentationValue.addEventListener("change", updateVariant);
-    updateVariant();
+      optionButtons.forEach((optionButton, index) => optionButton.setAttribute("aria-pressed", String(index === selectedIndex)));
+  };
+  if (multiplePresentations) {
+    options.forEach((variant, index) => {
+      const optionButton = document.createElement("button");
+      optionButton.className = "product-card__presentation-option";
+      optionButton.type = "button";
+      optionButton.textContent = formatPresentation(variant.presentation);
+      optionButton.addEventListener("click", () => {
+        selectedIndex = index;
+        updateVariant();
+        presentationValue.dispatchEvent(new Event("change", { bubbles: true }));
+      });
+      optionButtons.push(optionButton);
+      presentationValue.append(optionButton);
+    });
   }
+  updateVariant();
 
   const details = createProductDetails(product);
   body.append(name);
