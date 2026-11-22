@@ -26,7 +26,9 @@ const page = home
   .replace('rel="canonical" href="https://nutoria.com.co/"', 'rel="canonical" href="https://nutoria.com.co/todos-los-productos/"')
   .replace('property="og:url" content="https://nutoria.com.co/"', 'property="og:url" content="https://nutoria.com.co/todos-los-productos/"')
   .replace(/(<main\b[^>]*>)[\s\S]*?(<\/main>)/, `$1${catalog}$2`)
-  .replace('<main>', '<main class="catalog-page">');
+  .replace('<main>', '<main class="catalog-page catalog-page--all">')
+  .replace('<body>', '<body class="all-products-page">\n    <div class="all-products-scroll">')
+  .replace('<div class="mobile-actions"', '</div>\n    <div class="mobile-actions"');
 await mkdir(new URL("todos-los-productos/", root), { recursive: true });
 await writeFile(new URL("todos-los-productos/index.html", root), page, "utf8");
 console.log("Catálogo completo generado en /todos-los-productos/.");

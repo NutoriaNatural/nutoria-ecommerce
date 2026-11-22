@@ -81,7 +81,8 @@
     <link rel="stylesheet" href="/fonts.css" />
     <link rel="stylesheet" href="styles.css" />
   </head>
-  <body>
+  <body class="all-products-page">
+    <div class="all-products-scroll">
     <header class="site-header" aria-label="Encabezado">
       <div class="container site-header__inner">
         <a class="brand" href="/" aria-label="Ir al inicio de Nutoria">
@@ -114,7 +115,7 @@
 
     <div class="payment-status container" data-payment-status role="status" hidden></div>
 
-    <main class="catalog-page">
+    <main class="catalog-page catalog-page--all">
       <section class="section" id="productos" aria-labelledby="titulo-productos">
         <div class="container section-frame">
           <a class="catalog-back" href="/">← Inicio</a>
@@ -177,6 +178,7 @@
       </div>
     </footer>
 
+    </div>
     <div class="mobile-actions" aria-label="Acciones rápidas">
       <button class="cart-fab" data-cart-open type="button" aria-controls="cart-dialog" aria-haspopup="dialog" aria-label="Abrir carrito">
         <svg class="cart-fab__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
