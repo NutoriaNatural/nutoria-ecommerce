@@ -419,7 +419,7 @@ function initializeCart() {
     button.textContent = "Agregado ✓";
     const nextFeedbackTimer = window.setTimeout(() => {
       button.classList.remove("is-added");
-      button.textContent = "Agregar";
+      button.textContent = button.dataset.addLabel || "Agregar";
     }, 1400);
     feedbackTimers.set(button, nextFeedbackTimer);
   });

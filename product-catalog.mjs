@@ -114,7 +114,7 @@ export function createProductCard(product) {
   const presentation = document.createElement("div");
   presentation.className = "product-card__field";
   const presentationLabel = document.createElement("span");
-  presentationLabel.className = "product-card__label";
+  presentationLabel.className = "product-card__label product-card__presentation-label";
   presentationLabel.textContent = "Presentación";
   const options = productOptions(product);
   let selectedIndex = selectedOptionIndex(product);
@@ -144,7 +144,8 @@ export function createProductCard(product) {
   const button = document.createElement("button");
   button.className = "product-card__button";
   button.type = "button";
-  button.textContent = "Agregar";
+  button.textContent = "Agregar al carrito";
+  button.dataset.addLabel = "Agregar al carrito";
   if (Number.isInteger(product.price) && product.price > 0) {
     button.dataset.productId = product.id;
     button.dataset.productName = product.name;

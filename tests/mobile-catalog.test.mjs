@@ -16,7 +16,7 @@ test("el catálogo móvil usa dos columnas sin alterar los breakpoints superiore
 test("las tarjetas móviles priorizan compra y conservan objetivos táctiles", () => {
   const css = read("styles.css");
   const catalog = read("product-catalog.mjs");
-  assert.match(catalog, /button\.textContent = "Agregar"/);
+  assert.match(catalog, /button\.textContent = "Agregar al carrito"/);
   assert.match(css, /@media\s*\(max-width:\s*719px\)[\s\S]*?\.product-card__button\s*{[^}]*min-height:\s*44px/s);
   assert.match(css, /@media\s*\(max-width:\s*719px\)[\s\S]*?\.product-card__details\s*{\s*display:\s*none/s);
   assert.match(css, /\.product-card__image\s*{[^}]*aspect-ratio:\s*1\s*\/\s*1/s);
@@ -67,7 +67,7 @@ test("agregar actualiza el carrito, confirma visualmente y no abre el checkout",
   assert.match(handler, /persist\(\)/);
   assert.match(handler, /render\(\)/);
   assert.match(handler, /button\.textContent = "Agregado ✓"/);
-  assert.match(handler, /button\.textContent = "Agregar"/);
+  assert.match(handler, /button\.textContent = button\.dataset\.addLabel \|\| "Agregar"/);
   assert.doesNotMatch(handler, /dialog\.showModal\(/);
   assert.doesNotMatch(handler, /\/api\/wompi\/checkout/);
 });
