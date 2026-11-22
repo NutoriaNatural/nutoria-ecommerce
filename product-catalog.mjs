@@ -271,7 +271,8 @@ if (grid || (typeof document !== "undefined" && document.querySelector("[data-pr
   const clearButton = document.querySelector("[data-catalog-clear]");
   const featuredCategoryLinks = document.querySelectorAll("[data-catalog-category]");
   const productSection = document.querySelector("#productos");
-  let activeCategory = "Todos";
+  const fixedCategory = grid?.dataset.category;
+  let activeCategory = fixedCategory || "Todos";
   let activeRenderer = null;
   let initialRenderFrame = null;
 
@@ -311,7 +312,7 @@ if (grid || (typeof document !== "undefined" && document.querySelector("[data-pr
       window.cancelAnimationFrame(initialRenderFrame);
       initialRenderFrame = null;
     }
-    activeCategory = category;
+    activeCategory = fixedCategory || category;
     applyFilters();
   };
 

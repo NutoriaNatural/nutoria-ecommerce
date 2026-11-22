@@ -32,3 +32,16 @@ test("buscador compartido conserva coincidencias parciales, mayúsculas y tildes
   assert.equal(filterProducts(products, { query: "" }).length, 74);
   assert.equal(filterProducts(products, { query: "zzzzsinproducto" }).length, 0);
 });
+
+test("las categorías comparten tarjetas, encabezado, carrito y surtido fijo", () => {
+  for (const category of categories) {
+    const html = read(`${category.path.slice(1)}index.html`);
+    assert.ok(html.includes(`data-category="${category.name}"`));
+    for (const marker of ["data-product-search", "data-cart-count", "data-cart-open", "data-product-grid", 'src="cart.mjs"', 'src="product-catalog.mjs"']) assert.ok(html.includes(marker), marker);
+    assert.ok(!html.includes("Consulta cada ficha"));
+  }
+  const runtime = read("product-catalog.mjs");
+  assert.ok(runtime.includes('const fixedCategory = grid?.dataset.category'));
+  assert.ok(runtime.includes('activeCategory = fixedCategory || category'));
+  assert.ok(read("todos-los-productos/index.html").includes('class="catalog-back" href="/">← Inicio'));
+});

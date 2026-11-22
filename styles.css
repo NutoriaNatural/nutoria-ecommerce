@@ -763,6 +763,17 @@ h2 {
 
 #titulo-categorias {
   text-align: center;
+  font-size: clamp(2.25rem, 4.5vw, 3.75rem);
+}
+
+#categorias {
+  padding-top: clamp(2rem, 5vw, 4rem);
+}
+
+.catalog-back {
+  display: inline-block;
+  margin-bottom: 1rem;
+  color: var(--verde-nutoria);
 }
 
 .categories-all {
@@ -880,7 +891,8 @@ h2 {
 
 .catalog-category[aria-pressed="true"] {
   border-color: var(--verde-nutoria);
-  background: rgba(4, 38, 22, 0.1);
+  background: var(--verde-nutoria);
+  color: var(--blanco);
   box-shadow: inset 0 0 0 1px var(--verde-nutoria);
 }
 
@@ -1199,7 +1211,7 @@ h2 {
   }
 
   #titulo-categorias {
-    font-size: clamp(1.55rem, 7vw, 2.5rem);
+    font-size: clamp(1.75rem, 8vw, 2rem);
     white-space: nowrap;
   }
 
@@ -1209,6 +1221,26 @@ h2 {
 
   .categories-all {
     width: 100%;
+  }
+
+  .catalog-page {
+    padding-right: 4rem;
+  }
+
+  .catalog-page .catalog-categories {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    overflow: visible;
+  }
+
+  .catalog-page .catalog-category {
+    max-width: 100%;
+    white-space: normal;
+  }
+
+  .catalog-page .catalog-category:last-child {
+    flex-basis: 100%;
   }
 
   .choice-grid--categories .choice-card {
@@ -1888,6 +1920,14 @@ h2 {
 }
 
 @media (min-width: 720px) {
+  .categories-all {
+    min-height: 56px;
+    padding-inline: 2rem;
+  }
+
+  body:has(.catalog-page) .site-header__inner {
+    padding-block: 0.75rem;
+  }
   .site-header .brand {
     display: flex;
     align-items: center;
