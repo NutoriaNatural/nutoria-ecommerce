@@ -83,10 +83,6 @@ a {
   object-position: center;
 }
 
-.brand__picture {
-  display: contents;
-}
-
 .site-header__search-area {
   position: relative;
   grid-column: 1 / -1;
