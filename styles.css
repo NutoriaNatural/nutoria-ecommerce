@@ -1111,6 +1111,11 @@ h2 {
   min-height: 0;
   padding: 0 2px;
   line-height: 1;
+  border-radius: 13px;
+}
+
+.product-grid .product-card__button {
+  border-radius: 16px;
 }
 
 .product-card__details summary {
@@ -1510,7 +1515,7 @@ h2 {
     height: 28px;
     min-height: 0;
     padding: 0 2px;
-    border-radius: 12px;
+    border-radius: 13px;
   }
 
   .product-grid .product-card__presentation[data-mobile-three] {
@@ -1531,7 +1536,7 @@ h2 {
     font-size: 1rem;
     line-height: 1.25;
     letter-spacing: -0.6px;
-    border-radius: 15px;
+    border-radius: 16px;
   }
 
   .product-card__details {
