@@ -212,7 +212,7 @@ test("precios y presentaciones oficiales continúan en la validación server-sid
 
 test("las fichas seleccionan 250 g por defecto sin alterar productos de presentación única", () => {
   const detail = read("product-detail.mjs");
-  assert.match(detail, /selectedIndex = selectedOptionIndex\(product\)/);
+  assert.match(detail, /selectedIndex = selectedOptionIndex\(product, globalThis.location\?\.search \|\| ""\)/);
   assert.match(detail, /purchasableOptions\[selectedIndex\]/);
   assert.match(read("lib/product-presentation-options.mjs"), /=== "250g"/);
 });

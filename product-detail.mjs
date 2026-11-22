@@ -96,7 +96,7 @@ export function initializeProductDetail(product) {
   mainImage.sizes = responsiveMainImage.sizes;
   mainImage.alt = `${product.name}, imagen 1 de ${product.images.length}`;
   const purchasableOptions = productOptions(product);
-  let selectedIndex = selectedOptionIndex(product);
+  let selectedIndex = selectedOptionIndex(product, globalThis.location?.search || "");
 
   presentation.replaceChildren();
   purchasableOptions.forEach((option, index) => {

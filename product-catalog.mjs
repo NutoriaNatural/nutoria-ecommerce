@@ -117,12 +117,15 @@ export function createProductCard(product) {
   presentationLabel.className = "product-card__label product-card__presentation-label";
   presentationLabel.textContent = "Presentación";
   const options = productOptions(product);
+  const mobileThreeOptions = Boolean(product.detailPath) && options.length === 4 &&
+    options.every((option, index) => option.presentation.replace(/[.\s]/g, "") === ["125g", "250g", "500g", "1000g"][index]);
   let selectedIndex = selectedOptionIndex(product);
   const multiplePresentations = options.length > 1;
   const presentationValue = document.createElement(multiplePresentations ? "div" : "p");
   presentationValue.className = multiplePresentations
     ? `product-card__presentation product-card__presentation--buttons${options.length === 4 ? " product-card__presentation--four" : ""}`
     : "product-card__value product-card__presentation-value";
+  if (mobileThreeOptions) presentationValue.dataset.mobileThree = "true";
   if (multiplePresentations) {
     presentationValue.setAttribute("role", "group");
     presentationValue.setAttribute("aria-label", `Presentación de ${product.name}`);
@@ -176,6 +179,7 @@ export function createProductCard(product) {
       optionButton.className = "product-card__presentation-option";
       optionButton.type = "button";
       optionButton.textContent = formatPresentation(variant.presentation);
+      if (mobileThreeOptions && index === 3) optionButton.dataset.mobileDetailOnly = "true";
       optionButton.addEventListener("click", () => {
         selectedIndex = index;
         updateVariant();
@@ -186,6 +190,14 @@ export function createProductCard(product) {
     });
   }
   updateVariant();
+
+  if (mobileThreeOptions) {
+    const detailLink = document.createElement("a");
+    detailLink.className = "product-card__large-presentation";
+    detailLink.textContent = "También en 1.000 g";
+    detailLink.href = `${product.detailPath}?presentacion=${encodeURIComponent(options[3].id)}`;
+    presentation.append(detailLink);
+  }
 
   const details = createProductDetails(product);
   body.append(name);

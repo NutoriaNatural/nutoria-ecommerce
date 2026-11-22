@@ -40,6 +40,7 @@ test("selección de 500 g actualiza precio y añade la cantidad elegida al mismo
   const root = { querySelector: (key) => nodes[key] };
   const savedDocument = globalThis.document;
   const savedObserver = globalThis.MutationObserver;
+  const savedLocation = globalThis.location;
   globalThis.document = { querySelector: () => root, createElement: () => new Element() };
   globalThis.MutationObserver = class { observe() {} };
   try {
@@ -61,6 +62,11 @@ test("selección de 500 g actualiza precio y añade la cantidad elegida al mismo
     assert.equal(state.items[0].price, 39000);
     assert.equal(state.items[0].quantity, 2);
     assert.equal(state.total, 94000);
+    globalThis.location = { search: `?presentacion=${encodeURIComponent(productOptions(product)[3].id)}` };
+    initializeProductDetail(product);
+    assert.equal(nodes["[data-product-presentation]"].children[3].attributes["aria-pressed"], "true");
+    assert.match(nodes["[data-product-price]"].textContent, /73.000/);
+    assert.equal(nodes["[data-product-add]"].dataset.productId, productOptions(product)[3].id);
     const single = products.find((p) => p.slug === "colageno-marino");
     initializeProductDetail(single);
     assert.equal(nodes["[data-product-presentation]"].children.length, 1);
@@ -69,6 +75,7 @@ test("selección de 500 g actualiza precio y añade la cantidad elegida al mismo
   } finally {
     if (savedDocument === undefined) delete globalThis.document; else globalThis.document = savedDocument;
     if (savedObserver === undefined) delete globalThis.MutationObserver; else globalThis.MutationObserver = savedObserver;
+    if (savedLocation === undefined) delete globalThis.location; else globalThis.location = savedLocation;
   }
 });
 
