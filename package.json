@@ -4,7 +4,8 @@
   "type": "module",
   "scripts": {
     "images:generate": "node scripts/generate-responsive-images.mjs",
-    "seo:generate": "node scripts/generate-seo-pages.mjs",
+    "seo:generate": "node scripts/generate-seo-pages.mjs && node scripts/generate-catalog-page.mjs",
+    "catalog:generate": "node scripts/generate-catalog-page.mjs",
     "db:inspect": "node scripts/inspect-database.mjs",
     "db:migrate": "node scripts/migrate-database.mjs",
     "db:verify": "node scripts/verify-database.mjs",

@@ -262,7 +262,7 @@ export function createProgressiveRenderer({
 }
 
 const grid = typeof document !== "undefined" ? document.querySelector("[data-product-grid]") : null;
-if (grid) {
+if (grid || (typeof document !== "undefined" && document.querySelector("[data-product-search]"))) {
   const searchInput = document.querySelector("[data-product-search]");
   const headerSearchResults = document.querySelector("[data-header-search-results]");
   const categoryContainer = document.querySelector("[data-category-filters]");
@@ -287,6 +287,7 @@ if (grid) {
   });
 
   const applyFilters = () => {
+    if (!grid) return;
     const matches = filterProducts(products, {
       category: activeCategory,
     });
