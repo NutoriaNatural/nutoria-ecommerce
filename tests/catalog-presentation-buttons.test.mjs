@@ -70,6 +70,7 @@ test("los listados usan las mismas tarjetas y la fila de gramajes no recorta tex
   assert.match(css, /\.product-grid \.product-card__presentation\[data-mobile-three\]\s*\{[^}]*repeat\(3, minmax\(0, 1fr\)\)/);
   assert.match(css, /\.product-grid \[data-mobile-detail-only\]\s*\{\s*display: none/);
   assert.match(css, /\.product-grid \.product-card__presentation--buttons\s*\{[^}]*height: 28px;[^}]*gap: 6px;/);
-  assert.match(css, /\.product-grid \.product-card__button\s*\{[^}]*border-radius: 12px;/);
+  assert.match(css, /\.product-grid \.product-card__presentation-option\s*\{[^}]*height: 28px;[^}]*border-radius: 12px;/);
+  assert.match(css, /\.product-grid \.product-card__button\s*\{[^}]*border-radius: 15px;/);
   assert.ok(!read("index.html").includes("typography.css"));
 });
