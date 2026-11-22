@@ -142,7 +142,7 @@ test("la ficha piloto prioriza compra y oculta información opcional vacía", ()
   assert.ok(addPosition > page.indexOf("data-product-presentation"));
   assert.ok(addPosition > page.indexOf("data-product-quantity"));
   assert.ok(addPosition < page.indexOf("data-product-short-description"));
-  assert.match(page, /product-purchase__add-icon[\s\S]*?<span>AGREGAR AL CARRITO<\/span>/);
+  assert.match(page, /product-purchase__add-icon[\s\S]*?<span>Agregar al carrito<\/span>/);
   assert.match(template, /if \(!product\.description\) return ""/);
   assert.match(template, /if \(!product\.productInfo\.length\) return ""/);
   assert.doesNotMatch(detail, /shortDescription|productInfo|descriptionContent/);
@@ -212,9 +212,9 @@ test("precios y presentaciones oficiales continúan en la validación server-sid
 
 test("las fichas seleccionan 250 g por defecto sin alterar productos de presentación única", () => {
   const detail = read("product-detail.mjs");
-  assert.match(detail, /if \(product\.variants\.length\)/);
-  assert.match(detail, /findIndex\(\(\{ presentation: value \}\) => value === "250g"\)/);
-  assert.match(detail, /presentation\.value = String\(defaultVariantIndex\)/);
+  assert.match(detail, /selectedIndex = selectedOptionIndex\(product\)/);
+  assert.match(detail, /purchasableOptions\[selectedIndex\]/);
+  assert.match(read("lib/product-presentation-options.mjs"), /=== "250g"/);
 });
 
 test("la galería es responsive y conserva las imágenes completas", () => {

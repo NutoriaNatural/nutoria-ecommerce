@@ -3,6 +3,7 @@ import {
   productImageAttributes,
   productThumbnailPath,
 } from "./lib/responsive-product-images.mjs";
+import { productOptions, selectedOptionIndex } from "./lib/product-presentation-options.mjs";
 
 const formatPresentation = (value) =>
   value.replace(/(\d[\d.]*)\s*(mg|kg|g|ml|l)\b/giu, "$1 $2");
@@ -94,33 +95,37 @@ export function initializeProductDetail(product) {
   mainImage.srcset = responsiveMainImage.srcset;
   mainImage.sizes = responsiveMainImage.sizes;
   mainImage.alt = `${product.name}, imagen 1 de ${product.images.length}`;
-  const purchasableOptions = product.variants.length
-    ? product.variants.map((variant) => ({
-        id: `${product.id}-${variant.id}`,
-        presentation: variant.presentation,
-        price: variant.price,
-      }))
-    : [{ id: product.id, presentation: product.presentation, price: product.price }];
+  const purchasableOptions = productOptions(product);
+  let selectedIndex = selectedOptionIndex(product);
 
   presentation.replaceChildren();
   purchasableOptions.forEach((option, index) => {
-    const element = document.createElement("option");
-    element.value = String(index);
+    const element = document.createElement(purchasableOptions.length > 1 ? "button" : "p");
+    element.className = purchasableOptions.length > 1 ? "product-presentation__option" : "product-presentation__single";
     element.textContent = formatPresentation(option.presentation);
+    if (purchasableOptions.length > 1) {
+      element.type = "button";
+      element.dataset.presentationIndex = String(index);
+      element.setAttribute("aria-pressed", String(index === selectedIndex));
+      element.addEventListener("click", () => {
+        selectedIndex = index;
+        updateSelection();
+      });
+    }
     presentation.append(element);
   });
-  if (product.variants.length) {
-    const defaultVariantIndex = product.variants.findIndex(({ presentation: value }) => value === "250g");
-    if (defaultVariantIndex >= 0) presentation.value = String(defaultVariantIndex);
-  }
 
   const updateSelection = () => {
-    const selected = purchasableOptions[Number(presentation.value)];
+    const selected = purchasableOptions[selectedIndex];
+    presentation.querySelectorAll("button").forEach((button) => {
+      button.setAttribute("aria-pressed", String(Number(button.dataset.presentationIndex) === selectedIndex));
+    });
     price.textContent = Number.isInteger(selected?.price) ? formatMoney(selected.price) : "";
     if (!selected || !Number.isInteger(selected.price) || selected.price <= 0) {
       addButton.disabled = true;
       return;
     }
+    addButton.disabled = false;
     addButton.dataset.productId = selected.id;
     addButton.dataset.productName = `${product.name} ${selected.presentation}`;
     addButton.dataset.productDisplayName = product.name;
@@ -129,7 +134,6 @@ export function initializeProductDetail(product) {
     addButton.dataset.productImage = product.image;
   };
 
-  presentation.addEventListener("change", updateSelection);
   updateSelection();
 
   let quantity = 1;
