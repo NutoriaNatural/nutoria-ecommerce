@@ -1943,9 +1943,14 @@ h2 {
 }
 
 @media (min-width: 720px) {
+  #titulo-categorias {
+    font-size: clamp(2.5rem, 4.8vw, 4rem);
+    white-space: nowrap;
+  }
+
   .categories-all {
-    min-height: 56px;
-    padding-inline: 2rem;
+    min-height: 60px;
+    padding-inline: 2.4rem;
   }
 
   body:has(.catalog-page) .site-header__inner {
