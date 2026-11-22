@@ -1851,6 +1851,20 @@ h2 {
 }
 
 @media (min-width: 720px) {
+  .site-header .brand {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: visible;
+  }
+
+  .site-header .brand img {
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    object-fit: contain;
+  }
+
   .section--hero {
     min-height: 0;
   }
