@@ -1243,7 +1243,8 @@ h2 {
     flex-basis: 100%;
   }
 
-  .catalog-page--all {
+  .catalog-page--all,
+  .category-page.catalog-page {
     padding-right: 0;
   }
 
