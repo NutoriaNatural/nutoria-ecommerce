@@ -25,3 +25,14 @@ test("Por qué Nutoria conserva el texto separado en dos párrafos", () => {
   assert.match(section, /vida\.<\/p>\s*<p class="section-copy section-copy--large">Inspiramos a las personas/);
   assert.match(read("product-detail.css"), /\.product-purchase__price \{ font-size: 32px; font-weight: 700;/);
 });
+
+test("la presentación única es un indicador fijo y solo las dos etiquetas de ficha aumentan 2 px", () => {
+  const css = read("styles.css");
+  const detail = read("product-detail.css");
+  assert.match(css, /\.product-grid \.product-card__presentation-value\s*\{[^}]*width: fit-content;[^}]*height: 30px;[^}]*border-radius: 13px;[^}]*background: var\(--verde-nutoria\);/);
+  assert.match(css, /\.product-grid \.product-card__presentation-value\s*\{\s*height: 28px;/);
+  assert.match(detail, /\.product-presentation__single\s*\{[^}]*width: fit-content;[^}]*background: var\(--verde-nutoria\);/);
+  assert.match(detail, /\.product-presentation__label\s*\{[^}]*font-size: 13\.5px;/);
+  assert.match(detail, /\.product-presentation__label\s*\{\s*font-size: 12\.5px;/);
+  assert.match(detail, /\.product-purchase__quantity > span \{ font-size: 18px; \}/);
+});

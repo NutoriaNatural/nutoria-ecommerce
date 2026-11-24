@@ -67,10 +67,14 @@ test("selección de 500 g actualiza precio y añade la cantidad elegida al mismo
     assert.equal(nodes["[data-product-presentation]"].children[3].attributes["aria-pressed"], "true");
     assert.match(nodes["[data-product-price]"].textContent, /73.000/);
     assert.equal(nodes["[data-product-add]"].dataset.productId, productOptions(product)[3].id);
-    const single = products.find((p) => p.slug === "colageno-marino");
+    const single = products.find((p) => p.slug === "7-colagenos");
     initializeProductDetail(single);
     assert.equal(nodes["[data-product-presentation]"].children.length, 1);
     assert.equal(nodes["[data-product-presentation]"].children[0].className, "product-presentation__single");
+    assert.equal(nodes["[data-product-presentation]"].children[0].textContent, "1.000 g");
+    assert.equal(nodes["[data-product-add]"].disabled, false);
+    assert.equal(nodes["[data-product-add]"].dataset.productId, single.id);
+    assert.equal(nodes["[data-product-add]"].dataset.productPrice, "89900");
     console.log("Almendras 500 g × 2: subtotal $78.000 + envío $16.000 = $94.000; presentación única 1.000 g correcta.");
   } finally {
     if (savedDocument === undefined) delete globalThis.document; else globalThis.document = savedDocument;

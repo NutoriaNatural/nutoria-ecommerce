@@ -143,7 +143,7 @@
 
 .product-presentation__label {
   font-weight: 700;
-  font-size: 11.5px;
+  font-size: 13.5px;
   line-height: 1.4;
 }
 
@@ -187,6 +187,17 @@
 
 .product-presentation__single {
   margin: 0;
+  width: fit-content;
+  max-width: 100%;
+  min-height: 38px;
+  padding: 0.4rem 0.75rem;
+  border: 1px solid var(--verde-nutoria);
+  border-radius: var(--radio);
+  color: var(--blanco);
+  background: var(--verde-nutoria);
+  font-size: clamp(0.75rem, 3.3vw, 1rem);
+  font-weight: 600;
+  white-space: nowrap;
 }
 
 .product-purchase__field select {
@@ -329,7 +340,7 @@
 
 @media (max-width: 799px) {
   .product-presentation__label {
-    font-size: 10.5px;
+    font-size: 12.5px;
   }
   .product-gallery__main {
     min-height: 0;
@@ -377,6 +388,12 @@
 /* Typography only: retain the approved product-detail layout and controls. */
 .product-purchase h1 { font-size: 48px; line-height: 1.2; }
 .product-purchase__price { font-size: 32px; font-weight: 700; }
+.product-presentation__label,
+.product-purchase__quantity > span {
+  font-family: "Plus Jakarta Sans", Arial, sans-serif;
+  font-weight: 600;
+}
+.product-purchase__quantity > span { font-size: 18px; }
 .product-purchase__category,
 .product-purchase__quantity,
 .product-purchase__quantity-control button,

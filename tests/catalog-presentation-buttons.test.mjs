@@ -52,6 +52,16 @@ test("tarjetas independientes conservan gramajes, selección inicial y variante 
     assert.equal(cart.snapshot().items[0].id, productOptions(product)[2].id);
     assert.equal(cart.snapshot().items[0].presentation, "500 g");
     assert.equal(cart.snapshot().total, 55000);
+    const single = products.find((p) => p.slug === "7-colagenos");
+    const singleNodes = flatten(createProductCard(single));
+    assert.ok(singleNodes.some((n) => n.className?.includes("product-card__presentation-value") && n.textContent === "1.000 g"));
+    assert.equal(singleNodes.filter((n) => n.className === "product-card__presentation-option").length, 0);
+    const singleAdd = singleNodes.find((n) => n.className === "product-card__button");
+    const singleCart = new Cart();
+    singleCart.add({ id: singleAdd.dataset.productId, name: singleAdd.dataset.productName, price: Number(singleAdd.dataset.productPrice), presentation: singleAdd.dataset.productPresentation });
+    assert.equal(singleCart.snapshot().items[0].id, single.id);
+    assert.equal(singleCart.snapshot().items[0].presentation, "1.000 g");
+    assert.equal(singleCart.snapshot().items[0].price, 89900);
     console.log("Almendras 500 g: $39.000, carrito $55.000 con envío; otra tarjeta conserva 250 g y $20.000.");
   } finally {
     if (savedDocument === undefined) delete globalThis.document; else globalThis.document = savedDocument;
