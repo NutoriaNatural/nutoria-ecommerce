@@ -21,7 +21,7 @@ body {
   min-width: 320px;
   color: var(--verde-nutoria);
   background: var(--marfil-natural);
-  font-family: Montserrat, Arial, sans-serif;
+  font-family: "Plus Jakarta Sans", Arial, sans-serif;
   font-size: 16px;
   line-height: 1.6;
 }
@@ -425,7 +425,7 @@ a {
 .site-footer h2 {
   margin: 0 0 1rem;
   color: var(--dorado-nutoria);
-  font-family: Montserrat, Arial, sans-serif;
+  font-family: "Plus Jakarta Sans", Arial, sans-serif;
   font-size: 1rem;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -581,7 +581,7 @@ a {
 h1,
 h2 {
   margin: 0;
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: Lora, Georgia, serif;
   font-weight: 600;
   line-height: 1.05;
   text-wrap: balance;
@@ -716,7 +716,7 @@ h2 {
 }
 
 .choice-card__name {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: Lora, Georgia, serif;
   font-size: 1.5rem;
   font-weight: 600;
   line-height: 1.1;
@@ -1017,7 +1017,7 @@ h2 {
 
 .product-card__name {
   margin: 0;
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: Lora, Georgia, serif;
   font-size: 1.5rem;
   font-weight: 600;
   line-height: 1.1;
@@ -1557,7 +1557,7 @@ h2 {
   min-height: 4.5rem;
   padding: 1.25rem 0;
   border-bottom: 1px solid var(--borde);
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: Lora, Georgia, serif;
   font-size: 1.375rem;
   font-weight: 600;
 }
@@ -1820,7 +1820,7 @@ h2 {
 
 .checkout-form h3 {
   margin: 0;
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: Lora, Georgia, serif;
   font-size: 1.75rem;
 }
 
@@ -2286,4 +2286,124 @@ h2 {
   .product-grid {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
+}
+
+/* Shared storefront typography; purchase dimensions and behavior stay unchanged. */
+h1,
+h2,
+.choice-card__name,
+.product-card__name {
+  font-family: Lora, Georgia, serif;
+  font-weight: 600;
+}
+
+h1 {
+  max-width: none;
+  font-size: 52px;
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+}
+
+h2 { font-size: 38px; line-height: 1.2; }
+.section-frame--hero h1 { font-size: 52px; line-height: 1.15; }
+.hero-title__line { white-space: normal; }
+#titulo-categorias { font-size: 50px; text-align: center; }
+
+.hero-copy,
+.section-copy,
+.section-copy--large,
+.category-intro {
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+.section-copy + .section-copy { margin-top: 1rem; }
+
+#categorias .choice-grid--categories .choice-card__name {
+  font-size: 25px;
+  line-height: 1.25;
+  overflow-wrap: normal;
+}
+
+.product-grid .product-card__name {
+  display: block;
+  min-height: 0;
+  overflow: visible;
+  font-size: 23px;
+  line-height: 1.25;
+  -webkit-line-clamp: unset;
+  overflow-wrap: anywhere;
+}
+
+.product-grid .product-card__field--price { margin-top: 0; }
+.product-grid .product-card__body > .product-card__button { margin-top: auto; }
+.product-grid .product-card__field--price .product-card__value {
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.site-header__search input { font-weight: 500; }
+.site-header__result-name { font-weight: 500; }
+.button,
+.catalog-category,
+.product-card__button,
+.product-card__presentation-option,
+.checkout-form label,
+.checkout-form__button,
+.shipping-note__primary,
+.trust-item {
+  font-weight: 600;
+}
+
+.product-grid .product-card__button {
+  font-size: 16px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.trust-item { font-size: 18px; }
+.cart-item__price,
+.cart-summary dd { font-weight: 700; }
+.cart-summary div:last-child { font-size: 24px; }
+.cart-dialog__header h2 { font-size: 30px; }
+.checkout-form h3 { font-weight: 600; }
+.checkout-form input { font-weight: 400; }
+.catalog-results,
+.breadcrumbs,
+.site-footer { font-size: 15px; }
+.site-footer h2 { font-size: 16px; font-weight: 600; }
+.site-footer__description,
+.site-footer__bottom { font-size: 14px; }
+.site-footer__contact span {
+  font-size: 14px;
+  color: rgba(247, 243, 232, 0.9);
+}
+.site-footer a { text-decoration-line: underline; }
+.site-footer__social a,
+.site-footer__logo { text-decoration: none; }
+.payment-methods__copy p {
+  color: var(--verde-nutoria);
+  font-size: 17px;
+  font-weight: 400;
+  line-height: 1.5;
+}
+.product-card__name-link { text-decoration-color: var(--borde); }
+
+@media (max-width: 719px) {
+  h1 { font-size: 36px; }
+  h2 { font-size: 30px; }
+  .section-frame--hero h1 { font-size: 36px; }
+  #titulo-categorias { font-size: clamp(25px, 7.5vw, 28px); white-space: nowrap; }
+  .hero-copy,
+  .section-copy,
+  .section-copy--large,
+  .category-intro { font-size: 16px; }
+  #categorias .choice-grid--categories .choice-card__name { font-size: 20px; }
+  .product-grid .product-card__name { font-size: 18px; }
+  .product-grid .product-card__field--price .product-card__value { font-size: 18px; }
+  .product-grid .product-card__button { letter-spacing: -0.4px; }
+  .trust-item { font-size: 16px; }
+  .payment-methods__copy p { font-size: 16px; }
 }

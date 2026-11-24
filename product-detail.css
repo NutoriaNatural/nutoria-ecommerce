@@ -373,3 +373,36 @@
     margin-top: 0.65rem;
   }
 }
+
+/* Typography only: retain the approved product-detail layout and controls. */
+.product-purchase h1 { font-size: 48px; line-height: 1.2; }
+.product-purchase__price { font-size: 32px; font-weight: 700; }
+.product-purchase__category,
+.product-purchase__quantity,
+.product-purchase__quantity-control button,
+.product-purchase__quantity-control output,
+.product-presentation__label,
+.product-purchase__details summary,
+.product-purchase__details dt,
+.product-purchase__composition h2,
+.product-purchase__add { font-weight: 600; }
+.product-purchase__details summary,
+.product-purchase__composition h2 { font-size: 18px; }
+.product-purchase__short-description,
+.product-purchase__details p,
+.product-purchase__details dd,
+.product-purchase__composition ul {
+  font-size: 17px;
+  font-weight: 400;
+  line-height: 1.5;
+}
+@media (max-width: 799px) {
+  .product-purchase h1 { font-size: 36px; }
+  .product-purchase__price { font-size: 30px; }
+  .product-purchase__details summary,
+  .product-purchase__composition h2,
+  .product-purchase__short-description,
+  .product-purchase__details p,
+  .product-purchase__details dd,
+  .product-purchase__composition ul { font-size: 16px; }
+}

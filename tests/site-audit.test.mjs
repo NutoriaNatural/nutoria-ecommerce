@@ -47,14 +47,12 @@ test("sirve localmente solo las fuentes y pesos utilizados", () => {
   for (const markup of [index, template]) {
     assert.doesNotMatch(markup, /fonts\.(?:googleapis|gstatic)\.com/);
     assert.match(markup, /href="\/fonts\.css"/);
-    assert.match(markup, /rel="preload"[^>]*cormorant-garamond-600-latin\.woff2[^>]*as="font"/);
+    assert.match(markup, /rel="preload"[^>]*lora-600-latin\.woff2[^>]*as="font"/);
   }
-  assert.equal(existsSync(resolve(root, "assets/fonts/cormorant-garamond-600-latin.woff2")), true);
-  assert.equal(existsSync(resolve(root, "assets/fonts/montserrat-latin.woff2")), true);
-  assert.match(fonts, /font-family: "Cormorant Garamond";[\s\S]*?font-weight: 600;[\s\S]*?font-display: swap;/);
-  for (const weight of [400, 500, 600, 700]) {
-    assert.match(fonts, new RegExp(`font-family: Montserrat;[\\s\\S]*?font-weight: ${weight};[\\s\\S]*?font-display: swap;`));
-  }
+  assert.equal(existsSync(resolve(root, "assets/fonts/lora-600-latin.woff2")), true);
+  assert.equal(existsSync(resolve(root, "assets/fonts/plus-jakarta-sans-latin.woff2")), true);
+  assert.match(fonts, /font-family: Lora;[\s\S]*?font-weight: 600;[\s\S]*?font-display: swap;/);
+  assert.match(fonts, /font-family: "Plus Jakarta Sans";[\s\S]*?font-weight: 400 700;[\s\S]*?font-display: swap;/);
 });
 
 test("todas las imágenes declaradas existen y tienen atributo alt", () => {
