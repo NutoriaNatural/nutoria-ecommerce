@@ -208,12 +208,24 @@ test("Product solo usa descripción aprobada y no inventa variantes", () => {
   for (const product of products) {
     const data = structuredDataForProduct(product);
     const productEntity = data["@graph"].find(({ "@type": type }) => type === "Product");
-    const description = seoMetadataForProduct(product).description;
+    const description = product.description?.trim() || product.shortDescription?.trim();
 
     assert.equal(productEntity.description, description || undefined, product.slug);
     assert.equal("hasVariant" in productEntity, false);
     assert.equal("productGroupID" in productEntity, false);
   }
+});
+
+test("Product.description coincide con contenido visible y no usa texto SEO oculto", () => {
+  const almonds = products.find(({ slug }) => slug === "almendras");
+  const entity = (product) => structuredDataForProduct(product)["@graph"].find(({ "@type": type }) => type === "Product");
+  assert.equal("description" in entity(almonds), false);
+  assert.equal(entity(almonds).offers[0].price, 20000);
+  assert.equal(entity(almonds).offers[0].priceCurrency, "COP");
+  assert.match(entity(almonds).offers[0].name, /250 g/u);
+  assert.equal(entity({ ...almonds, seoDescription: "Solo metadata" }).description, undefined);
+  assert.equal(entity({ ...almonds, shortDescription: "Resumen visible" }).description, "Resumen visible");
+  assert.equal(entity({ ...almonds, shortDescription: "Resumen", description: "Descripción completa visible" }).description, "Descripción completa visible");
 });
 
 test("la portada conserva OnlineStore y añade WebSite conectado", () => {
