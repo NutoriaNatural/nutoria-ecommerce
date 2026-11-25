@@ -33,7 +33,7 @@ const productPricing = {
   "Habas Saladas Importadas": { variants: standardVariants([81000, 43000, 22000, 11000]) },
   "Harina de Almendra": { variants: standardVariants([81000, 43000, 22000, 11000]) },
   "Lentejas Tostadas": { variants: standardVariants([81000, 43000, 22000, 11000]) },
-  "Maca Negra, Roja, Shihua Y Amarilla": fixedPrice("1.000g", 89900),
+  "Maca Negra, Roja, Shihua Y Amarilla": fixedPrice("1.000g", 99900),
   "Macadamia Acaramelada": { variants: standardVariants([129000, 67000, 34000, 17000]) },
   Macadamia: { variants: standardVariants([113000, 59000, 30000, 15000]) },
   "Mango Deshidratado": { variants: standardVariants([153000, 79000, 40000, 20000]) },
