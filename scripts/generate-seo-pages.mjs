@@ -24,4 +24,4 @@ for (const category of categories) {
 }
 
 await writeFile(resolve(root, "sitemap.xml"), renderSitemap(products), "utf8");
-console.log(`SEO generado: ${products.length} fichas, ${categories.length} categorías y ${products.length + categories.length + 1} URLs en sitemap.xml.`);
+console.log(`SEO generado: ${products.length} fichas, ${categories.length} categorías, catálogo completo y ${products.length + categories.length + 2} URLs en sitemap.xml.`);

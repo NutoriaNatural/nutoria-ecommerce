@@ -47,6 +47,7 @@ function createQueue() {
 
 test("crea un bloque inicial y completa los 74 productos en lotes ordenados", () => {
   const container = createContainer();
+  container.children = products.map(({ id }) => ({ id, prerendered: true }));
   const queue = createQueue();
   createProgressiveRenderer({
     container,

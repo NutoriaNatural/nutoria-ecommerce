@@ -29,15 +29,16 @@ test("las 74 fichas generadas permanecen sincronizadas con la fuente única", ()
   }
 });
 
-test("el sitemap contiene portada, cuatro categorías y 74 fichas sin duplicados", () => {
+test("el sitemap contiene portada, catálogo, cuatro categorías y 74 fichas sin duplicados", () => {
   const sitemap = read("sitemap.xml");
   assert.equal(sitemap, renderSitemap(products));
   const urls = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/gu)].map((match) => match[1]);
-  assert.equal(urls.length, 79);
-  assert.equal(new Set(urls).size, 79);
+  assert.equal(urls.length, 80);
+  assert.equal(new Set(urls).size, 80);
   assert.equal(urls[0], "https://nutoria.com.co/");
-  assert.deepEqual(urls.slice(1, 5), categories.map(({ path }) => `https://nutoria.com.co${path}`));
-  assert.deepEqual(urls.slice(5), products.map((product) => canonicalForProduct(product)));
+  assert.equal(urls.filter((url) => url === "https://nutoria.com.co/todos-los-productos/").length, 1);
+  assert.deepEqual(urls.slice(2, 6), categories.map(({ path }) => `https://nutoria.com.co${path}`));
+  assert.deepEqual(urls.slice(6), products.map((product) => canonicalForProduct(product)));
   assert.equal(urls.some((url) => /vercel\.app|\/admin\/|\/api\/|\/index\.html|[?&]/u.test(url)), false);
 });
 

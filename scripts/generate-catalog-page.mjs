@@ -1,4 +1,6 @@
 import { readFile, mkdir, writeFile } from "node:fs/promises";
+import { products } from "../data/products.mjs";
+import { renderStaticCatalogCard } from "../lib/catalog-static-cards.mjs";
 
 // Reuse the Home shell so the catalog keeps the same header, cart and footer.
 const root = new URL("../", import.meta.url);
@@ -16,7 +18,9 @@ const catalog = `
             <p>No encontramos productos con esa búsqueda.</p>
             <button type="button" data-catalog-clear>Restablecer búsqueda y filtros</button>
           </div>
-          <div class="product-grid" data-product-grid></div>
+          <div class="product-grid" data-product-grid>
+            ${products.map(renderStaticCatalogCard).join("\n")}
+          </div>
         </div>
       </section>
     `;
