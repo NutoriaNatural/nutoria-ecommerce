@@ -286,6 +286,14 @@
   border-top: 1px solid var(--borde);
 }
 
+.product-purchase__properties { border-top: 1px solid var(--borde); padding-top: 1rem; }
+.product-purchase__properties h2 { margin: 0 0 0.75rem; font-family: inherit; font-size: 18px; font-weight: 600; line-height: 1.5; }
+.product-purchase__properties ul { margin: 0; padding-left: 1.25rem; font-size: 17px; line-height: 1.5; }
+.product-purchase__properties li + li { margin-top: 0.35rem; }
+@media (max-width: 799px) {
+  .product-purchase__properties h2, .product-purchase__properties ul { font-size: 16px; }
+}
+
 .product-purchase__details summary {
   padding: 1rem 2rem 1rem 0;
   cursor: pointer;

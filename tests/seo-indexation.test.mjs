@@ -55,7 +55,8 @@ test("el HTML inicial incluye el contenido aprobado sin inventar bloques vacíos
   assert.match(marine, /Registro sanitario/u);
 
   const almonds = read("productos/almendras/index.html");
-  assert.doesNotMatch(almonds, /data-product-short-description|data-product-description|data-product-info/u);
+  assert.match(almonds, /data-product-short-description/u);
+  assert.doesNotMatch(almonds, /data-product-description-content/u);
   assert.match(almonds, /Almendras/u);
   assert.match(almonds, /Frutos secos y más/u);
   assert.match(almonds, /125 g|250 g|500 g|1\.000 g/u);
@@ -98,12 +99,17 @@ test("solo publica meta descriptions respaldadas por contenido aprobado", () => 
 
   assert.deepEqual(withDescription.map(({ slug }) => slug), [
     "7-colagenos",
+    "almendra-laminada",
+    "almendras",
+    "avellanas",
+    "avena-en-hojuelas-sin-gluten",
     "calcio-coral-marino",
+    "coco-acaramelado",
     "colageno-marino",
     "maca-negra-roja-shihua-y-amarilla",
     "sales-de-magnesio-mg2",
   ]);
-  assert.equal(withoutDescription.length, 69);
+  assert.equal(withoutDescription.length, 64);
 
   for (const product of products) {
     const html = read(`productos/${product.slug}/index.html`);
@@ -208,12 +214,24 @@ test("Product solo usa descripción aprobada y no inventa variantes", () => {
   for (const product of products) {
     const data = structuredDataForProduct(product);
     const productEntity = data["@graph"].find(({ "@type": type }) => type === "Product");
-    const description = seoMetadataForProduct(product).description;
+    const description = product.shortDescription?.trim() || product.description?.trim();
 
     assert.equal(productEntity.description, description || undefined, product.slug);
     assert.equal("hasVariant" in productEntity, false);
     assert.equal("productGroupID" in productEntity, false);
   }
+});
+
+test("Product.description coincide con contenido visible y no usa texto SEO oculto", () => {
+  const almonds = products.find(({ slug }) => slug === "almendras");
+  const entity = (product) => structuredDataForProduct(product)["@graph"].find(({ "@type": type }) => type === "Product");
+  assert.equal(entity(almonds).description, almonds.shortDescription);
+  assert.equal(entity(almonds).offers[0].price, 20000);
+  assert.equal(entity(almonds).offers[0].priceCurrency, "COP");
+  assert.match(entity(almonds).offers[0].name, /250 g/u);
+  assert.equal(entity({ ...almonds, shortDescription: "", description: "", seoDescription: "Solo metadata" }).description, undefined);
+  assert.equal(entity({ ...almonds, shortDescription: "Resumen visible" }).description, "Resumen visible");
+  assert.equal(entity({ ...almonds, shortDescription: "Resumen", description: "Descripción completa visible" }).description, "Resumen");
 });
 
 test("la portada conserva OnlineStore y añade WebSite conectado", () => {

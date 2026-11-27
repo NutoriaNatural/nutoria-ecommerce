@@ -130,6 +130,11 @@ test("integra Anís estrellado y Linaza en la fuente y validación autoritativas
 test("deja vacíos los campos futuros cuando no existe información aprobada", () => {
   const productsWithApprovedDetails = new Set([
     "7-colagenos",
+    "almendra-laminada",
+    "almendras",
+    "avellanas",
+    "avena-en-hojuelas-sin-gluten",
+    "coco-acaramelado",
     "calcio-coral-marino",
     "colageno-marino",
     "maca-negra-roja-shihua-y-amarilla",

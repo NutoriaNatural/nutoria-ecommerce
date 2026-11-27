@@ -322,6 +322,53 @@ const productCompositions = {
 };
 
 const productDetails = {
+  "almendra-laminada": {
+    shortDescription: "Almendra cruda y natural, sin cáscara ni piel, cortada en láminas delgadas. Es práctica para decorar y dar un toque crocante sin tener que picarla. Va bien en granolas, yogur, ensaladas, pancakes y repostería.",
+    description: "Al ir sin piel y laminada, tiene un acabado claro y delicado. Sirve para espolvorear sobre postres, mezclar en masas de galletas o tortas, o agregar a ensaladas y platos salados.",
+    productInfo: [
+      { label: "Presentación", value: "A granel" },
+      { label: "Características", value: "Cruda, natural, sin piel, laminada" },
+      { label: "Conservación", value: "Guárdala en un recipiente de vidrio bien sellado; si no es posible, puede quedarse en su bolsa. Mantenla en un lugar fresco." },
+    ],
+    highlights: ["Contiene proteína de origen vegetal.", "Aporta grasas insaturadas, características de la almendra.", "Contiene vitamina E.", "Aporta magnesio."],
+  },
+  almendras: {
+    shortDescription: "Almendras naturales con su piel, a granel. Son versátiles para comer solas como snack y también para granolas, batidos, salsas, postres y repostería.",
+    productInfo: [
+      { label: "Presentación", value: "A granel" },
+      { label: "Características", value: "Naturales, con piel" },
+      { label: "Conservación", value: "Guárdalas en un recipiente de vidrio bien sellado; si no es posible, pueden quedarse en su bolsa. Mantenlas en un lugar fresco." },
+    ],
+    highlights: ["Contienen proteína de origen vegetal.", "Aportan grasas insaturadas.", "Contienen fibra, presente sobre todo en la piel.", "Aportan vitamina E.", "Contienen magnesio."],
+  },
+  avellanas: {
+    shortDescription: "Avellanas horneadas con piel, a granel, con el sabor tostado y aromático que da el horneado. Son ideales como snack y para preparar cremas, salsas, postres, panes y combinaciones con chocolate.",
+    description: "Como están horneadas, la piel se va desprendiendo poco a poco. Es algo normal en este tipo de avellana y facilita retirarla si prefieres usarlas peladas en tus recetas.",
+    productInfo: [
+      { label: "Presentación", value: "A granel" },
+      { label: "Características", value: "Horneadas, con piel (la piel se va desprendiendo)" },
+      { label: "Conservación", value: "Guárdalas en un recipiente de vidrio bien sellado; si no es posible, pueden quedarse en su bolsa. Mantenlas en un lugar fresco." },
+    ],
+    highlights: ["Aportan grasas insaturadas, principalmente monoinsaturadas.", "Contienen vitamina E.", "Contienen fibra.", "Aportan proteína de origen vegetal.", "Contienen manganeso."],
+  },
+  "avena-en-hojuelas-sin-gluten": {
+    shortDescription: "Avena natural de grano entero en hojuelas, sin gluten, cultivada sola y con excelentes cuidados. Sirve para preparar avena cocida, overnight oats, galletas, barras, granola, batidos y panes.",
+    productInfo: [
+      { label: "Presentación", value: "A granel" },
+      { label: "Características", value: "Sin gluten, natural, de grano entero, en hojuelas" },
+      { label: "Conservación", value: "Guárdala en un recipiente de vidrio bien sellado; si no es posible, puede quedarse en su bolsa. Mantenla en un lugar fresco." },
+    ],
+    highlights: ["Contiene fibra, incluidos betaglucanos propios de la avena.", "Aporta carbohidratos complejos como fuente de energía.", "Contiene proteína de origen vegetal.", "Aporta minerales como magnesio y manganeso."],
+  },
+  "coco-acaramelado": {
+    shortDescription: "Coco laminado con caramelo de panela, de sabor dulce y textura crocante. Va bien en granolas, yogur, postres, helados, tortas y como snack.",
+    productInfo: [
+      { label: "Presentación", value: "A granel" },
+      { label: "Características", value: "Coco laminado con caramelo de panela" },
+      { label: "Conservación", value: "Guárdalo en un recipiente de vidrio bien sellado; si no es posible, puede quedarse en su bolsa. Mantenlo en un lugar fresco." },
+    ],
+    highlights: ["Contiene fibra aportada por el coco.", "Aporta manganeso, presente de forma natural en el coco.", "Aporta energía; contiene grasas propias del coco.", "Contiene azúcares provenientes del caramelo de panela."],
+  },
   "7-colagenos": {
     shortDescription: "Mezcla nutricional con colágeno hidrolizado, cúrcuma, calcio, magnesio, vitaminas y fibra prebiótica FOS. Una fórmula diseñada para complementar tu alimentación, aportando nutrientes que contribuyen al cuidado de los huesos, músculos, piel y cabello. Ideal para quienes buscan incorporar nutrientes esenciales a su rutina diaria de forma práctica y deliciosa.",
     description: "Complementa tu bienestar diario con Bio Zem 7 Colágeno, una mezcla nutricional que combina colágeno hidrolizado, cúrcuma, vitaminas y minerales. Su fórmula aporta nutrientes importantes para el mantenimiento de huesos y músculos, ayudándote a complementar tu alimentación y cuidar tu organismo desde adentro.\n\nGracias a su contenido de vitamina C, contribuye a la formación normal de colágeno, mientras que el calcio y la vitamina D favorecen el mantenimiento de los huesos. Además, incorpora biotina y zinc, nutrientes que contribuyen al cuidado de la piel y el cabello, junto con fibra prebiótica FOS, que favorece el crecimiento de bacterias intestinales beneficiosas.\n\nDisfruta de una manera práctica de incorporar estos nutrientes a tu rutina con una bebida efervescente de agradable sabor Citrus Punch. Una alternativa para quienes buscan complementar su alimentación con proteínas, vitaminas y minerales, sin azúcares añadidos, sin soya, sin gluten y sin maltodextrina.",
@@ -426,7 +473,7 @@ export const products = productDefinitions.map(([id, name, category, pricingName
     shortDescription: details.shortDescription ?? "",
     description: details.description ?? "",
     productInfo: Object.freeze((details.productInfo ?? []).map((item) => Object.freeze({ ...item }))),
-    highlights: Object.freeze([]),
+    highlights: Object.freeze([...(details.highlights ?? [])]),
     ingredients: "",
     composition: Object.freeze([...(productCompositions[id] ?? [])]),
     content: "",
