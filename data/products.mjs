@@ -322,6 +322,51 @@ const productCompositions = {
 };
 
 const productDetails = {
+  "flor-de-jamaica": {
+    shortDescription: "Flor de Jamaica seca y natural, sin ingredientes añadidos, a granel. Viene entera, aunque con el manejo se va partiendo, algo normal en este producto. Es ideal para preparar infusiones y bebidas frías.\n\nTiene un sabor ácido y un color rojo intenso que se transfiere al agua al hervirla o dejarla en infusión. Se usa en aguas frescas, jugos, té helado, salsas, mermeladas y repostería, y se puede endulzar al gusto con panela, miel o el endulzante que prefieras.",
+    productInfo: [
+      { label: "Presentación", value: "A granel" },
+      { label: "Características", value: "Seca, natural, entera (se va partiendo), sin ingredientes añadidos" },
+      { label: "Conservación", value: "Guárdala en un recipiente de vidrio bien sellado; si no es posible, puede quedarse en su bolsa. Mantenla en un lugar fresco." },
+    ],
+    highlights: ["Contiene fibra, propia de la flor.", "Aporta antocianinas, pigmentos vegetales responsables de su color rojo.", "Contiene polifenoles y flavonoides, compuestos propios de las plantas.", "Aporta ácidos orgánicos, que le dan su sabor ácido característico.", "Contiene pequeñas cantidades de vitamina C."],
+  },
+  "garbanzo-tostados": {
+    shortDescription: "Garbanzos tostados con aceite de girasol y un toque de sal, a granel. Tienen una textura crocante y un sabor ligeramente salado.\n\nSon perfectos como snack o para agregar a ensaladas, sopas y bowls.",
+    productInfo: [
+      { label: "Presentación", value: "A granel" },
+      { label: "Características", value: "Tostados, con aceite de girasol y sal" },
+      { label: "Conservación", value: "Guárdalos en un recipiente de vidrio bien sellado; si no es posible, pueden quedarse en su bolsa. Mantenlos en un lugar fresco." },
+    ],
+    highlights: ["Contienen proteína de origen vegetal.", "Contienen fibra.", "Aportan carbohidratos complejos como fuente de energía.", "Aportan hierro y magnesio, además de folato (vitamina B9)."],
+  },
+  "habas-saladas": {
+    shortDescription: "Habas importadas con aceite de girasol y un toque de sal, a granel. Son crocantes y de sabor ligeramente salado.\n\nSon ideales como snack, para acompañar bebidas o para mezclar con otros frutos secos y semillas.",
+    productInfo: [
+      { label: "Presentación", value: "A granel" },
+      { label: "Características", value: "Importadas, con aceite de girasol y sal" },
+      { label: "Conservación", value: "Guárdalas en un recipiente de vidrio bien sellado; si no es posible, pueden quedarse en su bolsa. Mantenlas en un lugar fresco." },
+    ],
+    highlights: ["Contienen proteína de origen vegetal.", "Contienen fibra.", "Aportan carbohidratos complejos como fuente de energía.", "Aportan minerales como hierro y magnesio."],
+  },
+  "harina-de-almendras": {
+    shortDescription: "Harina de almendra natural, elaborada con almendra sin piel que se muele hasta obtener una textura fina. Es muy usada en repostería para preparar tortas, galletas, brownies, pancakes, panes y masas, y también para apanar o espesar preparaciones. Además, sirve para preparar bebida vegetal de almendras.\n\nAl estar hecha con almendra sin piel, tiene un color claro y un sabor suave. Puedes usarla sola o combinarla con otras harinas según la receta.",
+    productInfo: [
+      { label: "Presentación", value: "A granel" },
+      { label: "Características", value: "Natural, elaborada con almendra sin piel, molida" },
+      { label: "Conservación", value: "Guárdala en un recipiente de vidrio bien sellado; si no es posible, puede quedarse en su bolsa. Mantenla en un lugar fresco." },
+    ],
+    highlights: ["Contiene proteína de origen vegetal.", "Aporta grasas insaturadas, características de la almendra.", "Contiene vitamina E.", "Aporta magnesio."],
+  },
+  "lentejas-tostadas": {
+    shortDescription: "Lentejas tostadas con aceite de girasol y un toque de sal, a granel. Son crocantes y de sabor ligeramente salado.\n\nSon ideales como snack o para sumar textura a ensaladas, sopas y bowls.",
+    productInfo: [
+      { label: "Presentación", value: "A granel" },
+      { label: "Características", value: "Tostadas, con aceite de girasol y sal" },
+      { label: "Conservación", value: "Guárdalas en un recipiente de vidrio bien sellado; si no es posible, pueden quedarse en su bolsa. Mantenlas en un lugar fresco." },
+    ],
+    highlights: ["Contienen proteína de origen vegetal.", "Contienen fibra.", "Aportan carbohidratos complejos como fuente de energía.", "Aportan hierro y folato (vitamina B9)."],
+  },
   "almendra-laminada": {
     shortDescription: "Almendra cruda y natural, sin cáscara ni piel, cortada en láminas delgadas. Es práctica para decorar y dar un toque crocante sin tener que picarla. Va bien en granolas, yogur, ensaladas, pancakes y repostería.",
     description: "Al ir sin piel y laminada, tiene un acabado claro y delicado. Sirve para espolvorear sobre postres, mezclar en masas de galletas o tortas, o agregar a ensaladas y platos salados.",

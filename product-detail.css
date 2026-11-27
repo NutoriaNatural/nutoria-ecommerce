@@ -278,6 +278,7 @@
 
 .product-purchase__short-description {
   margin: 0;
+  white-space: pre-line;
   color: rgba(4, 38, 22, 0.82);
   line-height: 1.65;
 }

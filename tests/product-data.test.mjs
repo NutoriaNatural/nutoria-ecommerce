@@ -129,6 +129,11 @@ test("integra Anís estrellado y Linaza en la fuente y validación autoritativas
 
 test("deja vacíos los campos futuros cuando no existe información aprobada", () => {
   const productsWithApprovedDetails = new Set([
+    "flor-de-jamaica",
+    "garbanzo-tostados",
+    "habas-saladas",
+    "harina-de-almendras",
+    "lentejas-tostadas",
     "7-colagenos",
     "almendra-laminada",
     "almendras",

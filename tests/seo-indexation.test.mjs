@@ -106,10 +106,15 @@ test("solo publica meta descriptions respaldadas por contenido aprobado", () => 
     "calcio-coral-marino",
     "coco-acaramelado",
     "colageno-marino",
+    "flor-de-jamaica",
+    "garbanzo-tostados",
+    "habas-saladas",
+    "harina-de-almendras",
+    "lentejas-tostadas",
     "maca-negra-roja-shihua-y-amarilla",
     "sales-de-magnesio-mg2",
   ]);
-  assert.equal(withoutDescription.length, 64);
+  assert.equal(withoutDescription.length, 59);
 
   for (const product of products) {
     const html = read(`productos/${product.slug}/index.html`);
